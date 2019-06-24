@@ -16,25 +16,29 @@ export default {
 </script>
 
 <style lang="scss">
+html {
+  height: 100%;
+}
+
 body {
   background: $body-background;
   font-size: $body-font-size;
   font-family: $body-font-family;
   color: $body-font-color;
-}
-
-#app {
-  margin: 40px;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
   
+  #app {
+    margin: 40px;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+  }
+
   .container {
-    /* position: relative; */
     width: 100%;
     max-width: 700px;
     margin: 0 auto 40px auto;
-    /* display: none; */
   }
   
   input {
@@ -65,7 +69,7 @@ body {
     
     &.typewriter {
       height: 14px;
-      float: left;
+      /* float: left; */
       display: none;
       overflow: hidden;
       display: block;

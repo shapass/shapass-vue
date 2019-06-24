@@ -1,7 +1,16 @@
 $dark-blue: #010913;
 $bright-blue: #36cdd4;
+$gray: #212529;
+$black: #000;
+$white: #fff;
+$medium-gray: #666;
 
 $primary: $bright-blue;
+$background: $dark-blue;
+$background-highlight: $gray;
+$dark: $black;
+$accent: $bright-blue;
+$bright: $white;
 
 $body-font-family: 'Source Code Pro', monospace;
 //$body-font-family: 'Roboto', Helvetica, Arial, sans-serif;
@@ -10,3 +19,27 @@ $body-font-color: $bright-blue;
 $body-font-size: 20px;
 
 $label-color: #fff;
+
+
+//
+// v-select
+//
+$vs-state-active-bg: $background;//$dark;
+$vs-state-active-color: $bright;
+$vs-border-width: 1px;
+$vs-border-radius: none;
+$vs-border-color: $accent;
+//$vs-selected-bg: red;
+//$vs-dropdown-z-index: 1000 !default;
+//$vs-dropdown-min-width: 160px !default;
+//$vs-dropdown-max-height: 350px !default;
+$vs-dropdown-box-shadow: 7px 7px 0px rgba(0, 0, 0, 0.8);
+$vs-dropdown-bg: $dark;//$background-highlight; //$background;
+// my vs variables
+$vs-dropdown-color: $medium-gray;
+$vs-dropdown-selected-color: $accent;
+$vs-selected-color: $white;
+$vs-selected-background: $background-highlight;
+
+@import "vue-select/src/scss/vue-select.scss";
+
