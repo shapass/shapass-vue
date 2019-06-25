@@ -1,26 +1,38 @@
 <template>
   <div class="service-selector container">
     <label class="typewriter">What service or website is this password for?</label>
-    <v-select taggable selectOnTab filterable :clearable="false" placeholder="e.g. gmail" :options="getServices()">
-    </v-select>
-    <div id="service-configs">
-      <label>configurations:</label>
-      <span></span>
-    </div>
-    <input type="text"></input>
+    <v-select v-model="service" taggable selectOnTab filterable :clearable="true" placeholder="e.g. gmail" :options="getServices()" v-on:input="onSelectChange" v-on:search:focus="onFocus"></v-select>
+    <!-- <div id="service-configs"> -->
+    <!--   <label>configurations:</label> -->
+    <!--   <span></span> -->
+    <!-- </div> -->
   </div>
 </template>
 
 <script>
 export default {
   name: 'ServiceSelector',
+  props: {
+    value: String
+  },
   methods: {
     getServices: function() {
       return ["netflix", "gmail", "twitter", "twitch"];
+    },
+    onSelectChange: function(v) {
+      this.$emit('input', v)
+    },
+    onFocus: function() {
+      this.service = null;
+      this.$emit('input', null)
+    }
+  },
+  data () {
+    return {
+      service: null
     }
   },
   mounted () {
-    //this.setupSelectize()
   }
 }
 </script>
@@ -45,9 +57,9 @@ export default {
   }
   
   // the arrow
-  .vs__actions {
-    display: none;
-  }
+  /* .vs__actions { */
+  /*   display: none; */
+  /* } */
   
   .vs__dropdown-toggle {
     border-color: transparent;

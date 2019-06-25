@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <ServiceSelector />
+    <ServiceSelector v-model="service" v-on:input="onServiceChanged" />
+    <div class="container" v-if="service">
+      <label class="typewriter">Your master password:</label>
+      <input ref="password" type="password" spellcheck="false" placeholder="" autocomplete="off" v-focus>
+    </div>
   </div>
 </template>
 
@@ -11,6 +15,18 @@ export default {
   name: 'app',
   components: {
     ServiceSelector
+  },
+  methods: {
+    onServiceChanged: function(v) {
+      // if (this.$refs.password && this.service) {
+      //   this.$refs.password.focus();
+      // }
+    }
+  },
+  data () {
+    return {
+      service: null
+    }
   }
 }
 </script>
@@ -38,7 +54,7 @@ body {
   .container {
     width: 100%;
     max-width: 700px;
-    margin: 0 auto 40px auto;
+    margin: 0 auto 30px auto;
   }
   
   input {
@@ -66,14 +82,12 @@ body {
     text-transform: uppercase;
     font-size: 12px;
     color: $label-color;
+    display: inline;
     
     &.typewriter {
       height: 14px;
       /* float: left; */
-      display: none;
       overflow: hidden;
-      display: block;
-      overflow: hidden; /* Ensures the content is not revealed until the animation */
       white-space: nowrap; /* Keeps the content on a single line */
       margin: 0 auto; /* Gives that scrolling effect as the typing happens */
       animation: 
