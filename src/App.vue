@@ -3,7 +3,7 @@
     <ServiceSelector v-model="service" v-on:input="generatePassword" />
     <div class="container" v-if="service">
       <label class="typewriter">Your master password:</label>
-      <input ref="password" type="password" spellcheck="false" placeholder="" autocomplete="off" v-model="master" v-focus v-on:input="generatePassword">
+      <input ref="password" type="password" spellcheck="false" placeholder="" autocomplete="off" v-model="master" v-focus v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard">
     </div>
     <div class="container" v-if="generated">
       <label class="typewriter">Generated password:</label>
@@ -21,7 +21,7 @@ export default {
     ServiceSelector
   },
   methods: {
-    generatePassword: function(v) {
+    generatePassword: function() {
       if (this.service !== null && this.service !== undefined) {
         var input = this.service;
         if (this.master !== null) {
@@ -33,6 +33,14 @@ export default {
         this.generated = null;
         this.generatedCensored = null;
       }
+    },
+    copyToClipboard: function() {
+      this.$copyText(this.generated).then((e) => {
+        this.$toasted.show('Copied', { duration: 500 });
+        this.$el.children[1].children[1].focus()
+      }, (e) => {
+        this.$toasted.error('Could not copy', { duration: 500 });
+      })
     }
   },
   data () {
@@ -115,6 +123,15 @@ body {
   @keyframes typing {
     from { width: 0 }
     to { width: 100% }
+  }
+
+  .toasted.toasted-primary {
+    border-radius: $notification-border-radius;
+
+    &.default {
+      background-color: $notification-bg-color;
+      border: $notification-border;
+    }
   }
 }
 </style>

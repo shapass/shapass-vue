@@ -1,9 +1,17 @@
 import Vue from 'vue'
 import App from './App.vue'
 import vSelect from 'vue-select'
+import Toasted from 'vue-toasted';
+import VueClipboard from 'vue-clipboard2'
 
 Vue.config.productionTip = false
 
+Vue.use(Toasted, {
+  position: 'bottom-center',
+  duration: 1000,
+  singleton: true
+})
+Vue.use(VueClipboard)
 Vue.component('v-select', vSelect)
 
 Vue.directive('focus', {
