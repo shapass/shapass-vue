@@ -1,9 +1,13 @@
 <template>
   <div id="app">
-    <ServiceSelector v-model="service" v-on:input="onServiceChanged" />
+    <ServiceSelector v-model="service" v-on:input="generatePassword" />
     <div class="container" v-if="service">
       <label class="typewriter">Your master password:</label>
-      <input ref="password" type="password" spellcheck="false" placeholder="" autocomplete="off" v-focus>
+      <input ref="password" type="password" spellcheck="false" placeholder="" autocomplete="off" v-model="master" v-focus v-on:input="generatePassword">
+    </div>
+    <div class="container" v-if="generated">
+      <label class="typewriter">Generated password:</label>
+      <input type="text" readonly="readonly" autocomplete="off" v-model="generatedCensored" />
     </div>
   </div>
 </template>
@@ -17,15 +21,27 @@ export default {
     ServiceSelector
   },
   methods: {
-    onServiceChanged: function(v) {
-      // if (this.$refs.password && this.service) {
-      //   this.$refs.password.focus();
-      // }
+    generatePassword: function(v) {
+      if (this.service !== null && this.service !== undefined) {
+        var input = this.service;
+        if (this.master !== null) {
+          input = `${this.service}${this.master}`;
+        }
+        this.generated = this.shapass(input);
+        this.generatedCensored = this.generated.replace(/(.){4}/g, `${this.mask}$1`);
+      } else {
+        this.generated = null;
+        this.generatedCensored = null;
+      }
     }
   },
   data () {
     return {
-      service: null
+      service: null,
+      master: null,
+      generated: null,
+      generatedCensored: null,
+      mask: this.randomMask()
     }
   }
 }
@@ -65,6 +81,7 @@ body {
     width: 100%;
     outline: none;
     background: none;
+    font-family: $input-font-family;
     /* padding: 10px; */
     /* border: 1px solid darken($body-background, 10); */
     /* border-radius: 4px; */
