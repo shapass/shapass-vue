@@ -1,5 +1,6 @@
 module.exports = {
   runtimeCompiler: true,
+  publicPath: "./",
   css: {
     loaderOptions: {
       // pass options to sass-loader
