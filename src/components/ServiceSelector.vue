@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     getServices: function() {
-      return ["netflix", "gmail", "twitter", "twitch"];
+      return [];
     },
     onSelectChange: function(v) {
       this.$emit('input', v)
