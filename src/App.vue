@@ -7,7 +7,7 @@
         <font-awesome-icon icon="eye-slash" />
       </button>
       <button class="btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType">
-        <font-awesome-icon icon="eye" />
+        <font-awesome-icon icon="eye" class="active" />
       </button>
       <input :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="master" v-focus v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard">
     </div>
@@ -17,7 +17,10 @@
         <font-awesome-icon icon="eye-slash" />
       </button>
       <button class="btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility">
-        <font-awesome-icon icon="eye" />
+        <font-awesome-icon icon="eye" class="active" />
+      </button>
+      <button class="btn-copy" @click="copyToClipboard">
+        <font-awesome-icon icon="copy" />
       </button>
       <!-- <input type="text" readonly="readonly" autocomplete="off" v-model="generatedShown" /> -->
       <div v-html="generatedShown"></div>
@@ -119,17 +122,13 @@ body {
   }
   
   #master, #generated {
-    .btn-toggle-visibility {
+    .btn-toggle-visibility, .btn-copy {
       position: absolute;
       top: 26px;
       left: -40px;
-      padding: 0;
-      border: 0;
-      margin: 0;
-      background: none;
     }
-    .fa-eye-slash {
-      color: $background-highlight;
+    .btn-copy {
+      left: -70px;
     }
   }
 
@@ -151,6 +150,14 @@ body {
     position: relative;
   }
   
+  button {
+    outline: none;
+    padding: 0;
+    border: 0;
+    margin: 0;
+    background: none;
+  }
+
   input {
     background: none;
     border: 0;
@@ -194,7 +201,7 @@ body {
     from { width: 0 }
     to { width: 100% }
   }
-  
+
   .toasted.toasted-primary {
     border-radius: $notification-border-radius;
     
@@ -203,19 +210,27 @@ body {
       border: $notification-border;
     }
   }
-  
+
   .svg-inline--fa {
     font-size: $icon-size;
     cursor: pointer;
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
+    /* border-radius: 50%; */
     padding: 5px;
-    border-radius: 50%;
-    transition: background .1s linear;
-    color: $primary;
+    transition:
+      background .2s linear,
+      color .2s linear;
 
+    color: $background-highlight;
     &:hover, &:active {
-      /* border: 1px solid $primary; */
-      background: $dark;
+      color: $secondary;
+    }
+
+    &.active {
+      color: $primary;
+      &:hover, &:active {
+        color: $orange;
+      }
     }
   }
 }
