@@ -1,6 +1,6 @@
 <template>
   <div class="service-selector container">
-    <label class="typewriter">What service or website is this password for?</label>
+    <label class="typewriter">What is this password for?</label>
     <v-select v-model="service" taggable selectOnTab filterable :clearable="false" placeholder="e.g. gmail" :options="getServices()" v-on:input="onSelectChange" v-on:search:focus="onFocus" autocomplete="off"></v-select>
     <!-- <div id="service-configs"> -->
     <!--   <label>configurations:</label> -->

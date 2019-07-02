@@ -49,10 +49,10 @@ export default {
       }
     },
     copyToClipboard: function() {
-      this.$copyText(this.generated).then((e) => {
+      this.$copyText(this.generated).then(() => {
         this.$toasted.show('Copied', { duration: 500 });
         this.$el.children[1].getElementsByTagName('input')[0].focus();
-      }, (e) => {
+      }, () => {
         this.$toasted.error('Could not copy', { duration: 500 });
       })
     },
@@ -110,7 +110,7 @@ body {
   height: 100%;
   
   #app {
-    margin: 40px;
+    margin: 40px 0;
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -124,17 +124,24 @@ body {
   #master, #generated {
     .btn-toggle-visibility, .btn-copy {
       position: absolute;
-      top: 26px;
+      top: 3px;
       left: -40px;
     }
     .btn-copy {
-      left: -70px;
+      top: 31px;
+      left: -37px;
+    }
+
+    input {
+      margin-top: 5px;
     }
   }
 
   #generated {
     div {
       padding: 1px 0; /* to look like the #master input */
+      margin-top: 5px;
+      white-space: nowrap;
     }
   }
   
@@ -144,10 +151,13 @@ body {
    */
   
   .container {
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto 30px auto;
+    /* width: 100%; */
+    max-width: 800px;
+    /* margin: 0 auto 30px auto; */
     position: relative;
+    border-left: 1px solid $background-highlight;
+    padding-left: 15px;
+    margin: 0 40px 30px 40px;
   }
   
   button {
@@ -188,7 +198,6 @@ body {
     
     &.typewriter {
       height: 14px;
-      /* float: left; */
       overflow: hidden;
       white-space: nowrap; /* Keeps the content on a single line */
       margin: 0 auto; /* Gives that scrolling effect as the typing happens */
@@ -222,13 +231,13 @@ body {
       color .2s linear;
 
     color: $background-highlight;
-    &:hover, &:active {
+    &:hover {
       color: $secondary;
     }
 
     &.active {
       color: $primary;
-      &:hover, &:active {
+      &:hover {
         color: $orange;
       }
     }
