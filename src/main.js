@@ -1,24 +1,34 @@
-import Vue from 'vue'
-import App from './App.vue'
-import vSelect from 'vue-select'
+import Vue from 'vue';
+import App from './App.vue';
+import vSelect from 'vue-select';
 import Toasted from 'vue-toasted';
-import VueClipboard from 'vue-clipboard2'
+import VueClipboard from 'vue-clipboard2';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-Vue.config.productionTip = false
+library.add(faEye);
+library.add(faEyeSlash);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+Vue.config.productionTip = false;
 
 Vue.use(Toasted, {
   position: 'bottom-center',
   duration: 1000,
   singleton: true
-})
-Vue.use(VueClipboard)
-Vue.component('v-select', vSelect)
+});
+Vue.use(VueClipboard);
+Vue.component('v-select', vSelect);
 
 Vue.directive('focus', {
   inserted: function (el) {
-    el.focus()
+    el.focus();
+    if (el.value !== undefined && el.value !== null) {
+      el.select();
+    }
   }
-})
+});
 
 Vue.mixin({
   methods: {
@@ -27,7 +37,7 @@ Vue.mixin({
     },
     randomMask: function() {
       var masks = [
-        '___', '---', '===', '***', '###', '%%%', '+++'
+        '***', '___', '---', '!!!', '~~~'
       ];
       return masks[Math.floor(Math.random()*masks.length)];
     }
@@ -36,4 +46,4 @@ Vue.mixin({
 
 new Vue({
   render: h => h(App),
-}).$mount('#app')
+}).$mount('#app');

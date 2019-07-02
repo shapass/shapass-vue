@@ -1,13 +1,26 @@
 <template>
   <div id="app">
     <ServiceSelector v-model="service" v-on:input="generatePassword" />
-    <div class="container" v-if="service">
-      <label class="typewriter">Your master password:</label>
-      <input ref="password" type="password" spellcheck="false" placeholder="" autocomplete="off" v-model="master" v-focus v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard">
+    <div class="container" id="master" v-if="service">
+      <label class="typewriter">Your master password</label>
+      <button class="btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType">
+        <font-awesome-icon icon="eye-slash" />
+      </button>
+      <button class="btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType">
+        <font-awesome-icon icon="eye" />
+      </button>
+      <input :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="master" v-focus v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard">
     </div>
-    <div class="container" v-if="generated">
-      <label class="typewriter">Generated password:</label>
-      <input type="text" readonly="readonly" autocomplete="off" v-model="generatedCensored" />
+    <div class="container" id="generated" v-if="generated">
+      <label class="typewriter">Generated password</label>
+      <button class="btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility">
+        <font-awesome-icon icon="eye-slash" />
+      </button>
+      <button class="btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility">
+        <font-awesome-icon icon="eye" />
+      </button>
+      <!-- <input type="text" readonly="readonly" autocomplete="off" v-model="generatedShown" /> -->
+      <div v-html="generatedShown"></div>
     </div>
   </div>
 </template>
@@ -27,20 +40,43 @@ export default {
         if (this.master !== null) {
           input = `${this.service}${this.master}`;
         }
-        this.generated = this.shapass(input);
-        this.generatedCensored = this.generated.replace(/(.){4}/g, `${this.mask}$1`);
+        this.setGeneratedPassword(this.shapass(input));
       } else {
-        this.generated = null;
-        this.generatedCensored = null;
+        this.setGeneratedPassword(null);
       }
     },
     copyToClipboard: function() {
       this.$copyText(this.generated).then((e) => {
         this.$toasted.show('Copied', { duration: 500 });
-        this.$el.children[1].children[1].focus()
+        this.$el.children[1].getElementsByTagName('input')[0].focus();
       }, (e) => {
         this.$toasted.error('Could not copy', { duration: 500 });
       })
+    },
+    toggleMasterPasswordType: function() {
+      this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
+    },
+    toggleGeneratedPasswordVisibility: function() {
+      if (this.isGeneratedPasswordVisible) {
+        this.isGeneratedPasswordVisible = false;
+      } else {
+        this.isGeneratedPasswordVisible = true;
+      }
+      this.setGeneratedPassword(this.generated);
+    },
+    setGeneratedPassword: function(val) {
+      this.generated = val;
+      if (this.generated !== null) {
+        let maskHtml = `<span class="censored">${this.mask}</span>`;
+        this.generatedCensored = this.generated.replace(/(.){4}/g, `${maskHtml}$1`);
+      } else {
+        this.generatedCensored = null;
+      }
+      if (this.isGeneratedPasswordVisible) {
+        this.generatedShown = this.generated;
+      } else {
+        this.generatedShown = this.generatedCensored;
+      }
     }
   },
   data () {
@@ -49,7 +85,10 @@ export default {
       master: null,
       generated: null,
       generatedCensored: null,
-      mask: this.randomMask()
+      generatedShown: null,
+      isGeneratedPasswordVisible: false,
+      mask: this.randomMask(),
+      masterPasswordType: "password"
     }
   }
 }
@@ -73,12 +112,43 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     height: 100%;
+
+    .censored {
+      color: $background-highlight;
+    }
+  }
+  
+  #master, #generated {
+    .btn-toggle-visibility {
+      position: absolute;
+      top: 26px;
+      left: -40px;
+      padding: 0;
+      border: 0;
+      margin: 0;
+      background: none;
+    }
+    .fa-eye-slash {
+      color: $background-highlight;
+    }
   }
 
+  #generated {
+    div {
+      padding: 1px 0; /* to look like the #master input */
+    }
+  }
+  
+  
+  /*
+   * Global classes
+   */
+  
   .container {
     width: 100%;
     max-width: 700px;
     margin: 0 auto 30px auto;
+    position: relative;
   }
   
   input {
@@ -124,13 +194,28 @@ body {
     from { width: 0 }
     to { width: 100% }
   }
-
+  
   .toasted.toasted-primary {
     border-radius: $notification-border-radius;
-
+    
     &.default {
       background-color: $notification-bg-color;
       border: $notification-border;
+    }
+  }
+  
+  .svg-inline--fa {
+    font-size: $icon-size;
+    cursor: pointer;
+    border: 1px solid transparent;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background .1s linear;
+    color: $primary;
+
+    &:hover, &:active {
+      /* border: 1px solid $primary; */
+      background: $dark;
     }
   }
 }
