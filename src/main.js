@@ -15,7 +15,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.config.productionTip = false;
 
 Vue.use(Toasted, {
-  position: 'bottom-center',
+  position: 'top-right',
   duration: 1000,
   singleton: true
 });

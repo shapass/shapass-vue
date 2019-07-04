@@ -3,23 +3,23 @@
     <ServiceSelector v-model="service" v-on:input="generatePassword" />
     <div class="container" id="master" v-if="service">
       <label class="typewriter">Your master password</label>
-      <button class="btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType">
+      <button class="btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />
       </button>
-      <button class="btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType">
+      <button class="btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye" class="active" />
       </button>
       <input :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="master" v-focus v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard">
     </div>
     <div class="container" id="generated" v-if="generated">
       <label class="typewriter">Generated password</label>
-      <button class="btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility">
+      <button class="btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />
       </button>
-      <button class="btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility">
+      <button class="btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
         <font-awesome-icon icon="eye" class="active" />
       </button>
-      <button class="btn-copy" @click="copyToClipboard">
+      <button class="btn-copy" @click="copyToClipboard" tabindex="-1">
         <font-awesome-icon icon="copy" />
       </button>
       <!-- <input type="text" readonly="readonly" autocomplete="off" v-model="generatedShown" /> -->
@@ -105,12 +105,14 @@ html {
 body {
   background: $body-background;
   font-size: $body-font-size;
+  @include mobile { font-size: $m-body-font-size; }
   font-family: $body-font-family;
   color: $body-font-color;
   height: 100%;
   
   #app {
-    margin: 40px 0;
+    margin: 60px auto;
+    max-width: 600px;
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -124,11 +126,11 @@ body {
   #master, #generated {
     .btn-toggle-visibility, .btn-copy {
       position: absolute;
-      top: 3px;
+      top: -3px;
       left: -40px;
     }
     .btn-copy {
-      top: 31px;
+      top: 25px;
       left: -37px;
     }
 
@@ -171,7 +173,8 @@ body {
   input {
     background: none;
     border: 0;
-    font-size: 20px;
+    font-size: $body-font-size;
+    @include mobile { font-size: $m-body-font-size; }
     margin: 0;
     width: 100%;
     outline: none;
@@ -188,11 +191,13 @@ body {
   }
   input::placeholder {
     color: #666;
-    font-size: 18px;
+    font-size: $body-font-size;
+    @include mobile { font-size: $m-body-font-size; }
   }
   label {
     text-transform: uppercase;
-    font-size: 12px;
+    font-size: $label-font-size;
+    @include mobile { font-size: $m-label-font-size; }
     color: $label-color;
     display: inline;
     
@@ -222,9 +227,8 @@ body {
 
   .svg-inline--fa {
     font-size: $icon-size;
+    @include mobile { font-size: $m-icon-size; }
     cursor: pointer;
-    /* border: 1px solid transparent; */
-    /* border-radius: 50%; */
     padding: 5px;
     transition:
       background .2s linear,

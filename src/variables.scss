@@ -1,6 +1,6 @@
 $dark-blue: #010913;
 $bright-blue: #36cdd4;
-$gray: #212529;
+$gray: #2d3238; //#212529;
 $black: #000;
 $white: #fff;
 $medium-gray: #666;
@@ -24,6 +24,7 @@ $body-font-family: 'Source Code Pro', monospace;
 $body-background: $dark-blue;
 $body-font-color: $bright-blue;
 $body-font-size: 20px;
+$label-font-size: 12px;
 $label-color: #fff;
 $input-font-family: $body-font-family;
 $notification-border-radius: 0;
@@ -53,3 +54,17 @@ $vs-selected-background: $background-highlight;
 
 @import "vue-select/src/scss/vue-select.scss";
 
+
+//
+// Mobile
+//
+
+$m-body-font-size: calc(0.45em + 2vmin);
+$m-label-font-size: calc(0.45em + 1vmin);
+$m-icon-size: calc(0.45em + 2vmin);
+$mobile-width: 480px;
+@mixin mobile {
+  @media only screen and (max-width: #{$mobile-width}) {
+    @content;
+  }
+}

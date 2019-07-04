@@ -33,6 +33,8 @@ export default {
     }
   },
   mounted () {
+    // TODO: only on desktop
+    this.$el.getElementsByTagName('input')[0].focus();
   }
 }
 </script>
@@ -44,7 +46,7 @@ export default {
   
   input::placeholder {
     color: #666;
-    font-size: 18px;
+    /* font-size: 18px; */
   }
   
   .vs__search {
