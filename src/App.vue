@@ -2,14 +2,14 @@
   <div id="app">
     <ServiceSelector v-model="service" v-on:input="generatePassword" />
     <div class="container" id="master" v-if="service">
-      <label class="typewriter">Your master password</label>
+      <label class="typewriter" for="master-input">Your master password</label>
       <button class="btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />
       </button>
       <button class="btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye" class="active" />
       </button>
-      <input :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="master" v-focus v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard">
+      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="master" v-focus v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard">
     </div>
     <div class="container" id="generated" v-if="generated">
       <label class="typewriter">Generated password</label>
@@ -22,14 +22,30 @@
       <button class="btn-copy" @click="copyToClipboard" tabindex="-1">
         <font-awesome-icon icon="copy" />
       </button>
-      <!-- <input type="text" readonly="readonly" autocomplete="off" v-model="generatedShown" /> -->
       <div v-html="generatedShown"></div>
+    </div>
+    <div class="container clearfix" id="configurations" v-if="generated">
+      <div id="length">
+        <label class="typewriter">Length:</label>
+        <button class="btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
+          <font-awesome-icon icon="minus-square" />
+        </button>
+        <span v-html="length"></span>
+        <button class="btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
+          <font-awesome-icon icon="plus-square" />
+        </button>
+      </div>
+      <div id="suffix">
+        <label class="typewriter" for="suffix-input">Suffix:</label>
+        <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="suffix" v-on:input="generatePassword" tabindex="-1">
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import ServiceSelector from './components/ServiceSelector.vue'
+import { Configs } from './config.js'
 
 export default {
   name: 'app',
@@ -41,9 +57,14 @@ export default {
       if (this.service !== null && this.service !== undefined) {
         var input = this.service;
         if (this.master !== null) {
-          input = `${this.service}${this.master}`;
+          input = `${input}${this.master}`;
         }
-        this.setGeneratedPassword(this.shapass(input));
+        var pass = this.shapass(input);
+        pass = pass.substr(0, this.length);
+        if (this.suffix !== null) {
+          pass = `${pass}${this.suffix}`;
+        }
+        this.setGeneratedPassword(pass);
       } else {
         this.setGeneratedPassword(null);
       }
@@ -71,7 +92,7 @@ export default {
       this.generated = val;
       if (this.generated !== null) {
         let maskHtml = `<span class="censored">${this.mask}</span>`;
-        this.generatedCensored = this.generated.replace(/(.){4}/g, `${maskHtml}$1`);
+        this.generatedCensored = this.applyMask(this.generated, maskHtml, this.suffix);
       } else {
         this.generatedCensored = null;
       }
@@ -79,6 +100,15 @@ export default {
         this.generatedShown = this.generated;
       } else {
         this.generatedShown = this.generatedCensored;
+      }
+    },
+    lengthAdd: function(v) {
+      let before = this.length;
+      this.length += v;
+      if (this.length < 0) { this.length = 0; }
+      if (this.length > Configs.MAX_LENGTH) { this.length = Configs.MAX_LENGTH; }
+      if (before != this.length) {
+        this.generatePassword();
       }
     }
   },
@@ -91,7 +121,9 @@ export default {
       generatedShown: null,
       isGeneratedPasswordVisible: false,
       mask: this.randomMask(),
-      masterPasswordType: "password"
+      masterPasswordType: "password",
+      length: Configs.MAX_LENGTH,
+      suffix: null
     }
   }
 }
@@ -117,7 +149,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     height: 100%;
-
+    
     .censored {
       color: $background-highlight;
     }
@@ -126,24 +158,54 @@ body {
   #master, #generated {
     .btn-toggle-visibility, .btn-copy {
       position: absolute;
-      top: -3px;
+      top: 2px;
       left: -40px;
     }
     .btn-copy {
-      top: 25px;
+      top: 30px;
       left: -37px;
     }
-
+    
     input {
       margin-top: 5px;
     }
   }
-
+  
   #generated {
+    background: $dark; //$background-highlight;
+    border: 1px solid $primary;
+    
     div {
       padding: 1px 0; /* to look like the #master input */
       margin-top: 5px;
       white-space: nowrap;
+    }
+  }
+  
+  #configurations {
+    padding: 0;
+    border: 0;
+    
+    > div {
+      display: flex;
+      align-items: baseline;
+      justify-content: left;
+      /* float: left; */
+      /* margin-right: 40px; */
+      
+      label {
+        margin-right: 10px;
+      }
+      span {
+        margin: 0 10px;
+      }
+      input {
+        width: auto;
+        /* border: 1px solid $background-highlight; */
+      }
+      .svg-inline--fa {
+        padding: 0;
+      }
     }
   }
   
@@ -157,9 +219,10 @@ body {
     max-width: 800px;
     /* margin: 0 auto 30px auto; */
     position: relative;
-    border-left: 1px solid $background-highlight;
+    border-left: 1px solid darken($background-highlight, 5);
     padding-left: 15px;
-    margin: 0 40px 30px 40px;
+    margin: 0 10px 20px 40px;
+    padding: 5px 15px 10px 15px;
   }
   
   button {
@@ -169,7 +232,7 @@ body {
     margin: 0;
     background: none;
   }
-
+  
   input {
     background: none;
     border: 0;
@@ -190,7 +253,8 @@ body {
     /* border-color: $primary; */
   }
   input::placeholder {
-    color: #666;
+    color: $placeholder-color;
+    opacity: 0.8;
     font-size: $body-font-size;
     @include mobile { font-size: $m-body-font-size; }
   }
@@ -201,21 +265,21 @@ body {
     color: $label-color;
     display: inline;
     
-    &.typewriter {
-      height: 14px;
-      overflow: hidden;
-      white-space: nowrap; /* Keeps the content on a single line */
-      margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-      animation: 
-        typing 2s steps(40, end);
-    }
+    /* &.typewriter { */
+    /*   height: 14px; */
+    /*   overflow: hidden; */
+    /*   white-space: nowrap; /\* Keeps the content on a single line *\/ */
+    /*   margin: 0 auto; /\* Gives that scrolling effect as the typing happens *\/ */
+    /*   animation:  */
+    /*     typing 2s steps(40, end); */
+    /* } */
   }
   
   @keyframes typing {
     from { width: 0 }
     to { width: 100% }
   }
-
+  
   .toasted.toasted-primary {
     border-radius: $notification-border-radius;
     
@@ -224,7 +288,7 @@ body {
       border: $notification-border;
     }
   }
-
+  
   .svg-inline--fa {
     font-size: $icon-size;
     @include mobile { font-size: $m-icon-size; }
@@ -233,18 +297,25 @@ body {
     transition:
       background .2s linear,
       color .2s linear;
-
+    
     color: $background-highlight;
     &:hover {
       color: $secondary;
     }
-
+    
     &.active {
       color: $primary;
       &:hover {
         color: $orange;
       }
     }
+  }
+
+  .clearfix::after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
   }
 }
 </style>

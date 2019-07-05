@@ -4,12 +4,14 @@ import vSelect from 'vue-select';
 import Toasted from 'vue-toasted';
 import VueClipboard from 'vue-clipboard2';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEye, faEyeSlash, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 library.add(faEye);
 library.add(faEyeSlash);
 library.add(faCopy);
+library.add(faPlusSquare);
+library.add(faMinusSquare);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
@@ -38,9 +40,27 @@ Vue.mixin({
     },
     randomMask: function() {
       var masks = [
-        '***', '___', '---', '!!!', '~~~'
+        '*', '_', '-', '!', '~'
       ];
       return masks[Math.floor(Math.random()*masks.length)];
+    },
+    applyMask: function(str, mask, suffix=null) {
+      var result = "";
+      var maxLen = str.length;
+      if (suffix !== null) {
+        maxLen -= suffix.length;
+      }
+      for (var i = 0; i < maxLen; i++) {
+        if (i % 4 == 0) {
+          result += str[i];
+        } else {
+          result += mask;
+        }
+      }
+      if (suffix !== null) {
+        result += suffix;
+      }
+      return result;
     }
   }
 });
