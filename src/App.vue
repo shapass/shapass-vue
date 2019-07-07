@@ -30,7 +30,7 @@
         <button class="btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
           <font-awesome-icon icon="minus-square" />
         </button>
-        <span v-html="length"></span>
+        <input type="number" v-on:blur="setLengthEvent" :value="length"></input>
         <button class="btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
           <font-awesome-icon icon="plus-square" />
         </button>
@@ -59,8 +59,7 @@ export default {
         if (this.master !== null) {
           input = `${input}${this.master}`;
         }
-        var pass = this.shapass(input);
-        pass = pass.substr(0, this.length);
+        var pass = this.shapass(input, this.length);
         if (this.suffix !== null) {
           pass = `${pass}${this.suffix}`;
         }
@@ -103,13 +102,19 @@ export default {
       }
     },
     lengthAdd: function(v) {
+      this.setLength(this.length + v);
+    },
+    setLength: function(v) {
       let before = this.length;
-      this.length += v;
-      if (this.length < 0) { this.length = 0; }
+      this.length = v;
+      if (this.length < Configs.MIN_LENGTH) { this.length = Configs.MIN_LENGTH; }
       if (this.length > Configs.MAX_LENGTH) { this.length = Configs.MAX_LENGTH; }
       if (before != this.length) {
         this.generatePassword();
       }
+    },
+    setLengthEvent: function(e) {
+      this.setLength(e.target.valueAsNumber);
     }
   },
   data () {
@@ -122,7 +127,7 @@ export default {
       isGeneratedPasswordVisible: false,
       mask: this.randomMask(),
       masterPasswordType: "password",
-      length: Configs.MAX_LENGTH,
+      length: Configs.DEFAULT_LENGTH,
       suffix: null
     }
   }
@@ -178,7 +183,7 @@ body {
     div {
       padding: 1px 0; /* to look like the #master input */
       margin-top: 5px;
-      white-space: nowrap;
+      word-break: break-all;
     }
   }
   
@@ -190,8 +195,6 @@ body {
       display: flex;
       align-items: baseline;
       justify-content: left;
-      /* float: left; */
-      /* margin-right: 40px; */
       
       label {
         margin-right: 10px;
@@ -199,12 +202,23 @@ body {
       span {
         margin: 0 10px;
       }
-      input {
+      input[type="text"] {
         width: auto;
-        /* border: 1px solid $background-highlight; */
       }
       .svg-inline--fa {
         padding: 0;
+      }
+      input[type="number"] {
+        width: 30px;
+        margin: 0 10px;
+        text-align: center;
+        -moz-appearance: textfield;
+        -webkit-appearance: textfield;
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
       }
     }
   }
@@ -219,7 +233,7 @@ body {
     max-width: 800px;
     /* margin: 0 auto 30px auto; */
     position: relative;
-    border-left: 1px solid darken($background-highlight, 5);
+    border-left: 1px solid $background-highlight;
     padding-left: 15px;
     margin: 0 10px 20px 40px;
     padding: 5px 15px 10px 15px;
