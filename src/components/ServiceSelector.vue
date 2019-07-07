@@ -1,11 +1,7 @@
 <template>
   <div class="service-selector container">
     <label class="typewriter">What is this password for?</label>
-    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" placeholder="e.g. gmail" :options="getServices()" v-on:input="onSelectChange" v-on:search:focus="onFocus" autocomplete="off"></v-select>
-    <!-- <div id="service-configs"> -->
-    <!--   <label>configurations:</label> -->
-    <!--   <span></span> -->
-    <!-- </div> -->
+    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" placeholder="e.g. gmail" :options="services" v-on:input="onSelectChange" v-on:search:focus="onFocus" autocomplete="off"></v-select>
   </div>
 </template>
 
@@ -13,7 +9,8 @@
 export default {
   name: 'ServiceSelector',
   props: {
-    value: String
+    value: String,
+    services: Array
   },
   methods: {
     getServices: function() {

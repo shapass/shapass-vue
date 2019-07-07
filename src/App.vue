@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <ServiceSelector v-model="service" v-on:input="generatePassword" />
-    <div class="container" id="master" v-if="service">
+    <ServiceSelector v-model="state.service" v-on:input="generatePassword" :services="this.state.services" />
+    <div class="container" id="master" v-if="state.service">
       <label class="typewriter" for="master-input">Your master password</label>
       <button class="btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />
@@ -9,9 +9,9 @@
       <button class="btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye" class="active" />
       </button>
-      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="master" v-focus v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard">
+      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-focus v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard">
     </div>
-    <div class="container" id="generated" v-if="generated">
+    <div class="container" id="generated" v-if="state.generated">
       <label class="typewriter">Generated password</label>
       <button class="btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />
@@ -24,21 +24,27 @@
       </button>
       <div v-html="generatedShown"></div>
     </div>
-    <div class="container clearfix" id="configurations" v-if="generated">
+    <div class="container clearfix" id="configurations" v-if="state.generated">
       <div id="length">
         <label class="typewriter">Length:</label>
         <button class="btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
           <font-awesome-icon icon="minus-square" />
         </button>
-        <input type="number" v-on:blur="setLengthEvent" :value="length"></input>
+        <input type="number" v-on:blur="setLengthEvent" :value="state.length"></input>
         <button class="btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
           <font-awesome-icon icon="plus-square" />
         </button>
       </div>
       <div id="suffix">
         <label class="typewriter" for="suffix-input">Suffix:</label>
-        <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="suffix" v-on:input="generatePassword" tabindex="-1">
+        <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" v-on:input="generatePassword" tabindex="-1">
       </div>
+      <button class="btn-save" @click="save" tabindex="-1">
+        <font-awesome-icon icon="save" />
+      </button>
+      <button class="btn-remove" @click="remove" tabindex="-1">
+        <font-awesome-icon icon="trash" />
+      </button>
     </div>
   </div>
 </template>
@@ -46,6 +52,7 @@
 <script>
 import ServiceSelector from './components/ServiceSelector.vue'
 import { Configs } from './config.js'
+import Store from './store.js'
 
 export default {
   name: 'app',
@@ -53,83 +60,88 @@ export default {
     ServiceSelector
   },
   methods: {
-    generatePassword: function() {
-      if (this.service !== null && this.service !== undefined) {
-        var input = this.service;
-        if (this.master !== null) {
-          input = `${input}${this.master}`;
+    generatePassword () {
+      if (this.state.service !== null && this.state.service !== undefined) {
+        var input = this.state.service;
+        if (this.state.master !== null) {
+          input = `${input}${this.state.master}`;
         }
-        var pass = this.shapass(input, this.length);
-        if (this.suffix !== null) {
-          pass = `${pass}${this.suffix.trim()}`;
+        var pass = this.shapass(input, this.state.length);
+        if (this.state.suffix !== null) {
+          pass = `${pass}${this.state.suffix.trim()}`;
         }
         this.setGeneratedPassword(pass);
       } else {
         this.setGeneratedPassword(null);
       }
     },
-    copyToClipboard: function() {
-      this.$copyText(this.generated).then(() => {
+    copyToClipboard () {
+      this.$copyText(this.state.generated).then(() => {
         this.$toasted.show('Copied', { duration: 500 });
         this.$el.children[1].getElementsByTagName('input')[0].focus();
       }, () => {
         this.$toasted.error('Could not copy', { duration: 500 });
       })
     },
-    toggleMasterPasswordType: function() {
+    toggleMasterPasswordType () {
       this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
     },
-    toggleGeneratedPasswordVisibility: function() {
+    toggleGeneratedPasswordVisibility () {
       if (this.isGeneratedPasswordVisible) {
         this.isGeneratedPasswordVisible = false;
       } else {
         this.isGeneratedPasswordVisible = true;
       }
-      this.setGeneratedPassword(this.generated);
+      this.setGeneratedPassword(this.state.generated);
     },
-    setGeneratedPassword: function(val) {
-      this.generated = val;
-      if (this.generated !== null) {
+    setGeneratedPassword (val) {
+      this.state.generated = val;
+      if (this.state.generated !== null) {
         let maskHtml = `<span class="censored">${this.mask}</span>`;
-        this.generatedCensored = this.applyMask(this.generated, maskHtml, this.suffix);
+        this.generatedCensored = this.applyMask(this.state.generated, maskHtml, this.state.suffix);
       } else {
         this.generatedCensored = null;
       }
       if (this.isGeneratedPasswordVisible) {
-        this.generatedShown = this.generated;
+        this.generatedShown = this.state.generated;
       } else {
         this.generatedShown = this.generatedCensored;
       }
     },
-    lengthAdd: function(v) {
-      this.setLength(this.length + v);
+    lengthAdd (v) {
+      this.setLength(this.state.length + v);
     },
-    setLength: function(v) {
-      let before = this.length;
-      this.length = v;
-      if (this.length < Configs.MIN_LENGTH) { this.length = Configs.MIN_LENGTH; }
-      if (this.length > Configs.MAX_LENGTH) { this.length = Configs.MAX_LENGTH; }
-      if (before != this.length) {
+    setLength (v) {
+      let before = this.state.length;
+      this.state.length = v;
+      if (this.state.length < Configs.MIN_LENGTH) { this.state.length = Configs.MIN_LENGTH; }
+      if (this.state.length > Configs.MAX_LENGTH) { this.state.length = Configs.MAX_LENGTH; }
+      if (before != this.state.length) {
         this.generatePassword();
       }
     },
-    setLengthEvent: function(e) {
+    setLengthEvent (e) {
       this.setLength(e.target.valueAsNumber);
+    },
+    save () {
+      Store.saveState();
+    },
+    remove () {
+      Store.removeService();
     }
   },
   data () {
     return {
-      service: null,
-      master: null,
-      generated: null,
+      state: Store.state,
       generatedCensored: null,
       generatedShown: null,
       isGeneratedPasswordVisible: false,
       mask: this.randomMask(),
-      masterPasswordType: "password",
-      length: Configs.DEFAULT_LENGTH,
-      suffix: null
+      masterPasswordType: "password"
     }
+  },
+  mounted () {
+    Store.updateStateServices();
   }
 }
 </script>

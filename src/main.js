@@ -4,7 +4,7 @@ import vSelect from 'vue-select';
 import Toasted from 'vue-toasted';
 import VueClipboard from 'vue-clipboard2';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 library.add(faEye);
@@ -12,6 +12,8 @@ library.add(faEyeSlash);
 library.add(faCopy);
 library.add(faPlusSquare);
 library.add(faMinusSquare);
+library.add(faSave);
+library.add(faTrash);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
