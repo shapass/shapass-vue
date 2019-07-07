@@ -61,7 +61,7 @@ export default {
         }
         var pass = this.shapass(input, this.length);
         if (this.suffix !== null) {
-          pass = `${pass}${this.suffix}`;
+          pass = `${pass}${this.suffix.trim()}`;
         }
         this.setGeneratedPassword(pass);
       } else {
