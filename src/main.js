@@ -20,11 +20,12 @@ Vue.config.productionTip = false;
 
 Vue.use(Toasted, {
   position: 'top-right',
-  duration: 1000,
+  duration: 3000,
   singleton: true
 });
 Vue.use(VueClipboard);
 Vue.component('v-select', vSelect);
+Vue.use(require('vue-shortkey'));
 
 Vue.directive('focus', {
   inserted: function (el) {

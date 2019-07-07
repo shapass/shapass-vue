@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <ServiceSelector v-model="state.service" v-on:input="generatePassword" :services="this.state.services" />
+    <ServiceSelector v-model="state.service" v-on:input="onServiceSelected" :services="savedServicesAsArray()" />
     <div class="container" id="master" v-if="state.service">
       <label class="typewriter" for="master-input">Your master password</label>
       <button class="btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1">
@@ -19,9 +19,6 @@
       <button class="btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
         <font-awesome-icon icon="eye" class="active" />
       </button>
-      <button class="btn-copy" @click="copyToClipboard" tabindex="-1">
-        <font-awesome-icon icon="copy" />
-      </button>
       <div v-html="generatedShown"></div>
     </div>
     <div class="container clearfix" id="configurations" v-if="state.generated">
@@ -30,7 +27,7 @@
         <button class="btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
           <font-awesome-icon icon="minus-square" />
         </button>
-        <input type="number" v-on:blur="setLengthEvent" :value="state.length"></input>
+        <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength"></input>
         <button class="btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
           <font-awesome-icon icon="plus-square" />
         </button>
@@ -39,11 +36,14 @@
         <label class="typewriter" for="suffix-input">Suffix:</label>
         <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" v-on:input="generatePassword" tabindex="-1">
       </div>
-      <button class="btn-save" @click="save" tabindex="-1">
+      <button class="btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
         <font-awesome-icon icon="save" />
       </button>
-      <button class="btn-remove" @click="remove" tabindex="-1">
+      <button class="btn-remove" @click="remove" tabindex="-1" v-shortkey="['ctrl', 'del']" @shortkey="remove">
         <font-awesome-icon icon="trash" />
+      </button>
+      <button class="btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey="['ctrl', 'c']" @shortkey="copyToClipboard">
+        <font-awesome-icon icon="copy" />
       </button>
     </div>
   </div>
@@ -60,13 +60,17 @@ export default {
     ServiceSelector
   },
   methods: {
+    onServiceSelected (e) {
+      Store.loadStateConfigs(e === null ? null : (typeof e === 'string' ? e : e.name));
+      this.generatePassword();
+    },
     generatePassword () {
       if (this.state.service !== null && this.state.service !== undefined) {
         var input = this.state.service;
         if (this.state.master !== null) {
           input = `${input}${this.state.master}`;
         }
-        var pass = this.shapass(input, this.state.length);
+        var pass = this.shapass(input, this.state.outputLength);
         if (this.state.suffix !== null) {
           pass = `${pass}${this.state.suffix.trim()}`;
         }
@@ -78,7 +82,7 @@ export default {
     copyToClipboard () {
       this.$copyText(this.state.generated).then(() => {
         this.$toasted.show('Copied', { duration: 500 });
-        this.$el.children[1].getElementsByTagName('input')[0].focus();
+        this.focusMasterPassword();
       }, () => {
         this.$toasted.error('Could not copy', { duration: 500 });
       })
@@ -109,30 +113,47 @@ export default {
       }
     },
     lengthAdd (v) {
-      this.setLength(this.state.length + v);
+      this.setLength(this.state.outputLength + v);
     },
     setLength (v) {
-      let before = this.state.length;
-      this.state.length = v;
-      if (this.state.length < Configs.MIN_LENGTH) { this.state.length = Configs.MIN_LENGTH; }
-      if (this.state.length > Configs.MAX_LENGTH) { this.state.length = Configs.MAX_LENGTH; }
-      if (before != this.state.length) {
+      let before = this.state.outputLength;
+      this.state.outputLength = v;
+      if (this.state.outputLength < Configs.MIN_LENGTH) { this.state.outputLength = Configs.MIN_LENGTH; }
+      if (this.state.outputLength > Configs.MAX_LENGTH) { this.state.outputLength = Configs.MAX_LENGTH; }
+      if (before != this.state.outputLength) {
         this.generatePassword();
       }
     },
     setLengthEvent (e) {
       this.setLength(e.target.valueAsNumber);
     },
+    focusMasterPassword () {
+      if (this.$el.children[1] !== undefined) {
+        this.$el.children[1].getElementsByTagName('input')[0].focus();
+      }
+    },
+    focusServiceSelector () {
+      if (this.$el.children[0] !== undefined) {
+        this.$el.children[0].getElementsByTagName('input')[0].focus();
+      }
+    },
     save () {
-      Store.saveState();
+      var saved = Store.saveStateConfigs();
+      this.$toasted.show(`Configuration ${saved.service} saved`);
     },
     remove () {
-      Store.removeService();
+      var removed = Store.removeService();
+      this.$toasted.show(`Configuration "${removed.service}" removed`);
+      this.focusServiceSelector();
+    },
+    savedServicesAsArray () {
+      return Store.savedServicesAsArray();
     }
   },
   data () {
     return {
       state: Store.state,
+      serviceSelected: null,
       generatedCensored: null,
       generatedShown: null,
       isGeneratedPasswordVisible: false,
@@ -141,7 +162,7 @@ export default {
     }
   },
   mounted () {
-    Store.updateStateServices();
+    Store.reloadServices();
   }
 }
 </script>

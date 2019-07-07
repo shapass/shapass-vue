@@ -1,7 +1,7 @@
 <template>
   <div class="service-selector container">
     <label class="typewriter">What is this password for?</label>
-    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" placeholder="e.g. gmail" :options="services" v-on:input="onSelectChange" v-on:search:focus="onFocus" autocomplete="off"></v-select>
+    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" placeholder="e.g. gmail" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" autocomplete="off"></v-select>
   </div>
 </template>
 
@@ -13,9 +13,6 @@ export default {
     services: Array
   },
   methods: {
-    getServices: function() {
-      return [];
-    },
     onSelectChange: function(v) {
       this.$emit('input', v)
     },
