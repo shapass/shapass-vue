@@ -15,7 +15,7 @@ $secondary: $orange;
 $active: $green;
 $background: $dark-blue;
 $background-highlight: $gray;
-$dark: $black;
+$dark: rgba(0, 0, 0, 0.6); //$black;
 $accent: $bright-blue;
 $bright: $white;
 
@@ -31,7 +31,16 @@ $notification-border-radius: 0;
 $notification-bg-color: $dark;
 $notification-border: 1px solid $primary;
 $icon-size: 16px;
-$placeholder-color: #333;
+$placeholder-color: rgba(255, 255, 255, 0.2);
+$navbar-bg-color: rgba(0, 0, 0, 0.4);
+$btn-border: 1px solid $primary;
+$btn-bg-color: $black;
+$btn-color: #fff;
+$btn-font-size: 14px;
+$btn-font-family: $body-font-family;
+$btn-border-hover: $btn-border;
+$btn-bg-color-hover: $primary;
+$btn-color-hover: $black;
 
 //
 // v-select
@@ -67,5 +76,35 @@ $mobile-width: 480px;
 @mixin mobile {
   @media only screen and (max-width: #{$mobile-width}) {
     @content;
+  }
+}
+
+
+//
+// Global styles
+//
+
+.btn-clean {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+
+.btn {
+  background: $btn-bg-color;
+  border: $btn-border;
+  color: $btn-color;
+  font-size: $btn-font-size;
+  padding: 5px 10px;
+  font-family: $btn-font-family;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s linear;
+
+  &:hover, &:active {
+    background: $btn-bg-color-hover;
+    border: $btn-border-hover;
+    color: $btn-color-hover;
   }
 }

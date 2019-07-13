@@ -29,6 +29,11 @@ export default {
   mounted () {
     // TODO: only on desktop
     this.$el.getElementsByTagName('input')[0].focus();
+  },
+  watch: {
+    value: function(val, oldVal) {
+      this.service = val;
+    }
   }
 }
 </script>

@@ -28,10 +28,12 @@ Vue.component('v-select', vSelect);
 Vue.use(require('vue-shortkey'));
 
 Vue.directive('focus', {
-  inserted: function (el) {
-    el.focus();
-    if (el.value !== undefined && el.value !== null) {
-      el.select();
+  inserted: function (el, e) {
+    if (!e.hasOwnProperty('value') || e.value) {
+      el.focus();
+      if (el.value !== undefined && el.value !== null) {
+        el.select();
+      }
     }
   }
 });
