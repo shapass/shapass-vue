@@ -36,6 +36,8 @@
         <label class="typewriter" for="suffix-input">Suffix:</label>
         <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" v-on:input="generatePassword" tabindex="-1">
       </div>
+    </div>
+    <div class="container clearfix" id="toolbar" v-if="state.generated">
       <button class="btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
         <font-awesome-icon icon="save" />
       </button>
@@ -179,14 +181,17 @@ body {
   font-family: $body-font-family;
   color: $body-font-color;
   height: 100%;
+  margin: 0;
+  padding: 0;
   
   #app {
-    margin: 60px auto;
+    margin: 0 auto;
+    padding: 60px 0;
     max-width: 600px;
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    height: 100%;
+    height: calc(100% - 120px);
     
     .censored {
       color: $background-highlight;
@@ -196,13 +201,13 @@ body {
   #master, #generated {
     .btn-toggle-visibility, .btn-copy {
       position: absolute;
-      top: 2px;
+      top: 5px;
       left: -40px;
     }
-    .btn-copy {
-      top: 30px;
-      left: -37px;
-    }
+    /* .btn-copy { */
+    /*   top: 30px; */
+    /*   left: -37px; */
+    /* } */
     
     input {
       margin-top: 5px;
@@ -223,6 +228,7 @@ body {
   #configurations {
     padding: 0;
     border: 0;
+    background: none;
     
     > div {
       display: flex;
@@ -255,6 +261,17 @@ body {
       }
     }
   }
+
+  #toolbar {
+    border: 0;
+    padding: 0;
+    background: none;
+
+    .svg-inline--fa {
+      font-size: 28px;
+      margin-right: 15px;
+    }
+  }
   
   
   /*
@@ -267,9 +284,12 @@ body {
     /* margin: 0 auto 30px auto; */
     position: relative;
     border-left: 1px solid $background-highlight;
-    padding-left: 15px;
+    /* background: #000; */
+    /* padding-left: 15px; */
     margin: 0 10px 20px 40px;
     padding: 5px 15px 10px 15px;
+    /* border: 1px solid $primary; */
+    /* padding: 5px 0; */
   }
   
   button {
