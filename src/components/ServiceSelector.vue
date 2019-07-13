@@ -1,5 +1,5 @@
 <template>
-  <div class="service-selector container">
+  <div class="service-selector">
     <label class="typewriter">What is this password for?</label>
     <v-select v-model="service" taggable selectOnTab filterable :clearable="false" placeholder="e.g. gmail" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" autocomplete="off"></v-select>
   </div>

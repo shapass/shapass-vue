@@ -1,6 +1,24 @@
 <template>
   <div id="app">
-    <ServiceSelector v-model="state.service" v-on:input="onServiceSelected" :services="savedServicesAsArray()" />
+    <div class="container">
+      <ServiceSelector v-model="state.service" v-on:input="onServiceSelected" :services="savedServicesAsArray()" />
+      <div class="clearfix" id="configurations" v-if="state.generated">
+        <div id="length">
+          <label class="typewriter">Length:</label>
+          <button class="btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
+            <font-awesome-icon icon="minus-square" />
+          </button>
+          <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength"></input>
+          <button class="btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
+            <font-awesome-icon icon="plus-square" />
+          </button>
+        </div>
+        <div id="suffix">
+          <label class="typewriter" for="suffix-input">Suffix:</label>
+          <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" v-on:input="generatePassword" tabindex="-1">
+        </div>
+      </div>
+    </div>
     <div class="container" id="master" v-if="state.service">
       <label class="typewriter" for="master-input">Your master password</label>
       <button class="btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1">
@@ -20,22 +38,6 @@
         <font-awesome-icon icon="eye" class="active" />
       </button>
       <div v-html="generatedShown"></div>
-    </div>
-    <div class="container clearfix" id="configurations" v-if="state.generated">
-      <div id="length">
-        <label class="typewriter">Length:</label>
-        <button class="btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
-          <font-awesome-icon icon="minus-square" />
-        </button>
-        <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength"></input>
-        <button class="btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
-          <font-awesome-icon icon="plus-square" />
-        </button>
-      </div>
-      <div id="suffix">
-        <label class="typewriter" for="suffix-input">Suffix:</label>
-        <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" v-on:input="generatePassword" tabindex="-1">
-      </div>
     </div>
     <div class="container clearfix" id="toolbar" v-if="state.generated">
       <button class="btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
@@ -226,9 +228,8 @@ body {
   }
   
   #configurations {
-    padding: 0;
-    border: 0;
     background: none;
+    margin-top: 10px;
     
     > div {
       display: flex;
