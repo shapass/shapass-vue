@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-  <Navbar :stepChanged="stepChanged" />
+  <Navbar :stepChanged="stepChanged" :currentUser="this.currentUser" />
   <div id="content">
     <div class="container" id="service">
       <ServiceSelector v-model="state.service" :services="savedServicesAsArray()" />
@@ -77,7 +77,7 @@ export default {
     ServiceSelector
   },
   watch: {
-    "state.service": function(val, oldVal) {
+    "state.service" (val, _) {
       Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
       this.generatePassword();
     }
@@ -177,6 +177,7 @@ export default {
       this.step = v;
       if (this.step != null) {
         this.state.service = Configs.SHAPASS_SERVICE;
+        // TODO: set default length and suffix
         this.focusEmail();
       } else {
         this.state.service = null;
@@ -184,10 +185,26 @@ export default {
       }
     },
     login () {
-      // TODO
+      console.log("sign in with:", this.email, this.state.generated);
+      this.apiLogin(this.email, this.state.generated, (r) => {
+        if (r) {
+          this.currentUser = this.email;
+          this.$toasted.success('Welcome!');
+        } else {
+          this.currentUser = null;
+          this.$toasted.error('Incorrect email or password, try again');
+        }
+      });
     },
     register () {
-      // TODO
+      console.log("signup in with:", this.email, this.state.generated);
+      this.apiSignUp(this.email, this.state.generated, (r) => {
+        if (r) {
+          this.$toasted.success('Welcome!');
+        } else {
+          this.$toasted.error('Error registering');
+        }
+      });
     }
   },
   data () {
@@ -199,12 +216,23 @@ export default {
       isGeneratedPasswordVisible: false,
       mask: this.randomMask(),
       masterPasswordType: "password",
+
+      // TODO: move these to a "current_user" shared store
       step: null,
-      email: null
+      email: null,
+      currentUser: null
     }
   },
   mounted () {
     Store.reloadServices();
+    // this.apiMe((email) => {
+    //   console.log(email);
+    //   if (email) {
+    //     this.$toasted.success('Welcome!');
+    //   } else {
+    //     this.$toasted.error('Error registering');
+    //   }
+    // });
   }
 }
 </script>
