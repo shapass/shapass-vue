@@ -210,229 +210,99 @@ export default {
 </script>
 
 <style lang="scss">
-html {
+
+#app {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   height: 100%;
 }
 
-body {
-  background: $body-background;
-  font-size: $body-font-size;
-  @include mobile { font-size: $m-body-font-size; }
-  font-family: $body-font-family;
-  color: $body-font-color;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  
-  #app {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    height: 100%;
-    
-    .censored {
-      color: $background-highlight;
-    }
-  }
+#content {
+  margin: 0 auto;
+  padding: 20px 0;
+  max-width: 600px;
+}
 
-  #content {
-    margin: 0 auto;
-    padding: 20px 0;
-    max-width: 600px;
-  }
-  
-  #master, #generated {
-    .btn-toggle-visibility, .btn-copy {
-      position: absolute;
-      top: 5px;
-      left: -40px;
-    }
-    /* .btn-copy { */
-    /*   top: 30px; */
-    /*   left: -37px; */
-    /* } */
-    
-    input {
-      margin-top: 5px;
-    }
-  }
-  
-  #generated {
-    /* background: $dark; //$background-highlight; */
-    /* border: 1px solid $primary; */
-    
-    div {
-      padding: 1px 0; /* to look like the #master input */
-      margin-top: 5px;
-      word-break: break-all;
-    }
-  }
-  
-  #configurations {
-    background: none;
-    margin-top: 10px;
-    
-    > div {
-      display: flex;
-      align-items: baseline;
-      justify-content: left;
-      
-      label {
-        margin-right: 10px;
-      }
-      span {
-        margin: 0 10px;
-      }
-      input[type="text"] {
-        width: auto;
-      }
-      .svg-inline--fa {
-        padding: 0;
-      }
-      input[type="number"] {
-        width: 30px;
-        margin: 0 10px;
-        text-align: center;
-        -moz-appearance: textfield;
-        -webkit-appearance: textfield;
-        &::-webkit-outer-spin-button,
-        &::-webkit-inner-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-      }
-    }
-  }
-
-  #toolbar {
-    border: 0;
-    padding: 0;
-    background: none;
-
-    .svg-inline--fa {
-      font-size: 28px;
-      margin-right: 15px;
-    }
-  }
-
-  #login-registration-buttons {
-    border: 0;
-    padding: 10px 0;
-  }
-  
-  
-  /*
-   * Global classes
-   */
-  
-  .container {
-    /* width: 100%; */
-    max-width: 800px;
-    /* margin: 0 auto 30px auto; */
-    position: relative;
-    border-left: 1px solid $background-highlight;
-    /* background: #000; */
-    /* padding-left: 15px; */
-    margin: 0 10px 20px 40px;
-    padding: 5px 15px 10px 15px;
-    /* border: 1px solid $primary; */
-    /* padding: 5px 0; */
-    /* transition: all 0.2s linear; */
-  }
-  
-  button {
-    outline: none;
-    padding: 0;
-    border: 0;
-    margin: 0;
-    background: none;
+#master, #generated {
+  .btn-toggle-visibility, .btn-copy {
+    position: absolute;
+    top: 5px;
+    left: -40px;
   }
   
   input {
-    background: none;
-    border: 0;
-    font-size: $body-font-size;
-    @include mobile { font-size: $m-body-font-size; }
-    margin: 0;
-    width: 100%;
-    outline: none;
-    background: none;
-    font-family: $input-font-family;
-    /* padding: 10px; */
-    /* border: 1px solid darken($body-background, 10); */
-    /* border-radius: 4px; */
-    color: $body-font-color;
+    margin-top: 5px;
   }
-  input:focus {
-    outline: none;
-    /* border-color: $primary; */
-  }
-  input::placeholder {
-    color: $placeholder-color;
-    opacity: 0.8;
-    font-size: $body-font-size;
-    @include mobile { font-size: $m-body-font-size; }
-  }
-  label {
-    text-transform: uppercase;
-    font-size: $label-font-size;
-    @include mobile { font-size: $m-label-font-size; }
-    color: $label-color;
-    display: inline;
-    
-    /* &.typewriter { */
-    /*   height: 14px; */
-    /*   overflow: hidden; */
-    /*   white-space: nowrap; /\* Keeps the content on a single line *\/ */
-    /*   margin: 0 auto; /\* Gives that scrolling effect as the typing happens *\/ */
-    /*   animation:  */
-    /*     typing 2s steps(40, end); */
-    /* } */
-  }
+}
+
+#generated {
+  /* background: $dark; //$background-highlight; */
+  /* border: 1px solid $primary; */
   
-  @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
+  div {
+    padding: 1px 0; /* to look like the #master input */
+    margin-top: 5px;
+    word-break: break-all;
   }
-  
-  .toasted.toasted-primary {
-    border-radius: $notification-border-radius;
-    
-    &.default {
-      background-color: $notification-bg-color;
-      border: $notification-border;
-    }
-  }
-  
-  .svg-inline--fa {
-    font-size: $icon-size;
-    @include mobile { font-size: $m-icon-size; }
-    cursor: pointer;
-    padding: 5px;
-    transition:
-      background .2s linear,
-      color .2s linear;
-    
+
+  .censored {
     color: $background-highlight;
-    &:hover {
-      color: $secondary;
-    }
+  }
+}
+
+#configurations {
+  background: none;
+  margin-top: 10px;
+  
+  > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: left;
     
-    &.active {
-      color: $primary;
-      &:hover {
-        color: $orange;
+    label {
+      margin-right: 10px;
+    }
+    span {
+      margin: 0 10px;
+    }
+    input[type="text"] {
+      width: auto;
+    }
+    .svg-inline--fa {
+      padding: 0;
+    }
+    input[type="number"] {
+      width: 30px;
+      margin: 0 10px;
+      text-align: center;
+      -moz-appearance: textfield;
+      -webkit-appearance: textfield;
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
       }
     }
   }
+}
 
-  .clearfix::after {
-    content: " ";
-    display: block;
-    height: 0;
-    clear: both;
+#toolbar {
+  border: 0;
+  padding: 0;
+  background: none;
+
+  .svg-inline--fa {
+    font-size: 28px;
+    margin-right: 15px;
   }
 }
+
+#login-registration-buttons {
+  border: 0;
+  padding: 10px 0;
+}
+
 </style>

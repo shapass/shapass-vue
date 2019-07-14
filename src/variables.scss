@@ -84,9 +84,45 @@ $mobile-width: 480px;
 // Global styles
 //
 
-.btn-clean {
+html {
+  height: 100%;
+}
+
+body {
+  background: $body-background;
+  font-size: $body-font-size;
+  @include mobile { font-size: $m-body-font-size; }
+  font-family: $body-font-family;
+  color: $body-font-color;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  /* width: 100%; */
+  max-width: 800px;
+  /* margin: 0 auto 30px auto; */
+  position: relative;
+  border-left: 1px solid $background-highlight;
+  /* background: #000; */
+  /* padding-left: 15px; */
+  margin: 0 10px 20px 40px;
+  padding: 5px 15px 10px 15px;
+  /* border: 1px solid $primary; */
+  /* padding: 5px 0; */
+  /* transition: all 0.2s linear; */
+}
+
+button {
+  outline: none;
+  padding: 0;
   border: 0;
+  margin: 0;
   background: none;
+}
+
+.btn-clean {
   cursor: pointer;
   transition: all 0.2s linear;
 }
@@ -107,4 +143,89 @@ $mobile-width: 480px;
     border: $btn-border-hover;
     color: $btn-color-hover;
   }
+}
+
+input {
+  background: none;
+  border: 0;
+  font-size: $body-font-size;
+  @include mobile { font-size: $m-body-font-size; }
+  margin: 0;
+  width: 100%;
+  outline: none;
+  background: none;
+  font-family: $input-font-family;
+  /* padding: 10px; */
+  /* border: 1px solid darken($body-background, 10); */
+  /* border-radius: 4px; */
+  color: $body-font-color;
+}
+input:focus {
+  outline: none;
+  /* border-color: $primary; */
+}
+input::placeholder {
+  color: $placeholder-color;
+  opacity: 0.8;
+  font-size: $body-font-size;
+  @include mobile { font-size: $m-body-font-size; }
+}
+label {
+  text-transform: uppercase;
+  font-size: $label-font-size;
+  @include mobile { font-size: $m-label-font-size; }
+  color: $label-color;
+  display: inline;
+
+  /* &.typewriter { */
+  /*   height: 14px; */
+  /*   overflow: hidden; */
+  /*   white-space: nowrap; /\* Keeps the content on a single line *\/ */
+  /*   margin: 0 auto; /\* Gives that scrolling effect as the typing happens *\/ */
+  /*   animation:  */
+  /*     typing 2s steps(40, end); */
+  /* } */
+}
+
+// @keyframes typing {
+//   from { width: 0 }
+//   to { width: 100% }
+// }
+
+.toasted.toasted-primary {
+  border-radius: $notification-border-radius;
+
+  &.default {
+    background-color: $notification-bg-color;
+    border: $notification-border;
+  }
+}
+
+.svg-inline--fa {
+  font-size: $icon-size;
+  @include mobile { font-size: $m-icon-size; }
+  cursor: pointer;
+  padding: 5px;
+  transition:
+    background .2s linear,
+    color .2s linear;
+
+  color: $background-highlight;
+  &:hover {
+    color: $secondary;
+  }
+
+  &.active {
+    color: $primary;
+    &:hover {
+      color: $orange;
+    }
+  }
+}
+
+.clearfix::after {
+  content: " ";
+  display: block;
+  height: 0;
+  clear: both;
 }
