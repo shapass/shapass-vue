@@ -1,7 +1,7 @@
 <template>
   <div class="service-selector">
     <label class="typewriter">What is this password for?</label>
-    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" placeholder="e.g. gmail" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" autocomplete="off"></v-select>
+    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="$isMobile() ? 'Click here to start' : 'e.g. gmail'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" autocomplete="off"></v-select>
   </div>
 </template>
 
@@ -27,8 +27,9 @@ export default {
     }
   },
   mounted () {
-    // TODO: only on desktop
-    this.$el.getElementsByTagName('input')[0].focus();
+    if (!this.$isMobile()) {
+      this.$el.getElementsByTagName('input')[0].focus();
+    }
   },
   watch: {
     value: function(val, oldVal) {
@@ -109,6 +110,12 @@ export default {
     }
   }
 }
+
+/* TODO: make it look like a button to press on */
+/* .mobile .v-select:not(.vs--open) .vs__dropdown-toggle { */
+/*   background: $dark; */
+/*   border: 1px solid $primary; */
+/* } */
 </style>
 
 

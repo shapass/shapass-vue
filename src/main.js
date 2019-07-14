@@ -7,6 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import axios from 'axios';
+import VueMobileDetection from "vue-mobile-detection";
 
 library.add(faEye);
 library.add(faEyeSlash);
@@ -27,6 +28,7 @@ Vue.use(Toasted, {
 Vue.use(VueClipboard);
 Vue.component('v-select', vSelect);
 Vue.use(require('vue-shortkey'));
+Vue.use(VueMobileDetection);
 
 Vue.directive('focus', {
   inserted: function (el, e) {

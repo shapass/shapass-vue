@@ -1,5 +1,5 @@
 <template>
-<div id="app">
+<div id="app" v-bind:class="{ mobile: this.$isMobile() }">
   <Navbar :stepChanged="stepChanged" :currentUser="this.currentUser" />
   <div id="content">
     <div class="container" id="service">
@@ -45,21 +45,21 @@
       </button>
       <div v-html="generatedShown"></div>
     </div>
-    <div class="container clearfix" id="toolbar" v-if="state.generated && step == null">
-      <button class="btn-clean btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
-        <font-awesome-icon icon="save" />
-      </button>
-      <button class="btn-clean btn-remove" @click="remove" tabindex="-1" v-shortkey="['ctrl', 'del']" @shortkey="remove">
-        <font-awesome-icon icon="trash" />
-      </button>
-      <button class="btn-clean btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey="['ctrl', 'c']" @shortkey="copyToClipboard">
-        <font-awesome-icon icon="copy" />
-      </button>
-    </div>
     <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && step != null">
       <button class="btn btn-login" @click="login" v-if="step == 'Login'">Login</button>
       <button class="btn btn-register" @click="register" v-if="step == 'Register'">Register</button>
     </div>
+  </div>
+  <div class="clearfix" id="toolbar" v-if="state.generated && step == null">
+    <button class="btn-clean btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
+      <font-awesome-icon icon="save" />
+    </button>
+    <button class="btn-clean btn-remove" @click="remove" tabindex="-1" v-shortkey="['ctrl', 'del']" @shortkey="remove">
+      <font-awesome-icon icon="trash" />
+    </button>
+    <button class="btn-clean btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey="['ctrl', 'c']" @shortkey="copyToClipboard">
+      <font-awesome-icon icon="copy" />
+    </button>
   </div>
 </div>
 </template>
@@ -100,10 +100,10 @@ export default {
     },
     copyToClipboard () {
       this.$copyText(this.state.generated).then(() => {
-        this.$toasted.show('Copied', { duration: 500 });
+        this.$toasted.show('Copied', { duration: 1000 });
         this.focusMasterPassword();
       }, () => {
-        this.$toasted.error('Could not copy', { duration: 500 });
+        this.$toasted.error('Could not copy', { duration: 1000 });
       })
     },
     toggleMasterPasswordType () {
@@ -260,7 +260,7 @@ export default {
     top: 5px;
     left: -40px;
   }
-  
+
   input {
     margin-top: 5px;
   }
@@ -269,7 +269,7 @@ export default {
 #generated {
   /* background: $dark; //$background-highlight; */
   /* border: 1px solid $primary; */
-  
+
   div {
     padding: 1px 0; /* to look like the #master input */
     margin-top: 5px;
@@ -284,12 +284,12 @@ export default {
 #configurations {
   background: none;
   margin-top: 10px;
-  
+
   > div {
     display: flex;
     align-items: baseline;
     justify-content: left;
-    
+
     label {
       margin-right: 10px;
     }
@@ -320,11 +320,27 @@ export default {
 #toolbar {
   border: 0;
   padding: 0;
+  margin: 0;
   background: none;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  text-align: center;
+  background: $toolbar-bg-color;
+  width: 100%;
 
   .svg-inline--fa {
     font-size: 28px;
     margin-right: 15px;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid transparent;
+
+    &:hover {
+      background: $black;
+      border: $btn-border;
+    }
   }
 }
 

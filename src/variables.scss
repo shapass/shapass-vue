@@ -28,7 +28,7 @@ $label-font-size: 12px;
 $label-color: #fff;
 $input-font-family: $body-font-family;
 $notification-border-radius: 0;
-$notification-bg-color: $dark;
+$notification-bg-color: $black;
 $notification-border: 1px solid $primary;
 $icon-size: 16px;
 $placeholder-color: rgba(255, 255, 255, 0.2);
@@ -41,6 +41,7 @@ $btn-font-family: $body-font-family;
 $btn-border-hover: $btn-border;
 $btn-bg-color-hover: $primary;
 $btn-color-hover: $black;
+$toolbar-bg-color: rgba(0, 0, 0, 0.4);
 
 //
 // v-select
