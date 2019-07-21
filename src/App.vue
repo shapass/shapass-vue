@@ -11,7 +11,7 @@
     </div>
     <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your master password:</label>
-      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
+      <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
     </div>
     <div class="container" id="generated" v-if="state.generated && state.master !== null && state.master !== ''">
       <label class="typewriter">Generated password:</label>
@@ -21,11 +21,11 @@
         <!-- <label class="typewriter">Configure the generated password:</label> -->
         <div id="length">
           <label class="typewriter">Length:</label>
-          <button class="btn-clean btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
+          <button class="btn btn-ico btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
             <font-awesome-icon icon="minus-square" />
           </button>
           <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength" />
-          <button class="btn-clean btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
+          <button class="btn btn-ico btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
             <font-awesome-icon icon="plus-square" />
           </button>
         </div>
@@ -43,13 +43,13 @@
   </div>
 
   <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
-    <button class="btn-clean btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
+    <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
       <font-awesome-icon icon="save" />
     </button>
-    <button class="btn-clean btn-remove" @click="remove" tabindex="-1" v-shortkey="['ctrl', 'del']" @shortkey="remove">
+    <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey="['ctrl', 'del']" @shortkey="remove">
       <font-awesome-icon icon="trash" />
     </button>
-    <button class="btn-clean btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey="['ctrl', 'c']" @shortkey="copyToClipboard">
+    <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey="['ctrl', 'c']" @shortkey="copyToClipboard">
       <font-awesome-icon icon="copy" />
     </button>
 
@@ -59,10 +59,10 @@
       <!-- <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1"> -->
       <!--   <font-awesome-icon icon="eye" class="active" /> -->
       <!-- </button> -->
-      <button class="btn-clean btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="togglePasswordVisibility" tabindex="-1">
+      <button class="btn btn-ico btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="togglePasswordVisibility" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />
       </button>
-      <button class="btn-clean btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="togglePasswordVisibility" tabindex="-1">
+      <button class="btn btn-ico btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="togglePasswordVisibility" tabindex="-1">
         <font-awesome-icon icon="eye" class="active" />
       </button>
 
@@ -271,7 +271,7 @@ export default {
 #content {
   margin: 0 auto;
   padding: 0;
-  max-width: 600px;
+  max-width: $content-width;
 }
 
 #master, #generated {
@@ -285,13 +285,13 @@ export default {
     margin-top: 5px;
     word-break: break-all;
     padding: 10px 15px;
-    background: $background-highlight;
-    border: none;
-    color: $white;
+    background: $generated-input-bg;
+    border: $generated-input-border;
+    color: $generated-input-color;
   }
 
   .censored {
-    color: $background-dark; //$background-highlight;
+    color: $generated-input-censored-color;
   }
 }
 
@@ -338,28 +338,29 @@ export default {
 #toolbar {
   border: 0;
   padding: 0;
-  margin: 0;
   background: none;
   position: absolute;
   bottom: 0;
   right: 0;
   left: 0;
   text-align: center;
-  background: $toolbar-bg-color;
-  width: 100%;
-  /* border-top: 1px solid $dark-gray; */
+  background: $toolbar-bg;
+  border: $toolbar-border;
+  border-bottom: none;
+  width: auto;
+  max-width: $toolbar-width;
+  margin: 0 auto;
+
+  button {
+    width: 20%;
+  }
 
   .svg-inline--fa {
     font-size: 24px;
-    margin-right: 15px;
-    padding: 15px;
-    margin: 0 5px;
+    padding: 15px 0;
+    margin: 0;
     border: 1px solid transparent;
-
-    &:hover {
-      background: $black;
-      border: $btn-border;
-    }
+    width: 100%;
   }
 }
 
@@ -367,5 +368,4 @@ export default {
   border: 0;
   padding: 10px 0;
 }
-
 </style>

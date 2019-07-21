@@ -36,7 +36,8 @@ export default {
 
 <style lang="scss">
 #navbar {
-  background: $navbar-bg-color;
+  background: $navbar-bg;
+  border-bottom: $navbar-border-bottom;
   padding: 10px 20px;
   text-align: right;
   /* border-bottom: 1px solid $dark-gray; */
