@@ -1,10 +1,10 @@
 <template>
 <div id="app" v-bind:class="{ mobile: this.$isMobile() }">
-  <Navbar :stepChanged="stepChanged" :currentUser="this.currentUser" />
+  <Navbar :stepChanged="stepChanged" :currentUser="currentUser" />
   <div id="content">
     <div class="container" id="service">
-      <ServiceSelector v-model="state.service" :services="savedServicesAsArray()" />
-      <div class="clearfix" id="configurations" v-if="state.generated && step == null">
+      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" />
+      <div class="clearfix" id="configurations" v-if="state.generated && !currentUser.isSigningInOrRegistering()">
         <div id="length">
           <label class="typewriter">Length:</label>
           <button class="btn-clean btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
@@ -21,11 +21,11 @@
         </div>
       </div>
     </div>
-    <div class="container" id="email" v-if="step != null">
+    <div class="container" id="email" v-if="currentUser.isSigningInOrRegistering()">
       <label class="typewriter" for="master-input">Your email</label>
-      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="email" v-focus>
+      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus>
     </div>
-    <div class="container" id="master" v-if="state.service || step != null">
+    <div class="container" id="master" v-if="state.service || currentUser.isSigningInOrRegistering()">
       <label class="typewriter" for="master-input">Your master password</label>
       <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />
@@ -33,9 +33,9 @@
       <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye" class="active" />
       </button>
-      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="step == null">
+      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isSigningInOrRegistering()">
     </div>
-    <div class="container" id="generated" v-if="state.generated || step != null">
+    <div class="container" id="generated" v-if="state.generated || currentUser.isSigningInOrRegistering()">
       <label class="typewriter">Generated password</label>
       <button class="btn-clean btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />
@@ -45,12 +45,12 @@
       </button>
       <div v-html="generatedShown"></div>
     </div>
-    <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && step != null">
-      <button class="btn btn-login" @click="login" v-if="step == 'Login'">Login</button>
-      <button class="btn btn-register" @click="register" v-if="step == 'Register'">Register</button>
+    <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isSigningInOrRegistering()">
+      <button class="btn btn-login" @click="login" v-if="currentUser.isSigningIn()">Login</button>
+      <button class="btn btn-register" @click="register" v-if="currentUser.isRegistering()">Register</button>
     </div>
   </div>
-  <div class="clearfix" id="toolbar" v-if="state.generated && step == null">
+  <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isSigningInOrRegistering()">
     <button class="btn-clean btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
       <font-awesome-icon icon="save" />
     </button>
@@ -69,6 +69,8 @@ import Navbar from './components/Navbar.vue'
 import ServiceSelector from './components/ServiceSelector.vue'
 import { Configs } from './config.js'
 import Store from './store.js'
+import API from './api.js'
+import CurrentUser from './current_user.js'
 
 export default {
   name: 'app',
@@ -162,20 +164,26 @@ export default {
       this.focusInput('#service');
     },
     save () {
-      var saved = Store.saveStateConfigs();
-      this.$toasted.show(`Configuration ${saved.service} saved`);
+      Store.saveCurrentState((r, saved) => {
+        if (r) {
+          this.$toasted.show(`Configuration ${saved.service} saved`);
+        } else {
+          this.$toasted.error(`Error saving`);
+        }
+      });
     },
     remove () {
-      var removed = Store.removeService();
-      this.$toasted.show(`Configuration "${removed.service}" removed`);
-      this.focusServiceSelector();
-    },
-    savedServicesAsArray () {
-      return Store.savedServicesAsArray();
+      var removed = Store.removeService((r, removed) => {
+        if (r) {
+          this.$toasted.show(`Configuration "${removed.service}" removed`);
+          this.focusServiceSelector();
+        } else {
+          this.$toasted.error(`Error removing`);
+        }
+      });
     },
     stepChanged (v) {
-      this.step = v;
-      if (this.step != null) {
+      if (this.currentUser.isSigningInOrRegistering() != null) {
         this.state.service = Configs.SHAPASS_SERVICE;
         // TODO: set default length and suffix
         this.focusEmail();
@@ -185,54 +193,49 @@ export default {
       }
     },
     login () {
-      console.log("sign in with:", this.email, this.state.generated);
-      this.apiLogin(this.email, this.state.generated, (r) => {
+      currentUser.login(this.inputEmail, this.state.generated, (r, token) => {
         if (r) {
-          this.currentUser = this.email;
           this.$toasted.success('Welcome!');
+          this.afterLogin();
         } else {
-          this.currentUser = null;
           this.$toasted.error('Incorrect email or password, try again');
         }
       });
     },
     register () {
-      console.log("signup in with:", this.email, this.state.generated);
-      this.apiSignUp(this.email, this.state.generated, (r) => {
+      console.log("signup in with:", this.inputEmail, this.state.generated);
+      this.apiSignUp(this.inputEmail, this.state.generated, (r) => {
         if (r) {
           this.$toasted.success('Welcome!');
         } else {
           this.$toasted.error('Error registering');
         }
       });
+    },
+    afterLogin () {
+      Store.reloadServices();
     }
   },
   data () {
     return {
-      state: Store.state,
-      serviceSelected: null,
-      generatedCensored: null,
-      generatedShown: null,
-      isGeneratedPasswordVisible: false,
-      mask: this.randomMask(),
-      masterPasswordType: "password",
+      state: Store.state,                 // shared state info
+      currentUser: CurrentUser,           // shared user info
 
-      // TODO: move these to a "current_user" shared store
-      step: null,
-      email: null,
-      currentUser: null
+      inputEmail: null,                   // the email current in the input
+      generatedCensored: null,            // censored version of the generated password
+      generatedShown: null,               // clear text version of the generated password
+      isGeneratedPasswordVisible: false,  // are we showing the clear text version?
+      mask: this.randomMask(),            // mask to censor the generated password
+      masterPasswordType: "password",     // input type to control visibility of the master password
     }
   },
   mounted () {
-    Store.reloadServices();
-    // this.apiMe((email) => {
-    //   console.log(email);
-    //   if (email) {
-    //     this.$toasted.success('Welcome!');
-    //   } else {
-    //     this.$toasted.error('Error registering');
-    //   }
-    // });
+    // TODO: show loading while loading
+    this.currentUser.checkSignedIn(r => {
+      if (r) {
+        Store.reloadServices();
+      }
+    });
   }
 }
 </script>

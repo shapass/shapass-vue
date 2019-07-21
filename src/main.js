@@ -8,6 +8,7 @@ import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare, faSave, faTrash
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import axios from 'axios';
 import VueMobileDetection from "vue-mobile-detection";
+import { Configs } from './config.js';
 
 library.add(faEye);
 library.add(faEyeSlash);
@@ -71,44 +72,12 @@ Vue.mixin({
       return result;
     },
 
-    // TODO: move to an API-only component
-    // apiMe: function(email, pw, callback) {
-    //   axios
-    //     .post('https://shapass.com/api/me')
-    //     .then(response => {
-    //       console.log('success:', response.data);
-    //       if (response.data.Status === 'OK') {
-    //         callback(true);
-    //       } else {
-    //         callback(false);
-    //       }
-    //     })
-    //     .catch(error => {
-    //       callback(false);
-    //     });
-    // },
-    apiLogin: function(email, pw, callback) {
-      axios
-      // .post('https://shapass.com/api/login', `{ "email": ${email}, "password": ${pw} }`)
-        .post(`https://shapass.com/api/login?email=${email}&password=${pw}`)
-        .then(response => {
-          console.log('success:', response.data);
-          if (response.data.Status === 'OK') {
-            callback(true);
-          } else {
-            callback(false);
-          }
-        })
-        .catch(error => {
-          callback(false);
-        });
-    },
     apiSignUp: function(email, pw, callback) {
       axios
-      // .post('https://shapass.com/api/login', `{ "email": ${email}, "password": ${pw} }`)
-        .post(`https://shapass.com/api/signup?email=${email}&password=${pw}`)
+      // .post(`${Configs.API_URL}/login`, `{ "email": ${email}, "password": ${pw} }`)
+        .post(`${Configs.API_URL}/signup?email=${email}&password=${pw}`)
         .then(response => {
-          console.log('success:', response.data);
+          console.log('signup:', response.data);
           if (response.data.Status === 'OK') {
             callback(true);
           } else {
@@ -119,11 +88,21 @@ Vue.mixin({
           callback(false);
         });
     },
-    apiLogout: function(callback) {
+    apiCreate: function(name, length, prefix, suffix, callback) {
+      var url =`${Configs.API_URL}/create?name=${name}`;
+      if (length !== null && length !== undefined) {
+        url = `${url}&length=${length}`;
+      }
+      if (prefix !== null && prefix !== undefined) {
+        url = `${url}&prefix=${prefix}`;
+      }
+      if (suffix !== null && suffix !== undefined) {
+        url = `${url}&suffix=${suffix}`;
+      }
       axios
-        .post('https://shapass.com/api/logout')
+        .post(url)
         .then(response => {
-          console.log('success:', response.data);
+          console.log('create:', response.data);
           if (response.data.Status === 'OK') {
             callback(true);
           } else {
@@ -133,7 +112,7 @@ Vue.mixin({
         .catch(error => {
           callback(false);
         });
-    }
+    },
   }
 });
 

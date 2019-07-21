@@ -1,10 +1,10 @@
 <template>
 <div id="navbar" class="clearfix">
-  <label class="user-email" v-if="user">{{ user }}</label>
-  <button class="btn" v-on:click="setStep()" v-if="this.step != null && user == null">< back</button>
-  <button class="btn" v-on:click="setStep('Login')" v-if="this.step == null && user == null">Login</button>
-  <button class="btn" v-on:click="setStep('Register')" v-if="this.step == null && user == null">Register</button>
-  <button class="btn" v-on:click="logout" v-if="this.step == null && user != null">Logout</button>
+  <label class="user-email" v-if="currentUser.isSignedIn()">{{ currentUser.state.email }}</label>
+  <button class="btn" v-on:click="setStep()" v-if="currentUser.isSigningInOrRegistering()">< back</button>
+  <button class="btn" v-on:click="setStep('Login')" v-if="!currentUser.isSigningInOrRegistering() && !currentUser.isSignedIn()">Login</button>
+  <button class="btn" v-on:click="setStep('Register')" v-if="!currentUser.isSigningInOrRegistering() && !currentUser.isSignedIn()">Register</button>
+  <button class="btn" v-on:click="logout" v-if="currentUser.isSignedIn()">Logout</button>
 </div>
 </template>
 
@@ -13,37 +13,22 @@ export default {
   name: 'Navbar',
   props: {
     stepChanged: Function,
-    currentUser: String
+    currentUser: Object
   },
   methods: {
     setStep (v) {
-      this.step = v;
+      this.currentUser.setStep(v);
       this.stepChanged(v);
     },
     logout () {
-      this.apiLogout((r) => {
+      this.currentUser.logout(r => {
         if (r) {
-          this.currentUser = null;
           this.$toasted.success('Bye!');
         } else {
           this.$toasted.error('Something went wrong :(');
         }
       });
     },
-  },
-  watch: {
-    currentUser (v) {
-      this.user = v;
-      if (this.user !== null) {
-        this.setStep(null);
-      }
-    }
-  },
-  data () {
-    return {
-      step: null,
-      user: null
-    }
   }
 }
 </script>
