@@ -72,13 +72,13 @@ const API = {
     });
   },
   logout (callback) {
-    this.request('logout', 'post', this.loginData(), (r, d) => {
+    this.request('logout', 'post', this.loginData(), (r) => {
       callback(r);
     });
   },
   signup (email, password, callback) {
     var data = { email: email, password: password };
-    this.request('signup', 'post', data, (r, d) => {
+    this.request('signup', 'post', data, (r) => {
       if (r) {
         callback(true);
       } else {

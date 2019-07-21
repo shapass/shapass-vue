@@ -4,13 +4,13 @@
   <div id="content">
     <div class="container" id="service">
       <ServiceSelector v-model="state.service" :services="state.servicesForSelect" />
-      <div class="clearfix" id="configurations" v-if="state.generated && !currentUser.isSigningInOrRegistering()">
+      <div class="clearfix" id="configurations" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
         <div id="length">
           <label class="typewriter">Length:</label>
           <button class="btn-clean btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
             <font-awesome-icon icon="minus-square" />
           </button>
-          <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength"></input>
+          <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength" />
           <button class="btn-clean btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
             <font-awesome-icon icon="plus-square" />
           </button>
@@ -21,11 +21,11 @@
         </div>
       </div>
     </div>
-    <div class="container" id="email" v-if="currentUser.isSigningInOrRegistering()">
+    <div class="container" id="email" v-if="currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your email</label>
-      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus="currentUser.isSigningInOrRegistering()">
+      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()">
     </div>
-    <div class="container" id="master" v-if="state.service || currentUser.isSigningInOrRegistering()">
+    <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your master password</label>
       <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />
@@ -33,9 +33,9 @@
       <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye" class="active" />
       </button>
-      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isSigningInOrRegistering()">
+      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isLoggingInOrSigningUp()">
     </div>
-    <div class="container" id="generated" v-if="state.generated || currentUser.isSigningInOrRegistering()">
+    <div class="container" id="generated" v-if="state.generated || currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter">Generated password</label>
       <button class="btn-clean btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />
@@ -45,12 +45,12 @@
       </button>
       <div v-html="generatedShown"></div>
     </div>
-    <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isSigningInOrRegistering()">
-      <button class="btn btn-login" @click="login" v-if="currentUser.isSigningIn()">Login</button>
-      <button class="btn btn-register" @click="register" v-if="currentUser.isRegistering()">Register</button>
+    <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isLoggingInOrSigningUp()">
+      <button class="btn btn-login" @click="submitLogin" v-if="currentUser.isLoggingIn()">Login</button>
+      <button class="btn btn-signup" @click="submitSignUp" v-if="currentUser.isSigningUp()">Register</button>
     </div>
   </div>
-  <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isSigningInOrRegistering()">
+  <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
     <button class="btn-clean btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
       <font-awesome-icon icon="save" />
     </button>
@@ -78,12 +78,12 @@ export default {
     ServiceSelector
   },
   watch: {
-    "state.service" (val, _) {
+    "state.service" (val) {
       Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
       this.generatePassword();
     },
-    "currentUser.state.step" (v) {
-      if (this.currentUser.isSigningInOrRegistering()) {
+    "currentUser.state.step" () {
+      if (this.currentUser.isLoggingInOrSigningUp()) {
         Store.clearEntries();
         this.state.service = Configs.SHAPASS_SERVICE;
         this.focusEmail();
@@ -192,8 +192,8 @@ export default {
         }
       });
     },
-    login () {
-      this.currentUser.login(this.inputEmail, this.state.generated, (r, token) => {
+    submitLogin () {
+      this.currentUser.login(this.inputEmail, this.state.generated, (r) => {
         if (r) {
           this.$toasted.success('Welcome!');
           this.afterLogin();
@@ -202,7 +202,7 @@ export default {
         }
       });
     },
-    register () {
+    submitSignUp () {
       this.currentUser.signup(this.inputEmail, this.state.generated, (r) => {
         if (r) {
           this.$toasted.success('Successfully registered!');
@@ -241,7 +241,7 @@ export default {
   },
   mounted () {
     // TODO: show loading while loading
-    this.currentUser.checkSignedIn(r => {
+    this.currentUser.checkLoggedIn(r => {
       if (r) {
         Store.reloadServices();
       }

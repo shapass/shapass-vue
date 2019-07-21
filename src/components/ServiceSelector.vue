@@ -32,7 +32,7 @@ export default {
     }
   },
   watch: {
-    value: function(val, oldVal) {
+    value: function(val) {
       this.service = val;
     }
   }

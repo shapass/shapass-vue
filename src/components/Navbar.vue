@@ -1,10 +1,10 @@
 <template>
 <div id="navbar" class="clearfix">
-  <label class="user-email" v-if="currentUser.isSignedIn()">{{ currentUser.state.email }}</label>
-  <button class="btn" v-on:click="setStep()" v-if="currentUser.isSigningInOrRegistering()">< back</button>
-  <button class="btn" v-on:click="setStep('Login')" v-if="!currentUser.isSigningInOrRegistering() && !currentUser.isSignedIn()">Login</button>
-  <button class="btn" v-on:click="setStep('Register')" v-if="!currentUser.isSigningInOrRegistering() && !currentUser.isSignedIn()">Register</button>
-  <button class="btn" v-on:click="logout" v-if="currentUser.isSignedIn()">Logout</button>
+  <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
+  <button class="btn" v-on:click="setInitialStep()" v-if="currentUser.isLoggingInOrSigningUp()">&lt; back</button>
+  <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Login</button>
+  <button class="btn" v-on:click="setSigningUp()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Register</button>
+  <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()">Logout</button>
 </div>
 </template>
 
@@ -16,8 +16,14 @@ export default {
     currentUser: Object
   },
   methods: {
-    setStep (v) {
-      this.currentUser.setStep(v);
+    setInitialStep () {
+      this.currentUser.setInitialStep();
+    },
+    setLoggingIn () {
+      this.currentUser.setLoggingIn();
+    },
+    setSigningUp () {
+      this.currentUser.setSigningUp();
     },
     logout () {
       this.currentUser.logout((r) => {

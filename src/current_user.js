@@ -3,13 +3,13 @@ import API from './api.js';
 
 const CurrentUser = {
   state: {
-    email: null,      // email when signed in
-    token: null,      // login token when signed in
-    step: null        // login step: 'Login', 'Register', null // TODO: better merge with the code in the navbar
+    email: null,      // email when logged in
+    token: null,      // login token when logged in
+    step: null        // login step: 'Login', 'SignUp', null
   },
 
   signup (email, password, callback) {
-    API.signup(email, password, (r, token) => {
+    API.signup(email, password, (r) => {
       callback(r);
     });
   },
@@ -49,9 +49,6 @@ const CurrentUser = {
     this.removeCookie();
   },
 
-  setStep (v) {
-    this.state.step = v;
-  },
   getStep () {
     return this.state.step;
   },
@@ -64,19 +61,28 @@ const CurrentUser = {
   removeCookie () {
     this._eraseCookie(Configs.LOGIN_COOKIE_NAME);
   },
-  isSigningInOrRegistering () {
-    return (this.isSigningIn() || this.isRegistering()) && !this.isSignedIn();
+  isLoggingInOrSigningUp () {
+    return (this.isLoggingIn() || this.isSigningUp()) && !this.isLoggedIn();
   },
-  isSignedIn () {
+  isLoggedIn () {
     return this.state.email !== null;
   },
-  isSigningIn () {
+  isLoggingIn () {
     return this.state.step === 'Login';
   },
-  isRegistering () {
-    return this.state.step === 'Register';
+  isSigningUp () {
+    return this.state.step === 'SignUp';
   },
-  checkSignedIn (callback) {
+  setInitialStep () {
+    this.state.step = null;
+  },
+  setLoggingIn () {
+    this.state.step = 'Login';
+  },
+  setSigningUp () {
+    this.state.step = 'SignUp';
+  },
+  checkLoggedIn (callback) {
     var token = this.loadCookie();
     console.log("loaded cookie", token);
     API.setToken(token);
