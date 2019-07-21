@@ -23,7 +23,7 @@
     </div>
     <div class="container" id="email" v-if="currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your email</label>
-      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()">
+      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()" placeholder="Type your email...">
     </div>
     <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your master password</label>
@@ -33,9 +33,9 @@
       <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1">
         <font-awesome-icon icon="eye" class="active" />
       </button>
-      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isLoggingInOrSigningUp()">
+      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your secret password...">
     </div>
-    <div class="container" id="generated" v-if="state.generated || currentUser.isLoggingInOrSigningUp()">
+    <div class="container" id="generated" v-if="currentUser.isLoggingInOrSigningUp() || (state.generated && state.master !== null && state.master !== '')">
       <label class="typewriter">Generated password</label>
       <button class="btn-clean btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
         <font-awesome-icon icon="eye-slash" />

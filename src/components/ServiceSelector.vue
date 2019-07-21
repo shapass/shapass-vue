@@ -112,10 +112,10 @@ export default {
 }
 
 /* TODO: make it look like a button to press on */
-.mobile .v-select:not(.vs--open) .vs__dropdown-toggle {
-  background: $dark;
-  border: 1px solid $primary;
-}
+/* .mobile .v-select:not(.vs--open) .vs__dropdown-toggle { */
+/*   background: $dark; */
+/*   border: 1px solid $primary; */
+/* } */
 </style>
 
 
