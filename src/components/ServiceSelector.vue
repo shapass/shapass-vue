@@ -1,7 +1,7 @@
 <template>
   <div class="service-selector">
     <label class="typewriter">What is this password for?</label>
-    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="$isMobile() ? 'Click here to start' : 'e.g. gmail'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" autocomplete="off"></v-select>
+    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" placeholder="Type the name of the service..." :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" autocomplete="off"></v-select>
   </div>
 </template>
 
@@ -76,8 +76,10 @@ export default {
   
   &.vs--single .vs__selected {
     background: $vs-selected-background;
-    border-radius: 4px;
     color: $vs-selected-color;
+    /* width: 100%; */
+    border: $vs-selected-border;
+    padding: 2px 10px;
   }
   .vs__selected {
     /* width: 50%; */
@@ -112,10 +114,10 @@ export default {
 }
 
 /* TODO: make it look like a button to press on */
-.mobile .v-select:not(.vs--open) .vs__dropdown-toggle {
-  background: $dark;
-  border: 1px solid $primary;
-}
+/* .mobile .v-select:not(.vs--open) .vs__dropdown-toggle { */
+/*   background: $dark; */
+/*   border: 1px solid $primary; */
+/* } */
 </style>
 
 

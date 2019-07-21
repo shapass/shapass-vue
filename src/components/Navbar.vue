@@ -39,6 +39,7 @@ export default {
   background: $navbar-bg-color;
   padding: 10px 20px;
   text-align: right;
+  /* border-bottom: 1px solid $dark-gray; */
 
   .btn {
     /* float: right; */

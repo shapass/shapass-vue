@@ -4,7 +4,21 @@
   <div id="content">
     <div class="container" id="service">
       <ServiceSelector v-model="state.service" :services="state.servicesForSelect" />
-      <div class="clearfix" id="configurations" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
+    </div>
+    <div class="container" id="email" v-if="currentUser.isLoggingInOrSigningUp()">
+      <label class="typewriter" for="master-input">Your email</label>
+      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()">
+    </div>
+    <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
+      <label class="typewriter" for="master-input">Your master password:</label>
+      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
+    </div>
+    <div class="container" id="generated" v-if="state.generated && state.master !== null && state.master !== ''">
+      <label class="typewriter">Generated password:</label>
+      <div id="generated-input" v-html="generatedShown"></div>
+
+      <div class="container clearfix" id="configurations" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
+        <!-- <label class="typewriter">Configure the generated password:</label> -->
         <div id="length">
           <label class="typewriter">Length:</label>
           <button class="btn-clean btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
@@ -21,35 +35,13 @@
         </div>
       </div>
     </div>
-    <div class="container" id="email" v-if="currentUser.isLoggingInOrSigningUp()">
-      <label class="typewriter" for="master-input">Your email</label>
-      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()">
-    </div>
-    <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
-      <label class="typewriter" for="master-input">Your master password</label>
-      <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1">
-        <font-awesome-icon icon="eye-slash" />
-      </button>
-      <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1">
-        <font-awesome-icon icon="eye" class="active" />
-      </button>
-      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isLoggingInOrSigningUp()">
-    </div>
-    <div class="container" id="generated" v-if="state.generated || currentUser.isLoggingInOrSigningUp()">
-      <label class="typewriter">Generated password</label>
-      <button class="btn-clean btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
-        <font-awesome-icon icon="eye-slash" />
-      </button>
-      <button class="btn-clean btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
-        <font-awesome-icon icon="eye" class="active" />
-      </button>
-      <div v-html="generatedShown"></div>
-    </div>
+
     <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isLoggingInOrSigningUp()">
       <button class="btn btn-login" @click="submitLogin" v-if="currentUser.isLoggingIn()">Login</button>
       <button class="btn btn-signup" @click="submitSignUp" v-if="currentUser.isSigningUp()">Register</button>
     </div>
   </div>
+
   <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
     <button class="btn-clean btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
       <font-awesome-icon icon="save" />
@@ -60,6 +52,20 @@
     <button class="btn-clean btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey="['ctrl', 'c']" @shortkey="copyToClipboard">
       <font-awesome-icon icon="copy" />
     </button>
+
+      <!-- <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1"> -->
+      <!--   <font-awesome-icon icon="eye-slash" /> -->
+      <!-- </button> -->
+      <!-- <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1"> -->
+      <!--   <font-awesome-icon icon="eye" class="active" /> -->
+      <!-- </button> -->
+      <button class="btn-clean btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="togglePasswordVisibility" tabindex="-1">
+        <font-awesome-icon icon="eye-slash" />
+      </button>
+      <button class="btn-clean btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="togglePasswordVisibility" tabindex="-1">
+        <font-awesome-icon icon="eye" class="active" />
+      </button>
+
   </div>
 </div>
 </template>
@@ -117,16 +123,17 @@ export default {
         this.$toasted.error('Could not copy', { duration: 1000 });
       })
     },
-    toggleMasterPasswordType () {
-      this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
-    },
-    toggleGeneratedPasswordVisibility () {
+    // toggleMasterPasswordType () {
+    //   this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
+    // },
+    togglePasswordVisibility () {
       if (this.isGeneratedPasswordVisible) {
         this.isGeneratedPasswordVisible = false;
       } else {
         this.isGeneratedPasswordVisible = true;
       }
       this.setGeneratedPassword(this.state.generated);
+      this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
     },
     setGeneratedPassword (val) {
       this.state.generated = val;
@@ -263,40 +270,38 @@ export default {
 
 #content {
   margin: 0 auto;
-  padding: 20px 0;
+  padding: 0;
   max-width: 600px;
 }
 
 #master, #generated {
-  .btn-toggle-visibility, .btn-copy {
-    position: absolute;
-    top: 5px;
-    left: -40px;
-  }
-
   input {
     margin-top: 5px;
   }
 }
 
 #generated {
-  /* background: $dark; //$background-highlight; */
-  /* border: 1px solid $primary; */
-
-  div {
-    padding: 1px 0; /* to look like the #master input */
+  #generated-input {
     margin-top: 5px;
     word-break: break-all;
+    padding: 10px 15px;
+    background: $background-highlight;
+    border: none;
+    color: $white;
   }
 
   .censored {
-    color: $background-highlight;
+    color: $background-dark; //$background-highlight;
   }
 }
 
 #configurations {
   background: none;
-  margin-top: 10px;
+  /* margin-top: 10px; */
+  /* margin-left: 50px; */
+  margin: 0;
+  padding-left: 0px;
+  padding-top: 10px;
 
   > div {
     display: flex;
@@ -335,19 +340,20 @@ export default {
   padding: 0;
   margin: 0;
   background: none;
-  position: fixed;
+  position: absolute;
   bottom: 0;
   right: 0;
   left: 0;
   text-align: center;
   background: $toolbar-bg-color;
   width: 100%;
+  /* border-top: 1px solid $dark-gray; */
 
   .svg-inline--fa {
-    font-size: 28px;
+    font-size: 24px;
     margin-right: 15px;
-    padding: 10px;
-    margin: 10px;
+    padding: 15px;
+    margin: 0 5px;
     border: 1px solid transparent;
 
     &:hover {

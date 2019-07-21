@@ -1,6 +1,8 @@
 $dark-blue: #010913;
 $bright-blue: #36cdd4;
-$gray: #2d3238; //#212529;
+$dark-gray: #2d3238; //#212529;
+$gray: #4f5862;
+// $gray: #949fad;
 $black: #000;
 $white: #fff;
 $medium-gray: #666;
@@ -9,22 +11,23 @@ $orange: #F86624;
 // untested:
 $yellow: #e4ff1a;
 $purple: #791E94;
-
-$primary: $bright-blue;
-$secondary: $orange;
-$active: $green;
-$background: $dark-blue;
-$background-highlight: $gray;
 $dark: rgba(0, 0, 0, 0.6); //$black;
 $accent: $bright-blue;
 $bright: $white;
 
+$primary: $bright-blue;
+$secondary: $orange;
+$active: $green;
+$background: lighten($dark-blue, 2);
+$background-highlight: rgba(128, 128, 128, 0.3); //$gray;
+$background-dark: $dark; //rgba(0, 0, 0, 0.8);
+
 $body-font-family: 'Source Code Pro', monospace;
 //$body-font-family: 'Roboto', Helvetica, Arial, sans-serif;
-$body-background: $dark-blue;
+$body-background: $background; //rgba(0, 0, 0, 1);
 $body-font-color: $bright-blue;
 $body-font-size: 20px;
-$label-font-size: 12px;
+$label-font-size: 14px;
 $label-color: #fff;
 $input-font-family: $body-font-family;
 $notification-border-radius: 0;
@@ -32,7 +35,7 @@ $notification-bg-color: $black;
 $notification-border: 1px solid $primary;
 $icon-size: 16px;
 $placeholder-color: rgba(255, 255, 255, 0.2);
-$navbar-bg-color: rgba(0, 0, 0, 0.4);
+$navbar-bg-color: $background-dark; // rgba(255, 255, 255, 0.15);
 $btn-border: 1px solid $primary;
 $btn-bg-color: $black;
 $btn-color: #fff;
@@ -41,7 +44,7 @@ $btn-font-family: $body-font-family;
 $btn-border-hover: $btn-border;
 $btn-bg-color-hover: $primary;
 $btn-color-hover: $black;
-$toolbar-bg-color: rgba(0, 0, 0, 0.4);
+$toolbar-bg-color: rgba(255, 255, 255, 0.04);
 
 //
 // v-select
@@ -58,10 +61,20 @@ $vs-border-color: $accent;
 $vs-dropdown-box-shadow: 7px 7px 0px rgba(0, 0, 0, 0.8);
 $vs-dropdown-bg: $dark;//$background-highlight; //$background;
 // my vs variables
-$vs-dropdown-color: $medium-gray;
+$vs-dropdown-color: $gray;
 $vs-dropdown-selected-color: $accent;
+
+// medium
 $vs-selected-color: $white;
 $vs-selected-background: $background-highlight;
+$vs-selected-border: 0;
+// bright:
+// $vs-selected-color: $black;
+// $vs-selected-background: $bright-blue;
+// dark
+// $vs-selected-color: $white;
+// $vs-selected-background: $background-dark;
+// $vs-selected-border: 1px solid $primary;
 
 @import "vue-select/src/scss/vue-select.scss";
 
@@ -103,9 +116,9 @@ body {
 .container {
   max-width: 800px;
   position: relative;
-  /* border-left: 1px solid $background-highlight; */
-  margin: 0 10px 20px 40px;
-  padding: 5px 10px 10px 10px;
+  // border-left: 2px solid $background-highlight;
+  margin: 30px;
+  // border-bottom: 1px solid $black;
 
   /* width: 100%; */
   /* margin: 0 auto 30px auto; */
@@ -157,10 +170,10 @@ input {
   outline: none;
   background: none;
   font-family: $input-font-family;
-  /* padding: 10px; */
-  /* border: 1px solid darken($body-background, 10); */
-  /* border-radius: 4px; */
   color: $body-font-color;
+  // padding: 10px;
+  // border: 1px solid $dark-gray;
+  // border-radius: 4px;
 }
 input:focus {
   outline: none;
