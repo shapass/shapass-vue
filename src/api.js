@@ -29,8 +29,12 @@ const API = {
       callback(false, null, error);
     });
   },
-  loginData () {
-    return { loginToken: this.state.token };
+  loginData (data) {
+    var base = { loginToken: this.state.token };
+    if (data !== null && data !== undefined) {
+      Object.keys(data).forEach((k) => { base[k] = data[k]; });
+    }
+    return base;
   },
   setToken (val) {
     this.state.token = val;
@@ -59,7 +63,7 @@ const API = {
   },
   login (email, password, callback) {
     var data = { email: email, password: password };
-    this.request('list', 'post', data, (r, d) => {
+    this.request('login', 'post', data, (r, d) => {
       if (r) {
         callback(true, d.Token);
       } else {
@@ -70,6 +74,45 @@ const API = {
   logout (callback) {
     this.request('logout', 'post', this.loginData(), (r, d) => {
       callback(r);
+    });
+  },
+  signup (email, password, callback) {
+    var data = { email: email, password: password };
+    this.request('signup', 'post', data, (r, d) => {
+      if (r) {
+        callback(true);
+      } else {
+        callback(false);
+      }
+    });
+  },
+  create (name, length, prefix, suffix, callback) {
+    var data = { name: name };
+    if (length !== null && length !== undefined) {
+      data["length"] = length;
+    }
+    if (prefix !== null && prefix !== undefined) {
+      data["prefix"] = prefix;
+    }
+    if (suffix !== null && suffix !== undefined) {
+      data["suffix"] = suffix;
+    }
+    this.request('create', 'post', this.loginData(data), (r) => {
+      if (r) {
+        callback(true);
+      } else {
+        callback(false);
+      }
+    });
+  },
+  delete (name, callback) {
+    var data = { name: name };
+    this.request('delete', 'post', this.loginData(data), (r) => {
+      if (r) {
+        callback(true);
+      } else {
+        callback(false);
+      }
     });
   },
 };

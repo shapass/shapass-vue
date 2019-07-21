@@ -1,10 +1,9 @@
 import { Configs } from './config.js';
 import API from './api.js';
-import axios from 'axios';
 
 // TODO: make each service a model, with methods to stringify and convert api<>localStorage
 // TODO: make the list of services a model, with methods to stringify and convert api<>localStorage
-
+// TODO: User inputs is one thing, configs loaded/generated are another
 const Store = {
   state: {
     service: null,
@@ -38,6 +37,13 @@ const Store = {
     } else {
       return null;
     }
+  },
+  clearEntries () {
+    this.state.outputLength = Configs.DEFAULT_LENGTH;
+    this.state.suffix = null;
+    this.state.prefix = null;
+    this.state.master = null;
+    this.state.service = null;
   },
 
   // reloads the list of service names from localStorage to current state
@@ -73,7 +79,7 @@ const Store = {
   removeService (callback) {
     var name = this.state.service;
     if (name !== null && name !== undefined) {
-      this.remoteDelete(name, (r) => {
+      API.delete(name, (r) => {
         if (r) {
           var data = this.savedServices();
           delete data[name];
@@ -92,7 +98,7 @@ const Store = {
   // saves the current state in localStorage and in the API
   saveCurrentState (callback) {
     if (this.state.service !== null && this.state.service !== undefined) {
-      this.remoteSave(this.state.service, this.state.outputLength, this.state.prefix, this.state.suffix, (r) => {
+      API.create(this.state.service, this.state.outputLength, this.state.prefix, this.state.suffix, (r) => {
         console.log("remote save returned", r);
         if (r) {
           var data = this.savedServices();
@@ -114,64 +120,6 @@ const Store = {
     } else {
       callback(false, null);
     }
-  },
-
-  remoteSave (name, outputLength, prefix, suffix, callback) {
-    console.log("on remote save");
-    this.apiCreate(name, outputLength, prefix, suffix, (r) => {
-      console.log("remote save returning", r);
-      callback(r);
-    });
-  },
-  apiCreate: function(name, length, prefix, suffix, callback) {
-    var url =`${Configs.API_URL}/create?name=${name}`;
-    if (length !== null && length !== undefined) {
-      url = `${url}&length=${length}`;
-    }
-    if (prefix !== null && prefix !== undefined) {
-      url = `${url}&prefix=${prefix}`;
-    }
-    if (suffix !== null && suffix !== undefined) {
-      url = `${url}&suffix=${suffix}`;
-    }
-    axios
-      .post(url)
-      .then(response => {
-        console.log('success:', response.data);
-        if (response.data.Status === 'OK') {
-          console.log("saved and returned OK");
-          callback(true);
-        } else {
-          console.log("saved and returned ERROR");
-          callback(false);
-        }
-      })
-      .catch(error => {
-        console.log("saved and returned exception", error);
-        callback(false);
-      });
-  },
-
-  remoteDelete (name, callback) {
-    this.apiDelete(name, (r) => {
-      callback(r);
-    });
-  },
-  apiDelete: function(name, callback) {
-    var url =`${Configs.API_URL}/delete?name=${name}`;
-    axios
-      .post(url)
-      .then(response => {
-        console.log('success:', response.data);
-        if (response.data.Status === 'OK') {
-          callback(true);
-        } else {
-          callback(false);
-        }
-      })
-      .catch(error => {
-        callback(false);
-      });
   },
 };
 

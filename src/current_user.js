@@ -8,6 +8,12 @@ const CurrentUser = {
     step: null        // login step: 'Login', 'Register', null // TODO: better merge with the code in the navbar
   },
 
+  signup (email, password, callback) {
+    API.signup(email, password, (r, token) => {
+      callback(r);
+    });
+  },
+
   login (email, password, callback) {
     API.login(email, password, (r, token) => {
       if (r) {

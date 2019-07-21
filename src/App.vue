@@ -1,6 +1,6 @@
 <template>
 <div id="app" v-bind:class="{ mobile: this.$isMobile() }">
-  <Navbar :stepChanged="stepChanged" :currentUser="currentUser" />
+  <Navbar :afterLogout="afterLogout" :currentUser="currentUser" />
   <div id="content">
     <div class="container" id="service">
       <ServiceSelector v-model="state.service" :services="state.servicesForSelect" />
@@ -23,7 +23,7 @@
     </div>
     <div class="container" id="email" v-if="currentUser.isSigningInOrRegistering()">
       <label class="typewriter" for="master-input">Your email</label>
-      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus>
+      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus="currentUser.isSigningInOrRegistering()">
     </div>
     <div class="container" id="master" v-if="state.service || currentUser.isSigningInOrRegistering()">
       <label class="typewriter" for="master-input">Your master password</label>
@@ -69,7 +69,6 @@ import Navbar from './components/Navbar.vue'
 import ServiceSelector from './components/ServiceSelector.vue'
 import { Configs } from './config.js'
 import Store from './store.js'
-import API from './api.js'
 import CurrentUser from './current_user.js'
 
 export default {
@@ -82,7 +81,17 @@ export default {
     "state.service" (val, _) {
       Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
       this.generatePassword();
-    }
+    },
+    "currentUser.state.step" (v) {
+      if (this.currentUser.isSigningInOrRegistering()) {
+        Store.clearEntries();
+        this.state.service = Configs.SHAPASS_SERVICE;
+        this.focusEmail();
+      } else {
+        this.state.service = null;
+        this.focusServiceSelector();
+      }
+    },
   },
   methods: {
     generatePassword () {
@@ -158,6 +167,7 @@ export default {
       this.focusInput('#master');
     },
     focusEmail () {
+      // console.log("focusing email");
       this.focusInput('#email');
     },
     focusServiceSelector () {
@@ -166,34 +176,24 @@ export default {
     save () {
       Store.saveCurrentState((r, saved) => {
         if (r) {
-          this.$toasted.show(`Configuration ${saved.service} saved`);
+          this.$toasted.show(`Configuration '${saved.service}' saved`);
         } else {
           this.$toasted.error(`Error saving`);
         }
       });
     },
     remove () {
-      var removed = Store.removeService((r, removed) => {
+      Store.removeService((r, removed) => {
         if (r) {
-          this.$toasted.show(`Configuration "${removed.service}" removed`);
+          this.$toasted.show(`Configuration "${removed}" removed`);
           this.focusServiceSelector();
         } else {
           this.$toasted.error(`Error removing`);
         }
       });
     },
-    stepChanged (v) {
-      if (this.currentUser.isSigningInOrRegistering() != null) {
-        this.state.service = Configs.SHAPASS_SERVICE;
-        // TODO: set default length and suffix
-        this.focusEmail();
-      } else {
-        this.state.service = null;
-        this.focusServiceSelector();
-      }
-    },
     login () {
-      currentUser.login(this.inputEmail, this.state.generated, (r, token) => {
+      this.currentUser.login(this.inputEmail, this.state.generated, (r, token) => {
         if (r) {
           this.$toasted.success('Welcome!');
           this.afterLogin();
@@ -203,18 +203,28 @@ export default {
       });
     },
     register () {
-      console.log("signup in with:", this.inputEmail, this.state.generated);
-      this.apiSignUp(this.inputEmail, this.state.generated, (r) => {
+      this.currentUser.signup(this.inputEmail, this.state.generated, (r) => {
         if (r) {
-          this.$toasted.success('Welcome!');
+          this.$toasted.success('Successfully registered!');
+          this.afterSignUp();
         } else {
           this.$toasted.error('Error registering');
         }
       });
     },
+    afterSignUp () {
+      this.login();
+    },
     afterLogin () {
       Store.reloadServices();
-    }
+    },
+    afterLogout (r) {
+      if (r) {
+        this.$toasted.success('Bye!');
+      } else {
+        this.$toasted.error('Something went wrong :(');
+      }
+    },
   },
   data () {
     return {

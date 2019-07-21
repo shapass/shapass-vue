@@ -12,21 +12,16 @@
 export default {
   name: 'Navbar',
   props: {
-    stepChanged: Function,
+    afterLogout: Function,
     currentUser: Object
   },
   methods: {
     setStep (v) {
       this.currentUser.setStep(v);
-      this.stepChanged(v);
     },
     logout () {
-      this.currentUser.logout(r => {
-        if (r) {
-          this.$toasted.success('Bye!');
-        } else {
-          this.$toasted.error('Something went wrong :(');
-        }
+      this.currentUser.logout((r) => {
+        this.afterLogout(r);
       });
     },
   }

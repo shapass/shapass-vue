@@ -6,7 +6,6 @@ import VueClipboard from 'vue-clipboard2';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import axios from 'axios';
 import VueMobileDetection from "vue-mobile-detection";
 import { Configs } from './config.js';
 
@@ -70,48 +69,6 @@ Vue.mixin({
         result += suffix;
       }
       return result;
-    },
-
-    apiSignUp: function(email, pw, callback) {
-      axios
-      // .post(`${Configs.API_URL}/login`, `{ "email": ${email}, "password": ${pw} }`)
-        .post(`${Configs.API_URL}/signup?email=${email}&password=${pw}`)
-        .then(response => {
-          console.log('signup:', response.data);
-          if (response.data.Status === 'OK') {
-            callback(true);
-          } else {
-            callback(false);
-          }
-        })
-        .catch(error => {
-          callback(false);
-        });
-    },
-    apiCreate: function(name, length, prefix, suffix, callback) {
-      var url =`${Configs.API_URL}/create?name=${name}`;
-      if (length !== null && length !== undefined) {
-        url = `${url}&length=${length}`;
-      }
-      if (prefix !== null && prefix !== undefined) {
-        url = `${url}&prefix=${prefix}`;
-      }
-      if (suffix !== null && suffix !== undefined) {
-        url = `${url}&suffix=${suffix}`;
-      }
-      axios
-        .post(url)
-        .then(response => {
-          console.log('create:', response.data);
-          if (response.data.Status === 'OK') {
-            callback(true);
-          } else {
-            callback(false);
-          }
-        })
-        .catch(error => {
-          callback(false);
-        });
     },
   }
 });
