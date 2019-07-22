@@ -3,7 +3,7 @@
   <Navbar :afterLogout="afterLogout" :currentUser="currentUser" />
   <div id="content">
     <div class="container" id="service">
-      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" />
+      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" />
     </div>
     <div class="container" id="email" v-if="currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your email</label>
@@ -93,7 +93,7 @@ export default {
         Store.clearEntries();
         this.state.service = Configs.SHAPASS_SERVICE;
         this.focusEmail();
-      } else {
+      } else if (this.currentUser.atApp()) {
         this.state.service = null;
         this.focusServiceSelector();
       }
@@ -174,7 +174,6 @@ export default {
       this.focusInput('#master');
     },
     focusEmail () {
-      // console.log("focusing email");
       this.focusInput('#email');
     },
     focusServiceSelector () {
