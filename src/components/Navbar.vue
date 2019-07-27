@@ -1,5 +1,6 @@
 <template>
 <div id="navbar" class="clearfix">
+  <img src="logo.svg" id="logo" alt="ShaPass" />
   <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
   <button class="btn" v-on:click="setInitialStep()" v-if="currentUser.isLoggingInOrSigningUp()">&lt; back</button>
   <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Login</button>
@@ -38,18 +39,25 @@ export default {
 #navbar {
   background: $navbar-bg;
   border-bottom: $navbar-border-bottom;
-  padding: 10px 20px;
+  padding: 2px 20px;
   text-align: right;
   /* border-bottom: 1px solid $dark-gray; */
 
   .btn {
     /* float: right; */
-    margin-left: 15px;
+    margin: 10px 0 10px 15px;
   }
 
   .user-email {
     text-transform: none;
     font-size: $label-font-size + 2px;
   }
+}
+
+#logo {
+  float: left;
+  width: 40px;
+  height: 40px;
+  margin: 5px 0;
 }
 </style>
