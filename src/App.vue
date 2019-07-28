@@ -35,7 +35,6 @@
         </div>
       </div>
     </div>
-
     <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isLoggingInOrSigningUp()">
       <button class="btn btn-login" @click="submitLogin" v-if="currentUser.isLoggingIn()">Login</button>
       <button class="btn btn-signup" @click="submitSignUp" v-if="currentUser.isSigningUp()">Register</button>
@@ -269,7 +268,7 @@ export default {
 
 #content {
   margin: 0 auto;
-  padding: 0;
+  padding: 0 $content-side-padding;
   max-width: $content-width;
 }
 

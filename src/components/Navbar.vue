@@ -1,11 +1,13 @@
 <template>
 <div id="navbar" class="clearfix">
-  <img src="logo.svg" id="logo" alt="ShaPass" />
-  <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
-  <button class="btn" v-on:click="setInitialStep()" v-if="currentUser.isLoggingInOrSigningUp()">&lt; back</button>
-  <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Login</button>
-  <button class="btn" v-on:click="setSigningUp()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Register</button>
-  <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()">Logout</button>
+  <div id="navbar-content">
+    <a href="/"><img src="logo.svg" id="logo" alt="ShaPass" /></a>
+    <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
+    <button class="btn" v-on:click="setInitialStep()" v-if="currentUser.isLoggingInOrSigningUp()">&lt; back</button>
+    <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Login</button>
+    <button class="btn" v-on:click="setSigningUp()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Register</button>
+    <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()">Logout</button>
+  </div>
 </div>
 </template>
 
@@ -39,9 +41,13 @@ export default {
 #navbar {
   background: $navbar-bg;
   border-bottom: $navbar-border-bottom;
-  padding: 2px 20px;
+  padding: 2px $content-side-padding;
   text-align: right;
-  /* border-bottom: 1px solid $dark-gray; */
+
+  #navbar-content {
+    max-width: $content-width;
+    margin: 0 auto;
+  }
 
   .btn {
     /* float: right; */
