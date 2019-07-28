@@ -5,7 +5,7 @@ const CurrentUser = {
   state: {
     email: null,      // email when logged in
     token: null,      // login token when logged in
-    step: null        // login step: 'Login', 'SignUp', null
+    step: 'Landing'   // login step: 'Login', 'SignUp', null, 'Landing'
   },
 
   signup (email, password, callback) {
@@ -31,7 +31,7 @@ const CurrentUser = {
       this.state.token = token;
       API.setToken(token);
     }
-    this.state.step = null;
+    //this.state.step = null;
   },
 
   logout (callback) {
@@ -73,7 +73,16 @@ const CurrentUser = {
   isSigningUp () {
     return this.state.step === 'SignUp';
   },
-  setInitialStep () {
+  atApp () {
+    return this.state.step === null;
+  },
+  atLanding () {
+    return this.state.step === 'Landing';
+  },
+  setAtLanding () {
+    this.state.step = 'Landing';
+  },
+  setAtApp () {
     this.state.step = null;
   },
   setLoggingIn () {
@@ -84,7 +93,6 @@ const CurrentUser = {
   },
   checkLoggedIn (callback) {
     var token = this.loadCookie();
-    console.log("loaded cookie", token);
     API.setToken(token);
     API.whoAmI(email => {
       if (email !== null && email !== undefined) {

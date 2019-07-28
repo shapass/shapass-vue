@@ -1,17 +1,40 @@
 <template>
 <div id="app" v-bind:class="{ mobile: this.$isMobile() }">
   <Navbar :afterLogout="afterLogout" :currentUser="currentUser" />
-  <div id="content">
+  <div id="content-common" class="content-wrapper">
     <div class="container" id="service">
-      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" />
-      <div class="clearfix" id="configurations" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
+      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" />
+    </div>
+  </div>
+  <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
+    <div id="start" v-shortkey.once="['enter']" @shortkey="start">Press <kbd>enter</kbd> to start</div>
+    <div id="slogan">The password manager that <em>does not</em> store your passwords.</div>
+    <div id="logo-landing">
+      <img src="logo.svg" alt="ShaPass" />
+    </div>
+  </div>
+  <div id="content-app" v-if="!currentUser.atLanding()" class="content-wrapper">
+    <div class="container" id="email" v-if="currentUser.isLoggingInOrSigningUp()">
+      <label class="typewriter" for="master-input">Your email</label>
+      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="enterOnInput" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()">
+    </div>
+    <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
+      <label class="typewriter" for="master-input">Your master password:</label>
+      <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
+    </div>
+    <div class="container" id="generated" v-if="state.generated && state.master !== null && state.master !== ''">
+      <label class="typewriter">Generated password:</label>
+      <div id="generated-input" v-html="generatedShown"></div>
+
+      <div class="container clearfix" id="configurations" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
+        <!-- <label class="typewriter">Configure the generated password:</label> -->
         <div id="length">
           <label class="typewriter">Length:</label>
-          <button class="btn-clean btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
+          <button class="btn btn-ico btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
             <font-awesome-icon icon="minus-square" />
           </button>
           <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength" />
-          <button class="btn-clean btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
+          <button class="btn btn-ico btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
             <font-awesome-icon icon="plus-square" />
           </button>
         </div>
@@ -21,45 +44,36 @@
         </div>
       </div>
     </div>
-    <div class="container" id="email" v-if="currentUser.isLoggingInOrSigningUp()">
-      <label class="typewriter" for="master-input">Your email</label>
-      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()" placeholder="Type your email...">
-    </div>
-    <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
-      <label class="typewriter" for="master-input">Your master password</label>
-      <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1">
-        <font-awesome-icon icon="eye-slash" />
-      </button>
-      <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1">
-        <font-awesome-icon icon="eye" class="active" />
-      </button>
-      <input id="master-input" :type="masterPasswordType" spellcheck="false" placeholder="" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your secret password...">
-    </div>
-    <div class="container" id="generated" v-if="currentUser.isLoggingInOrSigningUp() || (state.generated && state.master !== null && state.master !== '')">
-      <label class="typewriter">Generated password</label>
-      <button class="btn-clean btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
-        <font-awesome-icon icon="eye-slash" />
-      </button>
-      <button class="btn-clean btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="toggleGeneratedPasswordVisibility" tabindex="-1">
-        <font-awesome-icon icon="eye" class="active" />
-      </button>
-      <div v-html="generatedShown"></div>
-    </div>
     <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isLoggingInOrSigningUp()">
-      <button class="btn btn-login" @click="submitLogin" v-if="currentUser.isLoggingIn()">Login</button>
-      <button class="btn btn-signup" @click="submitSignUp" v-if="currentUser.isSigningUp()">Register</button>
+      <button class="btn btn-login" id="login-submit" @click="submitLogin" v-if="currentUser.isLoggingIn()" :disabled="!canLogin()">Login</button>
+      <button class="btn btn-signup" id="signup-submit" @click="submitSignUp" v-if="currentUser.isSigningUp()" :disabled="!canSignUp()">Register</button>
     </div>
   </div>
+
   <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
-    <button class="btn-clean btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
+    <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save">
       <font-awesome-icon icon="save" />
     </button>
-    <button class="btn-clean btn-remove" @click="remove" tabindex="-1" v-shortkey="['ctrl', 'del']" @shortkey="remove">
+    <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove">
       <font-awesome-icon icon="trash" />
     </button>
-    <button class="btn-clean btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey="['ctrl', 'c']" @shortkey="copyToClipboard">
+    <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard">
       <font-awesome-icon icon="copy" />
     </button>
+
+      <!-- <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1"> -->
+      <!--   <font-awesome-icon icon="eye-slash" /> -->
+      <!-- </button> -->
+      <!-- <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1"> -->
+      <!--   <font-awesome-icon icon="eye" class="active" /> -->
+      <!-- </button> -->
+      <button class="btn btn-ico btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="togglePasswordVisibility" tabindex="-1">
+        <font-awesome-icon icon="eye-slash" />
+      </button>
+      <button class="btn btn-ico btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="togglePasswordVisibility" tabindex="-1">
+        <font-awesome-icon icon="eye" class="active" />
+      </button>
+
   </div>
 </div>
 </template>
@@ -87,8 +101,10 @@ export default {
         Store.clearEntries();
         this.state.service = Configs.SHAPASS_SERVICE;
         this.focusEmail();
-      } else {
-        this.state.service = null;
+      } else if (this.currentUser.atLanding()) {
+        Store.clearEntries();
+      } else if (this.currentUser.atApp()) {
+        Store.clearEntries();
         this.focusServiceSelector();
       }
     },
@@ -117,16 +133,17 @@ export default {
         this.$toasted.error('Could not copy', { duration: 1000 });
       })
     },
-    toggleMasterPasswordType () {
-      this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
-    },
-    toggleGeneratedPasswordVisibility () {
+    // toggleMasterPasswordType () {
+    //   this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
+    // },
+    togglePasswordVisibility () {
       if (this.isGeneratedPasswordVisible) {
         this.isGeneratedPasswordVisible = false;
       } else {
         this.isGeneratedPasswordVisible = true;
       }
       this.setGeneratedPassword(this.state.generated);
+      this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
     },
     setGeneratedPassword (val) {
       this.state.generated = val;
@@ -167,11 +184,21 @@ export default {
       this.focusInput('#master');
     },
     focusEmail () {
-      // console.log("focusing email");
       this.focusInput('#email');
     },
     focusServiceSelector () {
       this.focusInput('#service');
+    },
+
+    // Pressed enter on an input, decide what to do
+    enterOnInput () {
+      if (this.currentUser.atApp()) {
+        this.copyToClipboard();
+      } else if (this.currentUser.isLoggingIn()) {
+        this.submitLogin();
+      } else if (this.currentUser.isSigningUp()) {
+        this.submitSignUp();
+      }
     },
     save () {
       Store.saveCurrentState((r, saved) => {
@@ -192,30 +219,46 @@ export default {
         }
       });
     },
+    start () {
+      if (this.currentUser.atLanding()) {
+        this.focusServiceSelector();
+      }
+    },
     submitLogin () {
-      this.currentUser.login(this.inputEmail, this.state.generated, (r) => {
-        if (r) {
-          this.$toasted.success('Welcome!');
-          this.afterLogin();
-        } else {
-          this.$toasted.error('Incorrect email or password, try again');
-        }
-      });
+      if (this.canLogin()) {
+        this.withDisabledButton("#login-submit", (done) => {
+          this.currentUser.login(this.inputEmail, this.state.generated, (r) => {
+            if (r) {
+              this.$toasted.success('Welcome!');
+              this.afterLogin();
+            } else {
+              this.$toasted.error('Incorrect email or password, try again');
+            }
+            done();
+          });
+        });
+      }
     },
     submitSignUp () {
-      this.currentUser.signup(this.inputEmail, this.state.generated, (r) => {
-        if (r) {
-          this.$toasted.success('Successfully registered!');
-          this.afterSignUp();
-        } else {
-          this.$toasted.error('Error registering');
-        }
-      });
+      if (this.canSignUp()) {
+        this.withDisabledButton("#signup-submit", (done) => {
+          this.currentUser.signup(this.inputEmail, this.state.generated, (r) => {
+            if (r) {
+              this.$toasted.success('Successfully registered!');
+              this.afterSignUp();
+            } else {
+              this.$toasted.error('Error registering');
+            }
+            done();
+          });
+        });
+      }
     },
     afterSignUp () {
-      this.login();
+      this.submitLogin();
     },
     afterLogin () {
+      this.currentUser.setAtApp();
       Store.reloadServices();
     },
     afterLogout (r) {
@@ -225,6 +268,12 @@ export default {
         this.$toasted.error('Something went wrong :(');
       }
     },
+    canLogin () {
+      return this.notEmpty(this.state.master) && this.notEmpty(this.inputEmail);
+    },
+    canSignUp () {
+      return this.notEmpty(this.state.master) && this.notEmpty(this.inputEmail);
+    }
   },
   data () {
     return {
@@ -261,42 +310,92 @@ export default {
   height: 100%;
 }
 
-#content {
+#content-landing {
+  #slogan {
+    margin-top: 30px;
+    padding: 20px;
+    font-size: $font-lg;
+    text-align: center;
+
+    @include mobile {
+      padding: 0;
+      font-size: $m-font-lg;
+    }
+
+    em {
+      color: $primary;
+      font-weight: bold;
+      border-bottom: 1px dashed $primary;
+      font-style: normal;
+    }
+  }
+
+  #start {
+    text-align: center;
+    font-size: $font-sm;
+    opacity: 0.7;
+    @include mobile { display: none; }
+  }
+
+  #logo-landing {
+    text-align: center;
+    width: 70%;
+    max-width: 300px;
+    margin: 40px auto;
+
+    img {
+      animation:
+        float 3s ease-in-out infinite alternate;
+    }
+  }
+}
+
+@keyframes float {
+  0% {
+    /* transform: translateY(-5px) scaleY(1.02); */
+    transform: translateY(-3px) rotate(0);
+  }
+  50% {
+    transform: rotate(-1deg);
+  }
+  100% {
+    /* transform: translateY(5px) scaleY(1); */
+    transform: translateY(3px) rotate(0);
+  }
+}
+
+.content-wrapper {
   margin: 0 auto;
-  padding: 20px 0;
-  max-width: 600px;
+  padding: 0 $content-side-padding;
+  max-width: $content-width;
 }
 
 #master, #generated {
-  .btn-toggle-visibility, .btn-copy {
-    position: absolute;
-    top: 5px;
-    left: -40px;
-  }
-
   input {
     margin-top: 5px;
   }
 }
 
 #generated {
-  /* background: $dark; //$background-highlight; */
-  /* border: 1px solid $primary; */
-
-  div {
-    padding: 1px 0; /* to look like the #master input */
+  #generated-input {
     margin-top: 5px;
     word-break: break-all;
+    padding: 10px 15px;
+    background: $generated-input-bg;
+    border: $generated-input-border;
+    color: $generated-input-color;
   }
 
   .censored {
-    color: $background-highlight;
+    color: $generated-input-censored-color;
   }
 }
 
 #configurations {
   background: none;
-  margin-top: 10px;
+  margin: 0;
+  padding-left: 0px;
+  padding-top: 10px;
 
   > div {
     display: flex;
@@ -333,27 +432,29 @@ export default {
 #toolbar {
   border: 0;
   padding: 0;
-  margin: 0;
   background: none;
-  position: fixed;
+  position: absolute;
   bottom: 0;
   right: 0;
   left: 0;
   text-align: center;
-  background: $toolbar-bg-color;
-  width: 100%;
+  background: $toolbar-bg;
+  border: $toolbar-border;
+  border-bottom: none;
+  width: auto;
+  max-width: $toolbar-width;
+  margin: 0 auto;
+
+  button {
+    width: 20%;
+  }
 
   .svg-inline--fa {
-    font-size: 28px;
-    margin-right: 15px;
-    padding: 10px;
-    margin: 10px;
+    font-size: 24px;
+    padding: 15px 0;
+    margin: 0;
     border: 1px solid transparent;
-
-    &:hover {
-      background: $black;
-      border: $btn-border;
-    }
+    width: 100%;
   }
 }
 
@@ -361,5 +462,4 @@ export default {
   border: 0;
   padding: 10px 0;
 }
-
 </style>
