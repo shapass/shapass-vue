@@ -1,10 +1,19 @@
 <template>
 <div id="app" v-bind:class="{ mobile: this.$isMobile() }">
   <Navbar :afterLogout="afterLogout" :currentUser="currentUser" />
-  <div id="content">
+  <div id="content-common" class="content-wrapper">
     <div class="container" id="service">
       <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" />
     </div>
+  </div>
+  <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
+    <div id="start" v-shortkey.once="['enter']" @shortkey="start">Press <kbd>enter</kbd> to start</div>
+    <div id="slogan">The password manager that <em>does not</em> store your passwords.</div>
+    <div id="logo-landing">
+      <img src="logo.svg" alt="ShaPass" />
+    </div>
+  </div>
+  <div id="content-app" v-if="!currentUser.atLanding()" class="content-wrapper">
     <div class="container" id="email" v-if="currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your email</label>
       <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()">
@@ -42,13 +51,13 @@
   </div>
 
   <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
-    <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey="['ctrl', 's']" @shortkey="save">
+    <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save">
       <font-awesome-icon icon="save" />
     </button>
-    <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey="['ctrl', 'del']" @shortkey="remove">
+    <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove">
       <font-awesome-icon icon="trash" />
     </button>
-    <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey="['ctrl', 'c']" @shortkey="copyToClipboard">
+    <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard">
       <font-awesome-icon icon="copy" />
     </button>
 
@@ -92,6 +101,8 @@ export default {
         Store.clearEntries();
         this.state.service = Configs.SHAPASS_SERVICE;
         this.focusEmail();
+      } else if (this.currentUser.atLanding()) {
+        Store.clearEntries();
       } else if (this.currentUser.atApp()) {
         this.state.service = null;
         this.focusServiceSelector();
@@ -197,6 +208,11 @@ export default {
         }
       });
     },
+    start () {
+      if (this.currentUser.atLanding()) {
+        this.focusServiceSelector();
+      }
+    },
     submitLogin () {
       this.currentUser.login(this.inputEmail, this.state.generated, (r) => {
         if (r) {
@@ -266,7 +282,42 @@ export default {
   height: 100%;
 }
 
-#content {
+#content-landing {
+  #slogan {
+    margin-top: 30px;
+    padding: 20px;
+    font-size: $font-lg;
+    text-align: center;
+
+    @include mobile {
+      padding: 0;
+      font-size: $m-font-lg;
+    }
+
+    em {
+      color: $primary;
+      font-weight: bold;
+      border-bottom: 1px dashed $primary;
+      font-style: normal;
+    }
+  }
+
+  #start {
+    text-align: center;
+    font-size: $font-sm;
+    opacity: 0.7;
+    @include mobile { display: none; }
+  }
+
+  #logo-landing {
+    text-align: center;
+    width: 80%;
+    max-width: 300px;
+    margin: 40px auto;
+  }
+}
+
+.content-wrapper {
   margin: 0 auto;
   padding: 0 $content-side-padding;
   max-width: $content-width;
@@ -295,8 +346,6 @@ export default {
 
 #configurations {
   background: none;
-  /* margin-top: 10px; */
-  /* margin-left: 50px; */
   margin: 0;
   padding-left: 0px;
   padding-top: 10px;

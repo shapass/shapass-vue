@@ -1,7 +1,7 @@
 <template>
   <div class="service-selector">
     <label class="typewriter" v-if="!currentUser.atLanding()">What is this password for?</label>
-    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="currentUser.atLanding() ? 'Get started!' : 'e.g. gmail'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null }"></v-select>
+    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="currentUser.atLanding() ? 'Get started' : 'e.g. gmail'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, landing: currentUser.atLanding() }"></v-select>
   </div>
 </template>
 
@@ -34,9 +34,9 @@ export default {
     }
   },
   mounted () {
-    if (!this.$isMobile()) {
-      this.$el.getElementsByTagName('input')[0].focus();
-    }
+    // if (!this.$isMobile()) {
+    //   this.$el.getElementsByTagName('input')[0].focus();
+    // }
   },
   watch: {
     value: function(val) {
@@ -120,18 +120,25 @@ export default {
   }
 }
 
-/* TODO: make it look like a button to press on */
-.mobile .v-select:not(.vs--open) .vs__dropdown-toggle {
+/* make it look like a button to press on */
+.landing.v-select:not(.vs--open) .vs__dropdown-toggle {
   background: $primary;
   padding: 15px;
+  cursor: pointer;
 
   input::placeholder {
     color: $black;
     text-align: center;
+    text-transform: uppercase;
+    /* font-weight: bold; */
     /* font-size: 18px; */
   }
+
+  .vs__selected-options input {
+    cursor: pointer;
+  }
 }
-.mobile .v-select.selected:not(.vs--open) .vs__dropdown-toggle {
+.landing.v-select.selected:not(.vs--open) .vs__dropdown-toggle {
   background: none;
   border: none;
   padding: 0 0 4px 0;

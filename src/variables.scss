@@ -24,14 +24,18 @@ $background: lighten($dark-blue, 1);
 $background-highlight: lighten($gray-tv, 2); //rgba(128, 128, 128, 0.3); //$gray;
 $background-dark: $dark; //rgba(0, 0, 0, 0.8);
 
+$font-md: 20px;
+$font-lg: $font-md + 4px;
+$font-sm: $font-md - 6px;
+
 $content-width: 600px;
 $content-side-padding: 20px;
 $body-font-family: 'Source Code Pro', monospace;
 //$body-font-family: 'Roboto', Helvetica, Arial, sans-serif;
 $body-background: $background; //rgba(0, 0, 0, 1);
-$body-font-color: $primary;
-$body-font-size: 20px;
-$label-font-size: 14px;
+$body-font-color: $white;//$primary;
+$body-font-size: $font-md;
+$label-font-size: $font-sm;
 $label-color: #fff;
 $input-font-family: $body-font-family;
 $notification-border-radius: 0;
@@ -44,7 +48,7 @@ $navbar-border-bottom: 1px solid $background-highlight;
 $btn-border: 1px solid $primary;
 $btn-bg: $black;
 $btn-color: #fff;
-$btn-font-size: 14px;
+$btn-font-size: $font-sm;
 $btn-font-family: $body-font-family;
 $btn-hover-border: $btn-border;
 $btn-hover-bg: $primary;
@@ -106,7 +110,9 @@ $vs-selected-border: none;
 // Mobile
 //
 
-$m-body-font-size: calc(0.45em + 2vmin);
+$m-font-md: calc(0.45em + 2vmin);
+$m-font-lg: calc(0.65em + 2vmin);
+$m-body-font-size: $m-font-md;
 $m-label-font-size: calc(0.45em + 1vmin);
 $m-icon-size: calc(0.45em + 2vmin);
 $mobile-width: 480px;
@@ -286,4 +292,22 @@ label {
   display: block;
   height: 0;
   clear: both;
+}
+
+kbd {
+  padding: .2rem .4rem;
+  font-size: 87.5%;
+  color: #fff;
+  background-color: #212529;
+  border-radius: .2rem;
+}
+
+kbd kbd {
+  padding: 0;
+  font-size: 100%;
+  font-weight: 700;
+}
+
+img {
+  max-width: 100%;
 }

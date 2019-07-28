@@ -1,7 +1,7 @@
 <template>
 <div id="navbar" class="clearfix">
   <div id="navbar-content">
-    <a href="/"><img src="logo.svg" id="logo" alt="ShaPass" /></a>
+    <img v-on:click="goToLanding" src="logo.svg" id="logo" alt="ShaPass" v-if="!currentUser.atLanding()" />
     <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
     <button class="btn" v-on:click="setInitialStep()" v-if="currentUser.isLoggingInOrSigningUp()">&lt; back</button>
     <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Login</button>
@@ -32,6 +32,9 @@ export default {
       this.currentUser.logout((r) => {
         this.afterLogout(r);
       });
+    },
+    goToLanding () {
+      this.currentUser.setInitialStep();
     },
   }
 }
@@ -65,5 +68,6 @@ export default {
   width: 40px;
   height: 40px;
   margin: 5px 0;
+  cursor: pointer;
 }
 </style>
