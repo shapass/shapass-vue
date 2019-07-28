@@ -311,9 +311,28 @@ export default {
 
   #logo-landing {
     text-align: center;
-    width: 80%;
+    width: 70%;
     max-width: 300px;
     margin: 40px auto;
+
+    img {
+      animation:
+        float 3s ease-in-out infinite alternate;
+    }
+  }
+}
+
+@keyframes float {
+  0% {
+    /* transform: translateY(-5px) scaleY(1.02); */
+    transform: translateY(-3px) rotate(0);
+  }
+  50% {
+    transform: rotate(-1deg);
+  }
+  100% {
+    /* transform: translateY(5px) scaleY(1); */
+    transform: translateY(3px) rotate(0);
   }
 }
 

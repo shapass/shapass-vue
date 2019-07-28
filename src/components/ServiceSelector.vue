@@ -127,11 +127,9 @@ export default {
   cursor: pointer;
 
   input::placeholder {
-    color: $black;
+    color: $body-background;
     text-align: center;
     text-transform: uppercase;
-    /* font-weight: bold; */
-    /* font-size: 18px; */
   }
 
   .vs__selected-options input {
