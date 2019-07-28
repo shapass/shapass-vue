@@ -79,8 +79,11 @@ const CurrentUser = {
   atLanding () {
     return this.state.step === 'Landing';
   },
-  setInitialStep () {
+  setAtLanding () {
     this.state.step = 'Landing';
+  },
+  setAtApp () {
+    this.state.step = null;
   },
   setLoggingIn () {
     this.state.step = 'Login';

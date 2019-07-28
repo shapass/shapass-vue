@@ -69,6 +69,19 @@ Vue.mixin({
       }
       return result;
     },
+    withDisabledButton: function(id, callback) {
+      var btn = this.$el.querySelector(id);
+      if (btn !== undefined && btn !== null) {
+        var bef = btn.disabled;
+        btn.disabled = true;
+        callback(() => { btn.disabled = bef; });
+      } else {
+        callback(() => {});
+      }
+    },
+    notEmpty: function(v) {
+      return v !== null && v !== undefined && v !== '';
+    }
   }
 });
 

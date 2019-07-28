@@ -3,7 +3,7 @@
   <div id="navbar-content">
     <img v-on:click="goToLanding" src="logo.svg" id="logo" alt="ShaPass" v-if="!currentUser.atLanding()" />
     <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
-    <button class="btn" v-on:click="setInitialStep()" v-if="currentUser.isLoggingInOrSigningUp()">&lt; back</button>
+    <button class="btn" v-on:click="setAtLanding()" v-if="currentUser.isLoggingInOrSigningUp()">&lt; back</button>
     <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Login</button>
     <button class="btn" v-on:click="setSigningUp()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Register</button>
     <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()">Logout</button>
@@ -19,8 +19,8 @@ export default {
     currentUser: Object
   },
   methods: {
-    setInitialStep () {
-      this.currentUser.setInitialStep();
+    setAtLanding () {
+      this.currentUser.setAtLanding();
     },
     setLoggingIn () {
       this.currentUser.setLoggingIn();
@@ -34,7 +34,7 @@ export default {
       });
     },
     goToLanding () {
-      this.currentUser.setInitialStep();
+      this.currentUser.setAtLanding();
     },
   }
 }

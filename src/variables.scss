@@ -38,6 +38,7 @@ $body-font-size: $font-md;
 $label-font-size: $font-sm;
 $label-color: #fff;
 $input-font-family: $body-font-family;
+$input-font-color: $primary;
 $notification-border-radius: 0;
 $notification-bg-color: $black;
 $notification-border: 1px solid $primary;
@@ -53,6 +54,9 @@ $btn-font-family: $body-font-family;
 $btn-hover-border: $btn-border;
 $btn-hover-bg: $primary;
 $btn-hover-color: $black;
+$btn-disabled-border-color: $gray;
+$btn-disabled-font-color: $gray;
+$btn-disabled-bg-color: $background-highlight;
 $btn-ico-bg: transparent;
 $btn-ico-border: none;
 $btn-ico-color: #787b86; //$body-font-color;
@@ -182,6 +186,18 @@ button {
     border: $btn-hover-border;
     color: $btn-hover-color;
   }
+
+  &[disabled], &.disabled {
+    color: $btn-disabled-font-color;
+    background-color: $btn-disabled-bg-color;
+    border-color: $btn-disabled-border-color;
+
+    &:hover, &:active {
+      color: $btn-disabled-font-color;
+      background-color: $btn-disabled-bg-color;
+      border-color: $btn-disabled-border-color;
+    }
+  }
 }
 
 .btn-ico {
@@ -231,10 +247,7 @@ input {
   outline: none;
   background: none;
   font-family: $input-font-family;
-  color: $body-font-color;
-  // padding: 10px;
-  // border: 1px solid $dark-gray;
-  // border-radius: 4px;
+  color: $input-font-color;
 }
 input:focus {
   outline: none;

@@ -16,11 +16,11 @@
   <div id="content-app" v-if="!currentUser.atLanding()" class="content-wrapper">
     <div class="container" id="email" v-if="currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your email</label>
-      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()">
+      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="enterOnInput" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()">
     </div>
     <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your master password:</label>
-      <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="copyToClipboard" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
+      <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
     </div>
     <div class="container" id="generated" v-if="state.generated && state.master !== null && state.master !== ''">
       <label class="typewriter">Generated password:</label>
@@ -45,8 +45,8 @@
       </div>
     </div>
     <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isLoggingInOrSigningUp()">
-      <button class="btn btn-login" @click="submitLogin" v-if="currentUser.isLoggingIn()">Login</button>
-      <button class="btn btn-signup" @click="submitSignUp" v-if="currentUser.isSigningUp()">Register</button>
+      <button class="btn btn-login" id="login-submit" @click="submitLogin" v-if="currentUser.isLoggingIn()" :disabled="!canLogin()">Login</button>
+      <button class="btn btn-signup" id="signup-submit" @click="submitSignUp" v-if="currentUser.isSigningUp()" :disabled="!canSignUp()">Register</button>
     </div>
   </div>
 
@@ -104,7 +104,7 @@ export default {
       } else if (this.currentUser.atLanding()) {
         Store.clearEntries();
       } else if (this.currentUser.atApp()) {
-        this.state.service = null;
+        Store.clearEntries();
         this.focusServiceSelector();
       }
     },
@@ -189,6 +189,17 @@ export default {
     focusServiceSelector () {
       this.focusInput('#service');
     },
+
+    // Pressed enter on an input, decide what to do
+    enterOnInput () {
+      if (this.currentUser.atApp()) {
+        this.copyToClipboard();
+      } else if (this.currentUser.isLoggingIn()) {
+        this.submitLogin();
+      } else if (this.currentUser.isSigningUp()) {
+        this.submitSignUp();
+      }
+    },
     save () {
       Store.saveCurrentState((r, saved) => {
         if (r) {
@@ -214,29 +225,40 @@ export default {
       }
     },
     submitLogin () {
-      this.currentUser.login(this.inputEmail, this.state.generated, (r) => {
-        if (r) {
-          this.$toasted.success('Welcome!');
-          this.afterLogin();
-        } else {
-          this.$toasted.error('Incorrect email or password, try again');
-        }
-      });
+      if (this.canLogin()) {
+        this.withDisabledButton("#login-submit", (done) => {
+          this.currentUser.login(this.inputEmail, this.state.generated, (r) => {
+            if (r) {
+              this.$toasted.success('Welcome!');
+              this.afterLogin();
+            } else {
+              this.$toasted.error('Incorrect email or password, try again');
+            }
+            done();
+          });
+        });
+      }
     },
     submitSignUp () {
-      this.currentUser.signup(this.inputEmail, this.state.generated, (r) => {
-        if (r) {
-          this.$toasted.success('Successfully registered!');
-          this.afterSignUp();
-        } else {
-          this.$toasted.error('Error registering');
-        }
-      });
+      if (this.canSignUp()) {
+        this.withDisabledButton("#signup-submit", (done) => {
+          this.currentUser.signup(this.inputEmail, this.state.generated, (r) => {
+            if (r) {
+              this.$toasted.success('Successfully registered!');
+              this.afterSignUp();
+            } else {
+              this.$toasted.error('Error registering');
+            }
+            done();
+          });
+        });
+      }
     },
     afterSignUp () {
-      this.login();
+      this.submitLogin();
     },
     afterLogin () {
+      this.currentUser.setAtApp();
       Store.reloadServices();
     },
     afterLogout (r) {
@@ -246,6 +268,12 @@ export default {
         this.$toasted.error('Something went wrong :(');
       }
     },
+    canLogin () {
+      return this.notEmpty(this.state.master) && this.notEmpty(this.inputEmail);
+    },
+    canSignUp () {
+      return this.notEmpty(this.state.master) && this.notEmpty(this.inputEmail);
+    }
   },
   data () {
     return {
