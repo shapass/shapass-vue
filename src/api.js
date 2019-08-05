@@ -7,19 +7,13 @@ const API = {
   },
   request (method, httpMethod, data, callback) {
     var url = `${Configs.API_URL}/${method}`;
-    var params = new URLSearchParams();
-    if (data !== null && data !== undefined) {
-      Object.keys(data).forEach((k) => {
-        params.append(k, data[k]);
-      });
-    }
-    console.log("Sending request", url, httpMethod, params.toString());
+    console.log("Sending request", url, httpMethod, data);
     axios({
       method: httpMethod,
       url: url,
-      data: params,
+      data: data,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       }
     }).then(response => {
       console.log("Success response:", url, response.data);
@@ -30,7 +24,7 @@ const API = {
     });
   },
   loginData (data) {
-    var base = { loginToken: this.state.token };
+    var base = { token: this.state.token };
     if (data !== null && data !== undefined) {
       Object.keys(data).forEach((k) => { base[k] = data[k]; });
     }
