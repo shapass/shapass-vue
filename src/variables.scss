@@ -1,5 +1,6 @@
 $dark-blue: #010913;
-$turquoise: #36cdd4; //#4abfc8;
+// $turquoise: #36cdd4; //#4abfc8;
+$turquoise: #00ffff; //#4abfc8;
 $dark-gray: #2d3238; //#212529;
 $gray: #4f5862;
 $black-tv: #010a13;
@@ -131,6 +132,20 @@ $mobile-width: 480px;
 // Global styles
 //
 
+@keyframes float {
+  0% {
+    /* transform: translateY(-5px) scaleY(1.02); */
+    transform: translateY(-3px) rotate(0);
+  }
+  50% {
+    transform: rotate(-1deg);
+  }
+  100% {
+    /* transform: translateY(5px) scaleY(1); */
+    transform: translateY(3px) rotate(0);
+  }
+}
+
 html {
   height: 100%;
 }
@@ -233,8 +248,6 @@ button {
       }
     }
   }
-
-
 }
 
 input {

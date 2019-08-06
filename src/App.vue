@@ -350,20 +350,6 @@ export default {
   }
 }
 
-@keyframes float {
-  0% {
-    /* transform: translateY(-5px) scaleY(1.02); */
-    transform: translateY(-3px) rotate(0);
-  }
-  50% {
-    transform: rotate(-1deg);
-  }
-  100% {
-    /* transform: translateY(5px) scaleY(1); */
-    transform: translateY(3px) rotate(0);
-  }
-}
-
 .content-wrapper {
   margin: 0 auto;
   padding: 0 $content-side-padding;
