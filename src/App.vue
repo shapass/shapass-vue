@@ -164,9 +164,7 @@ export default {
     },
     setLength (v) {
       let before = this.state.outputLength;
-      this.state.outputLength = v;
-      if (this.state.outputLength < Configs.MIN_LENGTH) { this.state.outputLength = Configs.MIN_LENGTH; }
-      if (this.state.outputLength > Configs.MAX_LENGTH) { this.state.outputLength = Configs.MAX_LENGTH; }
+      this.state.outputLength = Configs.boundedOutputLength(v);
       if (before != this.state.outputLength) {
         this.generatePassword();
       }

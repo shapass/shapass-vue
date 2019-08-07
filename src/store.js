@@ -63,7 +63,7 @@ const Store = {
         services.forEach((s) => {
           data[s.Name] = {
             service: s.Name,
-            outputLength: s.Length,
+            outputLength: Configs.boundedOutputLength(s.Length),
             suffix: s.Suffix,
             prefix: s.Prefix
           };
