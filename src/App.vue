@@ -21,11 +21,22 @@
     <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your master password:</label>
       <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
+      <button class="btn btn-ico btn-toggle-visibility" v-if="!isPasswordVisible('master')" @click="togglePasswordVisibility('master')" tabindex="-1">
+        <font-awesome-icon icon="eye-slash" />
+      </button>
+      <button class="btn btn-ico btn-toggle-visibility" v-if="isPasswordVisible('master')" @click="togglePasswordVisibility('master')" tabindex="-1">
+        <font-awesome-icon icon="eye" class="active" />
+      </button>
     </div>
-    <div class="container" id="generated" v-if="state.generated && state.master !== null && state.master !== ''">
+    <div class="container" id="generated" v-if="state.generated">
       <label class="typewriter">Generated password:</label>
       <div id="generated-input" v-html="generatedShown"></div>
-
+      <button class="btn btn-ico btn-toggle-visibility" v-if="!isPasswordVisible('generated')" @click="togglePasswordVisibility('generated')" tabindex="-1">
+        <font-awesome-icon icon="eye-slash" />
+      </button>
+      <button class="btn btn-ico btn-toggle-visibility" v-if="isPasswordVisible('generated')" @click="togglePasswordVisibility('generated')" tabindex="-1">
+        <font-awesome-icon icon="eye" class="active" />
+      </button>
       <div class="container clearfix" id="configurations" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
         <!-- <label class="typewriter">Configure the generated password:</label> -->
         <div id="length">
@@ -60,20 +71,6 @@
     <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard">
       <font-awesome-icon icon="copy" />
     </button>
-
-      <!-- <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'password'" @click="toggleMasterPasswordType" tabindex="-1"> -->
-      <!--   <font-awesome-icon icon="eye-slash" /> -->
-      <!-- </button> -->
-      <!-- <button class="btn-clean btn-toggle-visibility" v-if="masterPasswordType == 'text'" @click="toggleMasterPasswordType" tabindex="-1"> -->
-      <!--   <font-awesome-icon icon="eye" class="active" /> -->
-      <!-- </button> -->
-      <button class="btn btn-ico btn-toggle-visibility" v-if="!isGeneratedPasswordVisible" @click="togglePasswordVisibility" tabindex="-1">
-        <font-awesome-icon icon="eye-slash" />
-      </button>
-      <button class="btn btn-ico btn-toggle-visibility" v-if="isGeneratedPasswordVisible" @click="togglePasswordVisibility" tabindex="-1">
-        <font-awesome-icon icon="eye" class="active" />
-      </button>
-
   </div>
 </div>
 </template>
@@ -133,17 +130,24 @@ export default {
         this.$toasted.error('Could not copy', { duration: 1000 });
       })
     },
-    // toggleMasterPasswordType () {
-    //   this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
-    // },
-    togglePasswordVisibility () {
-      if (this.isGeneratedPasswordVisible) {
-        this.isGeneratedPasswordVisible = false;
+    isPasswordVisible (which) {
+      if (which == 'master') {
+        return this.masterPasswordType === 'text';
       } else {
-        this.isGeneratedPasswordVisible = true;
+        return this.isGeneratedPasswordVisible;
       }
-      this.setGeneratedPassword(this.state.generated);
-      this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
+    },
+    togglePasswordVisibility (which) {
+      if (which == 'master') {
+        this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
+      } else if (which == 'generated') {
+        if (this.isGeneratedPasswordVisible) {
+          this.isGeneratedPasswordVisible = false;
+        } else {
+          this.isGeneratedPasswordVisible = true;
+        }
+        this.setGeneratedPassword(this.state.generated);
+      }
     },
     setGeneratedPassword (val) {
       this.state.generated = val;
@@ -355,19 +359,32 @@ export default {
 }
 
 #master, #generated {
-  input {
-    margin-top: 5px;
-  }
-}
+  position: relative;
 
-#generated {
-  #generated-input {
+  > input, #generated-input {
     margin-top: 5px;
+    padding-right: 45px;
+    padding-left: 10px;
+    width: calc(100% - 55px);
+  }
+  #generated-input {
     word-break: break-all;
-    padding: 10px 15px;
     background: $generated-input-bg;
     border: $generated-input-border;
     color: $generated-input-color;
+    border: 1px solid $background-highlight;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .btn-toggle-visibility {
+    position: absolute;
+    right: 10px;
+    top: 38px;
+
+    svg {
+      font-size: 14px;
+    }
   }
 
   .censored {
@@ -382,9 +399,12 @@ export default {
   padding-top: 10px;
 
   > div {
-    display: flex;
+    /* display: flex; */
     align-items: baseline;
     justify-content: left;
+    float: left;
+
+    &#suffix { float: right; }
 
     label {
       margin-right: 10px;
@@ -393,7 +413,7 @@ export default {
       margin: 0 10px;
     }
     input[type="text"] {
-      width: auto;
+      width: 70px;
     }
     .svg-inline--fa {
       padding: 0;

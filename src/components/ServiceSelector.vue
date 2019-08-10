@@ -1,7 +1,8 @@
 <template>
   <div class="service-selector">
     <label class="typewriter" v-if="!currentUser.atLanding()">What is this password for?</label>
-    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="currentUser.atLanding() ? 'Get started' : 'e.g. gmail'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, landing: currentUser.atLanding() }"></v-select>
+    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="currentUser.atLanding() ? 'Get started' : 'Search or enter a new one...'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, landing: currentUser.atLanding() }" transition="slide">
+    </v-select>
   </div>
 </template>
 
@@ -50,6 +51,10 @@ export default {
 .v-select {
   clear: both;
   margin-top: 10px;
+
+  border: 1px solid $background-highlight;
+  /* padding: 5px 10px; */
+  width: 100%;
 
   input::placeholder {
     color: $placeholder-color;

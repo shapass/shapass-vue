@@ -22,7 +22,7 @@ $primary: $turquoise;
 $secondary: $orange;
 $active: $green;
 $background: lighten($dark-blue, 1);
-$background-highlight: lighten($gray-tv, 2); //rgba(128, 128, 128, 0.3); //$gray;
+$background-highlight: lighten($gray-tv, 5); //rgba(128, 128, 128, 0.3); //$gray;
 $background-dark: $dark; //rgba(0, 0, 0, 0.8);
 
 $font-md: 20px;
@@ -261,10 +261,16 @@ input {
   background: none;
   font-family: $input-font-family;
   color: $input-font-color;
+
+  border: 1px solid $background-highlight;
+  padding: 5px 10px;
+  width: calc(100% - 20px);
+  transition: all 0.3s linear;
 }
 input:focus {
   outline: none;
-  /* border-color: $primary; */
+  border-color: $primary;
+  transition: all 0.3s linear;
 }
 input::placeholder {
   color: $placeholder-color;
