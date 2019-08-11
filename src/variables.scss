@@ -29,6 +29,8 @@ $font-md: 20px;
 $font-lg: $font-md + 4px;
 $font-sm: $font-md - 6px;
 
+$transition-default: all 0.3s linear;
+
 $content-width: 600px;
 $content-side-padding: 20px;
 $body-font-family: 'Source Code Pro', monospace;
@@ -66,13 +68,13 @@ $btn-ico-hover-bg: none;
 $btn-ico-hover-color: $primary; //secondary;
 $btn-ico-hover-border: none;
 $btn-ico-active-color: $primary;
-$toolbar-ico-bg: $navbar-bg; //rgba(255, 255, 255, 0.04);
+$toolbar-ico-bg: none; //$navbar-bg; //rgba(255, 255, 255, 0.04);
 $toolbar-ico-color: $white;
-$toolbar-ico-hover-bg: $primary; //$background-highlight;
-$toolbar-ico-hover-color: $black; // $primary
+$toolbar-ico-hover-bg: $black;// $primary; //$background-highlight;
+$toolbar-ico-hover-color: $white; // $black; // $primary
 $toolbar-ico-size: 22px;
-$toolbar-ico-border: 0px solid $background-highlight;
-$kbd-bg: #212529;
+$toolbar-ico-border: 0; //0px solid $background-highlight;
+$kbd-bg: $background-highlight; //#212529;
 $kbd-color: #fff;
 $tooltip-bg: $background-highlight;
 $tooltip-color: $white;

@@ -9,7 +9,7 @@
   <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
     <div id="start" v-shortkey.once="['enter']" @shortkey="start">Press <kbd>enter</kbd> to start</div>
     <div id="slogan">The password manager that <em>does not</em> store your passwords.</div>
-    <div id="logo-landing">
+    <div id="logo-landing" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }">
       <img src="logo.svg" alt="Shapass" />
     </div>
   </div>
@@ -62,12 +62,15 @@
   <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
     <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'">
       <font-awesome-icon icon="save" />
+      <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>s</kbd></span>
     </button>
     <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove" v-tooltip="'Remove the selected service from your list of services'">
       <font-awesome-icon icon="trash" />
+      <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>del</kbd></span>
     </button>
     <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
       <font-awesome-icon icon="copy" />
+      <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>c</kbd></span>
     </button>
   </div>
 </div>
@@ -153,7 +156,9 @@ export default {
     copyToClipboard () {
       this.$copyText(this.state.generated).then(() => {
         this.$toasted.show('Copied', { duration: 1000 });
-        this.focusMasterPassword();
+        if (!this.$isMobile()) {
+          this.focusMasterPassword();
+        }
       }, () => {
         this.$toasted.error('Could not copy', { duration: 1000 });
       })
@@ -472,17 +477,14 @@ export default {
   margin: 0 auto;
 
   button {
-    width: 4em;
-    height: 4em;
+    width: auto;
+    height: auto;
     background: $toolbar-ico-bg;
     border: $toolbar-ico-border;
-    border-radius: 50%;
-    margin-right: 1em;
-    transition: all 0.4s linear;
-
-    &:last-child {
-      margin-right: 0;
-    }
+    border-radius: 0; //50%;
+    padding: 10px;
+    margin: 0 0.5em;
+    transition: $transition-default;
 
     &:hover {
       background: $toolbar-ico-hover-bg;
@@ -498,7 +500,14 @@ export default {
       padding: 0;
       margin: 0;
       border: 1px solid transparent;
-      width: 100%;
+      width: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    > span {
+      margin-top: 10px;
+      display: block;
     }
   }
 }

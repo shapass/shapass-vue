@@ -1,7 +1,7 @@
 <template>
 <div id="navbar" class="clearfix">
   <div id="navbar-content">
-    <img v-on:click="goToLanding" src="logo.svg" id="logo" alt="ShaPass" v-if="!currentUser.atLanding()" />
+    <img v-on:click="goToLanding" src="logo.svg" id="logo" alt="ShaPass" v-if="!currentUser.atLanding()" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }"/>
     <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
     <button class="btn" v-on:click="setAtLanding()" v-if="currentUser.isLoggingInOrSigningUp()">&lt; back</button>
     <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Login</button>
@@ -59,7 +59,7 @@ export default {
 
   .user-email {
     text-transform: none;
-    font-size: $label-font-size + 2px;
+    font-size: $label-font-size;
   }
 }
 
