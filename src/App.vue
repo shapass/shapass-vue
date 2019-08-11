@@ -100,6 +100,7 @@ export default {
       if (val != prev) {
         this.masterPasswordVisible = false;
         this.generatedPasswordVisible = false;
+        this.inputEmail = null;
       }
     },
     masterPasswordVisible () {
