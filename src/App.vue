@@ -3,7 +3,7 @@
   <Navbar :afterLogout="afterLogout" :currentUser="currentUser" />
   <div id="content-common" class="content-wrapper">
     <div class="container" id="service">
-      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" />
+      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :disabled="currentUser.isLoggingInOrSigningUp()" />
     </div>
   </div>
   <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">

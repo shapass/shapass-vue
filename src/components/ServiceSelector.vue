@@ -1,7 +1,11 @@
 <template>
   <div class="service-selector">
     <label class="typewriter" v-if="!currentUser.atLanding()">What is this password for?</label>
-    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="currentUser.atLanding() ? 'Get started' : 'Search or enter a new one...'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, landing: currentUser.atLanding() }" transition="slide">
+    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="currentUser.atLanding() ? 'Get started' : 'Search or enter a new one...'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, landing: currentUser.atLanding() }" transition="slide" :disabled="disabled">
+      <!-- <v-slot name="no-options">Sorry! no matching options.</v-slot> -->
+      <!-- <v-slot name="spinner"> -->
+      <!--   <div class="spinner">Loading...</div> -->
+      <!-- </v-slot> -->
     </v-select>
   </div>
 </template>
@@ -12,7 +16,8 @@ export default {
   props: {
     value: String,
     services: Array,
-    currentUser: Object
+    currentUser: Object,
+    disabled: Boolean
   },
   methods: {
     onSelectChange: function(v) {
@@ -125,6 +130,16 @@ export default {
   }
 }
 
+.v-select.vs--disabled {
+  .vs__dropdown-toggle {
+    background: rgba($vs-selected-background, 0.3);
+    /* background: $vs-selected-background; */
+  }
+  .vs__search {
+    background: none;
+  }
+}
+
 /* make it look like a button to press on */
 .landing.v-select:not(.vs--open) .vs__dropdown-toggle {
   background: $primary;
@@ -132,7 +147,7 @@ export default {
   cursor: pointer;
 
   input::placeholder {
-    color: $body-background;
+    color: $vs-bg;
     text-align: center;
     text-transform: uppercase;
   }
