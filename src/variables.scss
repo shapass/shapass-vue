@@ -62,8 +62,9 @@ $btn-ico-bg: transparent;
 $btn-ico-border: none;
 $btn-ico-color: #787b86; //$body-font-color;
 $btn-ico-hover-bg: none;
-$btn-ico-hover-color: $secondary;
+$btn-ico-hover-color: $primary; //secondary;
 $btn-ico-hover-border: none;
+$btn-ico-active-color: $primary;
 $toolbar-width: 350px;
 $toolbar-bg: $navbar-bg; //rgba(255, 255, 255, 0.04);
 $toolbar-border: 2px solid $background-highlight;
@@ -221,7 +222,7 @@ button {
   border: $btn-ico-border;
   color: $btn-ico-color;
 
-  &:hover, &:active {
+  &:hover {
     background: $btn-ico-hover-bg;
     border: $btn-ico-hover-border;
     color: $btn-ico-hover-color;
@@ -242,11 +243,15 @@ button {
     }
 
     &.active {
-      color: $btn-ico-color; //$primary;
+      color: $btn-ico-active-color; //$primary;
       &:hover {
         color: $btn-ico-hover-color; //$orange;
       }
     }
+  }
+
+  &.active .svg-inline--fa {
+    color: $btn-ico-active-color;
   }
 }
 

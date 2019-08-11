@@ -10,7 +10,7 @@
     <div id="start" v-shortkey.once="['enter']" @shortkey="start">Press <kbd>enter</kbd> to start</div>
     <div id="slogan">The password manager that <em>does not</em> store your passwords.</div>
     <div id="logo-landing">
-      <img src="logo.svg" alt="ShaPass" />
+      <img src="logo.svg" alt="Shapass" />
     </div>
   </div>
   <div id="content-app" v-if="!currentUser.atLanding()" class="content-wrapper">
@@ -21,22 +21,12 @@
     <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your master password:</label>
       <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
-      <button class="btn btn-ico btn-toggle-visibility" v-if="!isPasswordVisible('master')" @click="togglePasswordVisibility('master')" tabindex="-1">
-        <font-awesome-icon icon="eye-slash" />
-      </button>
-      <button class="btn btn-ico btn-toggle-visibility" v-if="isPasswordVisible('master')" @click="togglePasswordVisibility('master')" tabindex="-1">
-        <font-awesome-icon icon="eye" class="active" />
-      </button>
+      <PasswordVisibilityToggle :timeout="passwordVisibilityTimeout" v-on:visibility-changed="toggleMasterPasswordVisibility" />
     </div>
     <div class="container" id="generated" v-if="state.generated">
       <label class="typewriter">Generated password:</label>
       <div id="generated-input" v-html="generatedShown"></div>
-      <button class="btn btn-ico btn-toggle-visibility" v-if="!isPasswordVisible('generated')" @click="togglePasswordVisibility('generated')" tabindex="-1">
-        <font-awesome-icon icon="eye-slash" />
-      </button>
-      <button class="btn btn-ico btn-toggle-visibility" v-if="isPasswordVisible('generated')" @click="togglePasswordVisibility('generated')" tabindex="-1">
-        <font-awesome-icon icon="eye" class="active" />
-      </button>
+      <PasswordVisibilityToggle :timeout="passwordVisibilityTimeout" v-on:visibility-changed="toggleGeneratedPasswordVisibility" />
       <div class="container clearfix" id="configurations" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
         <!-- <label class="typewriter">Configure the generated password:</label> -->
         <div id="length">
@@ -78,6 +68,7 @@
 <script>
 import Navbar from './components/Navbar.vue'
 import ServiceSelector from './components/ServiceSelector.vue'
+import PasswordVisibilityToggle from './components/PasswordVisibilityToggle.vue'
 import { Configs } from './config.js'
 import Store from './store.js'
 import CurrentUser from './current_user.js'
@@ -86,7 +77,8 @@ export default {
   name: 'app',
   components: {
     Navbar,
-    ServiceSelector
+    ServiceSelector,
+    PasswordVisibilityToggle
   },
   watch: {
     "state.service" (val) {
@@ -137,17 +129,16 @@ export default {
         return this.isGeneratedPasswordVisible;
       }
     },
-    togglePasswordVisibility (which) {
-      if (which == 'master') {
-        this.masterPasswordType = this.masterPasswordType === 'password' ? 'text' : 'password'
-      } else if (which == 'generated') {
-        if (this.isGeneratedPasswordVisible) {
-          this.isGeneratedPasswordVisible = false;
-        } else {
-          this.isGeneratedPasswordVisible = true;
-        }
-        this.setGeneratedPassword(this.state.generated);
+    toggleMasterPasswordVisibility (visible) {
+      if (visible) {
+        this.masterPasswordType = 'text';
+      } else {
+        this.masterPasswordType = 'password';
       }
+    },
+    toggleGeneratedPasswordVisibility (visible) {
+      this.isGeneratedPasswordVisible = visible;
+      this.setGeneratedPassword(this.state.generated);
     },
     setGeneratedPassword (val) {
       this.state.generated = val;
@@ -285,9 +276,11 @@ export default {
       inputEmail: null,                   // the email current in the input
       generatedCensored: null,            // censored version of the generated password
       generatedShown: null,               // clear text version of the generated password
-      isGeneratedPasswordVisible: false,  // are we showing the clear text version?
       mask: this.randomMask(),            // mask to censor the generated password
       masterPasswordType: "password",     // input type to control visibility of the master password
+      hideMasterPasswordTimeout: null,    // timeout to animate and hide password visibility
+      isGeneratedPasswordVisible: false,  // are we showing the clear text version?
+      passwordVisibilityTimeout: Configs.PASSWORD_VISIBILITY_TIMEOUT,
     }
   },
   mounted () {
@@ -377,14 +370,10 @@ export default {
     padding-bottom: 5px;
   }
 
-  .btn-toggle-visibility {
+  .password-visibility-toggle {
     position: absolute;
     right: 10px;
-    top: 38px;
-
-    svg {
-      font-size: 14px;
-    }
+    top: 35px;
   }
 
   .censored {
