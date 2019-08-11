@@ -389,7 +389,7 @@ export default {
   .password-visibility-toggle {
     position: absolute;
     right: 10px;
-    top: 1.8em; // based on how font-size is calculated
+    top: 1.75em; // based on how font-size is calculated
   }
 
   .censored {
@@ -479,6 +479,10 @@ export default {
     border-radius: 50%;
     margin-right: 1em;
     transition: all 0.4s linear;
+
+    &:last-child {
+      margin-right: 0;
+    }
 
     &:hover {
       background: $toolbar-ico-hover-bg;

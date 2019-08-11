@@ -126,12 +126,13 @@ $vs-selected-border: none;
 //
 // Mobile
 //
-
-$m-font-md: calc(0.45em + 2vmin);
-$m-font-lg: calc(0.65em + 2vmin);
+// TODO: move all mobile things to a separate file
+$m-body-background: lighten($body-background, 5);
+$m-font-md: calc(0.5em + 2vmin);
+$m-font-lg: calc(0.7em + 2vmin);
 $m-body-font-size: $m-font-md;
-$m-label-font-size: calc(0.45em + 1vmin);
-$m-icon-size: calc(0.45em + 2vmin);
+$m-label-font-size: calc(0.5em + 1vmin);
+$m-icon-size: calc(0.5em + 2vmin);
 $mobile-width: 480px;
 @mixin mobile {
   @media only screen and (max-width: #{$mobile-width}) {
@@ -171,6 +172,8 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+
+  @include mobile { background: $m-body-background; }
 }
 
 .container {
