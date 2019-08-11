@@ -60,13 +60,13 @@
   </div>
 
   <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
-    <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save">
+    <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'">
       <font-awesome-icon icon="save" />
     </button>
-    <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove">
+    <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove" v-tooltip="'Remove the selected service from your list of services'">
       <font-awesome-icon icon="trash" />
     </button>
-    <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard">
+    <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
       <font-awesome-icon icon="copy" />
     </button>
   </div>
@@ -462,27 +462,40 @@ export default {
   padding: 0;
   background: none;
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 20px;
+  right: 20px;
   left: 0;
   text-align: center;
-  background: $toolbar-bg;
-  border: $toolbar-border;
-  border-bottom: none;
+  /* border-bottom: none; */
   width: auto;
-  max-width: $toolbar-width;
+  /* max-width: $toolbar-width; */
   margin: 0 auto;
 
   button {
-    width: 20%;
-  }
+    width: 4em;
+    height: 4em;
+    background: $toolbar-ico-bg;
+    border: $toolbar-ico-border;
+    border-radius: 50%;
+    margin-right: 1em;
+    transition: all 0.4s linear;
 
-  .svg-inline--fa {
-    font-size: 24px;
-    padding: 15px 0;
-    margin: 0;
-    border: 1px solid transparent;
-    width: 100%;
+    &:hover {
+      background: $toolbar-ico-hover-bg;
+      border-color: $toolbar-ico-hover-bg;
+      .svg-inline--fa {
+        color: $toolbar-ico-hover-color;
+      }
+    }
+
+    .svg-inline--fa {
+      font-size: $toolbar-ico-size;
+      color: $toolbar-ico-color;
+      padding: 0;
+      margin: 0;
+      border: 1px solid transparent;
+      width: 100%;
+    }
   }
 }
 

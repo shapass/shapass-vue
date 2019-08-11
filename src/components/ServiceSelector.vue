@@ -150,6 +150,7 @@ export default {
     color: $vs-bg;
     text-align: center;
     text-transform: uppercase;
+    font-size: $body-font-size;
   }
 
   .vs__selected-options input {

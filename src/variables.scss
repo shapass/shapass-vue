@@ -45,6 +45,7 @@ $notification-bg-color: $black;
 $notification-border: 1px solid $primary;
 $icon-size: 16px;
 $placeholder-color: rgba(255, 255, 255, 0.2);
+$placeholder-font-size: $font-sm;
 $navbar-bg: $black;//$background-highlight; // rgba(255, 255, 255, 0.15);
 $navbar-border-bottom: 1px solid $background-highlight;
 $btn-border: 1px solid $primary;
@@ -65,9 +66,18 @@ $btn-ico-hover-bg: none;
 $btn-ico-hover-color: $primary; //secondary;
 $btn-ico-hover-border: none;
 $btn-ico-active-color: $primary;
-$toolbar-width: 350px;
-$toolbar-bg: $navbar-bg; //rgba(255, 255, 255, 0.04);
-$toolbar-border: 2px solid $background-highlight;
+$toolbar-ico-bg: $navbar-bg; //rgba(255, 255, 255, 0.04);
+$toolbar-ico-color: $white;
+$toolbar-ico-hover-bg: $primary; //$background-highlight;
+$toolbar-ico-hover-color: $black; // $primary
+$toolbar-ico-size: 22px;
+$toolbar-ico-border: 0px solid $background-highlight;
+$kbd-bg: #212529;
+$kbd-color: #fff;
+$tooltip-bg: $background-highlight;
+$tooltip-color: $white;
+$tooltip-border: 1px solid $primary;
+$tooltip-font-size: $font-sm;
 
 //medium
 $generated-input-bg: $background-highlight;
@@ -281,7 +291,7 @@ input:focus {
 input::placeholder {
   color: $placeholder-color;
   opacity: 0.8;
-  font-size: $body-font-size;
+  font-size: $placeholder-font-size;
   @include mobile { font-size: $m-body-font-size; }
 }
 label {
@@ -335,8 +345,8 @@ label {
 kbd {
   padding: .2rem .4rem;
   font-size: 87.5%;
-  color: #fff;
-  background-color: #212529;
+  color: $kbd-color;
+  background-color: $kbd-bg;
   border-radius: .2rem;
 }
 
@@ -348,4 +358,119 @@ kbd kbd {
 
 img {
   max-width: 100%;
+}
+
+.tooltip {
+  display: block !important;
+  z-index: 10000;
+  font-size: $tooltip-font-size;
+  max-width: 300px;
+  text-align: center;
+  border-radius: 0;
+
+  .tooltip-inner {
+    background: $tooltip-bg;
+    color: $tooltip-color;
+    border-radius: 0;
+    padding: 5px 10px 4px;
+    border: $tooltip-border;
+  }
+
+  .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+    border-color: transparent; //
+    z-index: 1;
+  }
+
+  &[x-placement^="top"] {
+    margin-bottom: 10px;
+
+    /* .tooltip-arrow { */
+    /*   border-width: 10px 10px 0 10px; */
+    /*   border-left-color: transparent !important; */
+    /*   border-right-color: transparent !important; */
+    /*   border-bottom-color: transparent !important; */
+    /*   bottom: -10px; */
+    /*   left: calc(50% - 10px); */
+    /*   margin-top: 0; */
+    /*   margin-bottom: 0; */
+    /* } */
+  }
+
+  &[x-placement^="bottom"] {
+    margin-top: 10px;
+
+    /* .tooltip-arrow { */
+    /*   border-width: 0 5px 5px 5px; */
+    /*   border-left-color: transparent !important; */
+    /*   border-right-color: transparent !important; */
+    /*   border-top-color: transparent !important; */
+    /*   top: -5px; */
+    /*   left: calc(50% - 5px); */
+    /*   margin-top: 0; */
+    /*   margin-bottom: 0; */
+    /* } */
+  }
+
+  &[x-placement^="right"] {
+    margin-left: 10px;
+
+    /* .tooltip-arrow { */
+    /*   border-width: 5px 5px 5px 0; */
+    /*   border-left-color: transparent !important; */
+    /*   border-top-color: transparent !important; */
+    /*   border-bottom-color: transparent !important; */
+    /*   left: -5px; */
+    /*   top: calc(50% - 5px); */
+    /*   margin-left: 0; */
+    /*   margin-right: 0; */
+    /* } */
+  }
+
+  &[x-placement^="left"] {
+    margin-right: 10px;
+
+    /* .tooltip-arrow { */
+    /*   border-width: 5px 0 5px 5px; */
+    /*   border-top-color: transparent !important; */
+    /*   border-right-color: transparent !important; */
+    /*   border-bottom-color: transparent !important; */
+    /*   right: -5px; */
+    /*   top: calc(50% - 5px); */
+    /*   margin-left: 0; */
+    /*   margin-right: 0; */
+    /* } */
+  }
+
+  /* &.popover { */
+  /*   $color: #f9f9f9; */
+
+  /*   .popover-inner { */
+  /*     background: $color; */
+  /*     color: black; */
+  /*     padding: 24px; */
+  /*     border-radius: 5px; */
+  /*     box-shadow: 0 5px 30px rgba(black, .1); */
+  /*   } */
+
+  /*   .popover-arrow { */
+  /*     border-color: $color; */
+  /*   } */
+  /* } */
+
+  &[aria-hidden='true'] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .15s, visibility .15s;
+  }
+
+  &[aria-hidden='false'] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .15s;
+  }
 }

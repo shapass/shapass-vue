@@ -7,6 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMobileDetection from "vue-mobile-detection";
+import VTooltip from 'v-tooltip';
 
 library.add(faEye);
 library.add(faEyeSlash);
@@ -28,6 +29,7 @@ Vue.use(VueClipboard);
 Vue.component('v-select', vSelect);
 Vue.use(require('vue-shortkey'));
 Vue.use(VueMobileDetection);
+Vue.use(VTooltip, { defaultDelay: 800 });
 
 Vue.directive('focus', {
   inserted: function (el, e) {
@@ -91,6 +93,9 @@ Vue.mixin({
   }
 });
 
-new Vue({
+var app = new Vue({
   render: h => h(App),
 }).$mount('#app');
+
+console.log("mobile?", app.$isMobile());
+VTooltip.enabled = !app.$isMobile(); //window.innerWidth > 768;
