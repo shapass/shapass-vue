@@ -22,15 +22,21 @@ export default {
   name: 'PasswordVisibilityToggle',
   props: {
     timeout: Number,
+    value: Boolean,
   },
   methods: {
     toggleVisibility: function() {
       this.visible = !this.visible;
+      this.afterToggleVisibility();
+    },
+    afterToggleVisibility: function() {
       if (this.visible) {
         clearTimeout(this.timeoutInstance);
         this.timeoutInstance = setTimeout(() => {
           this.visible = false;
         }, this.timeout);
+      } else {
+        clearTimeout(this.timeoutInstance);
       }
     }
   },
@@ -41,9 +47,18 @@ export default {
     }
   },
   watch: {
-    visible: function(val) {
-      this.$emit('visibility-changed', val)
+    visible: function(val, prev) {
+      if (val != prev) {
+        this.afterToggleVisibility();
+      }
+      this.$emit('input', val)
+    },
+    value: function(val) {
+      this.visible = val;
     }
+  },
+  mounted () {
+    this.visible = false;
   }
 }
 </script>
@@ -67,7 +82,7 @@ $t: 8;    // timeout in s
   border-radius: 999px;
   /* box-shadow: inset 0 0 0 $w+px rgba(255,255,255,0.1); /* to add a background bar */
   text-align: center;
-  
+
   svg, .svg-inline--fa {
     position: absolute;
     padding: 0;

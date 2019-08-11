@@ -21,12 +21,12 @@
     <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your master password:</label>
       <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
-      <PasswordVisibilityToggle :timeout="passwordVisibilityTimeout" v-on:visibility-changed="toggleMasterPasswordVisibility" />
+      <PasswordVisibilityToggle v-model="masterPasswordVisible" :timeout="passwordVisibilityTimeout" />
     </div>
     <div class="container" id="generated" v-if="state.generated">
       <label class="typewriter">Generated password:</label>
-      <div id="generated-input" v-html="generatedShown"></div>
-      <PasswordVisibilityToggle :timeout="passwordVisibilityTimeout" v-on:visibility-changed="toggleGeneratedPasswordVisibility" />
+      <div id="generated-input" v-html="generatedClearText"></div>
+      <PasswordVisibilityToggle v-model="generatedPasswordVisible" :timeout="passwordVisibilityTimeout" />
       <div class="container clearfix" id="configurations" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
         <!-- <label class="typewriter">Configure the generated password:</label> -->
         <div id="length">
@@ -85,7 +85,7 @@ export default {
       Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
       this.generatePassword();
     },
-    "currentUser.state.step" () {
+    "currentUser.state.step" (val, prev) {
       if (this.currentUser.isLoggingInOrSigningUp()) {
         Store.clearEntries();
         this.state.service = Configs.SHAPASS_SERVICE;
@@ -96,6 +96,17 @@ export default {
         Store.clearEntries();
         this.focusServiceSelector();
       }
+      // force-hide passwords when changing page
+      if (val != prev) {
+        this.masterPasswordVisible = false;
+        this.generatedPasswordVisible = false;
+      }
+    },
+    masterPasswordVisible () {
+      this.toggleMasterPasswordVisibility(this.masterPasswordVisible);
+    },
+    generatedPasswordVisible () {
+      this.toggleGeneratedPasswordVisibility();
     },
   },
   methods: {
@@ -122,13 +133,6 @@ export default {
         this.$toasted.error('Could not copy', { duration: 1000 });
       })
     },
-    isPasswordVisible (which) {
-      if (which == 'master') {
-        return this.masterPasswordType === 'text';
-      } else {
-        return this.isGeneratedPasswordVisible;
-      }
-    },
     toggleMasterPasswordVisibility (visible) {
       if (visible) {
         this.masterPasswordType = 'text';
@@ -137,7 +141,6 @@ export default {
       }
     },
     toggleGeneratedPasswordVisibility (visible) {
-      this.isGeneratedPasswordVisible = visible;
       this.setGeneratedPassword(this.state.generated);
     },
     setGeneratedPassword (val) {
@@ -148,10 +151,10 @@ export default {
       } else {
         this.generatedCensored = null;
       }
-      if (this.isGeneratedPasswordVisible) {
-        this.generatedShown = this.state.generated;
+      if (this.generatedPasswordVisible) {
+        this.generatedClearText = this.state.generated;
       } else {
-        this.generatedShown = this.generatedCensored;
+        this.generatedClearText = this.generatedCensored;
       }
     },
     lengthAdd (v) {
@@ -275,11 +278,12 @@ export default {
 
       inputEmail: null,                   // the email current in the input
       generatedCensored: null,            // censored version of the generated password
-      generatedShown: null,               // clear text version of the generated password
+      generatedClearText: null,           // clear text version of the generated password
       mask: this.randomMask(),            // mask to censor the generated password
       masterPasswordType: "password",     // input type to control visibility of the master password
-      hideMasterPasswordTimeout: null,    // timeout to animate and hide password visibility
-      isGeneratedPasswordVisible: false,  // are we showing the clear text version?
+      masterPasswordVisible: false,       // is the master password visible?
+      generatedPasswordVisible: false,    // is the generated password visible?
+
       passwordVisibilityTimeout: Configs.PASSWORD_VISIBILITY_TIMEOUT,
     }
   },
