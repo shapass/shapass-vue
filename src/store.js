@@ -12,6 +12,7 @@ const Store = {
     prefix: null,
     master: null,
     generated: null,
+    algorithm: Configs.DEFAULT_ALGORITHM,
     services: [],
     servicesForSelect: []
   },
@@ -29,6 +30,7 @@ const Store = {
       if (data[name] !== null && data[name] !== undefined) {
         this.state.outputLength = data[name].outputLength;
         this.state.suffix = data[name].suffix;
+        this.state.algorithm = data[name].algorithm;
       } else {
         this.state.outputLength = Configs.DEFAULT_LENGTH;
         this.state.suffix = null;
@@ -44,6 +46,7 @@ const Store = {
     this.state.prefix = null;
     this.state.master = null;
     this.state.service = null;
+    this.state.algorithm = Configs.DEFAULT_ALGORITHM;
   },
 
   // reloads the list of service names from localStorage to current state
@@ -65,7 +68,8 @@ const Store = {
             service: s.Name,
             outputLength: Configs.boundedOutputLength(s.Length),
             suffix: s.Suffix,
-            prefix: s.Prefix
+            prefix: s.Prefix,
+            algorithm: s.Algorithm
           };
         });
         localStorage.shapassData = JSON.stringify(data);
@@ -106,6 +110,7 @@ const Store = {
             service: this.state.service,
             outputLength: this.state.outputLength,
             suffix: this.state.suffix,
+            algorithm: this.state.algorithm,
             prefix: null
           };
           localStorage.shapassData = JSON.stringify(data);

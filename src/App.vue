@@ -20,7 +20,7 @@
     </div>
     <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your master password:</label>
-      <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:input="generatePassword" v-on:keyup.enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
+      <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:keyup.enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
       <PasswordVisibilityToggle v-model="masterPasswordVisible" :timeout="passwordVisibilityTimeout" />
     </div>
     <div class="container" id="generated" v-if="state.generated">
@@ -31,17 +31,25 @@
         <!-- <label class="typewriter">Configure the generated password:</label> -->
         <div id="length">
           <label class="typewriter">Length:</label>
+          <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength" />
           <button class="btn btn-ico btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
             <font-awesome-icon icon="minus-square" />
           </button>
-          <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength" />
           <button class="btn btn-ico btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
             <font-awesome-icon icon="plus-square" />
           </button>
         </div>
+        <div id="algorithm">
+          <label class="typewriter" for="algorithm-input">Algorithm:</label>
+          <select id="algorithm-input" v-model="state.algorithm" tabindex="-1">
+            <option>sha256-str</option>
+            <option>sha256-bin</option>
+            <!-- <option>sha256-bin-alfanum</option> -->
+          </select>
+        </div>
         <div id="suffix">
           <label class="typewriter" for="suffix-input">Suffix:</label>
-          <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" v-on:input="generatePassword" tabindex="-1">
+          <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" tabindex="-1">
         </div>
       </div>
     </div>
@@ -81,9 +89,21 @@ export default {
     PasswordVisibilityToggle
   },
   watch: {
-    "state.service" (val) {
+    "state.service" (val, prev) {
       Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
-      this.generatePassword();
+      if (val !== prev) { this.generatePassword(); }
+    },
+    "state.master" (val, prev) {
+      if (val !== prev) { this.generatePassword(); }
+    },
+    "state.suffix" (val, prev) {
+      if (val !== prev) { this.generatePassword(); }
+    },
+    "state.outputLength" (val, prev) {
+      if (val !== prev) { this.generatePassword(); }
+    },
+    "state.algorithm" (val, prev) {
+      if (val !== prev) { this.generatePassword(); }
     },
     "currentUser.state.step" (val, prev) {
       if (this.currentUser.isLoggingInOrSigningUp()) {
@@ -104,10 +124,14 @@ export default {
       }
     },
     masterPasswordVisible () {
-      this.toggleMasterPasswordVisibility(this.masterPasswordVisible);
+      if (this.masterPasswordVisible) {
+        this.masterPasswordType = 'text';
+      } else {
+        this.masterPasswordType = 'password';
+      }
     },
     generatedPasswordVisible () {
-      this.toggleGeneratedPasswordVisibility();
+      this.setGeneratedPassword(this.state.generated);
     },
   },
   methods: {
@@ -117,7 +141,7 @@ export default {
         if (this.state.master !== null) {
           input = `${input}${this.state.master}`;
         }
-        var pass = this.shapass(input, this.state.outputLength);
+        var pass = this.shapass(input, this.state.algorithm, this.state.outputLength);
         if (this.state.suffix !== null) {
           pass = `${pass}${this.state.suffix.trim()}`;
         }
@@ -133,16 +157,6 @@ export default {
       }, () => {
         this.$toasted.error('Could not copy', { duration: 1000 });
       })
-    },
-    toggleMasterPasswordVisibility (visible) {
-      if (visible) {
-        this.masterPasswordType = 'text';
-      } else {
-        this.masterPasswordType = 'password';
-      }
-    },
-    toggleGeneratedPasswordVisibility (visible) {
-      this.setGeneratedPassword(this.state.generated);
     },
     setGeneratedPassword (val) {
       this.state.generated = val;
@@ -162,11 +176,7 @@ export default {
       this.setLength(this.state.outputLength + v);
     },
     setLength (v) {
-      let before = this.state.outputLength;
       this.state.outputLength = Configs.boundedOutputLength(v);
-      if (before != this.state.outputLength) {
-        this.generatePassword();
-      }
     },
     setLengthEvent (e) {
       this.setLength(e.target.valueAsNumber);
@@ -389,40 +399,59 @@ export default {
 
 #configurations {
   background: none;
-  margin: 0;
+  margin: 20px 0;
   padding-left: 0px;
   padding-top: 10px;
 
   > div {
-    /* display: flex; */
     align-items: baseline;
     justify-content: left;
     float: left;
-
-    &#suffix { float: right; }
+    clear: both;
+    margin-bottom: 5px;
+    position: relative;
 
     label {
       margin-right: 10px;
+      width: 100px;
+      text-align: right;
+      float: left;
+      margin-top: 10px;
     }
-    span {
-      margin: 0 10px;
-    }
-    input[type="text"] {
+
+    &#suffix input {
       width: 70px;
     }
-    .svg-inline--fa {
-      padding: 0;
+
+    &#algorithm select {
+      width: auto;
     }
-    input[type="number"] {
-      width: 30px;
-      margin: 0 10px;
-      text-align: center;
-      -moz-appearance: textfield;
-      -webkit-appearance: textfield;
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+
+    &#length {
+      input {
+        width: 30px;
+        margin-right: 25px;
+        text-align: center;
+        -moz-appearance: textfield;
+        -webkit-appearance: textfield;
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      }
+      .btn-length-minus {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+      .btn-length-plus {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+      .svg-inline--fa {
+        padding: 0;
       }
     }
   }

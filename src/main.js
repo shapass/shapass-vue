@@ -42,8 +42,14 @@ Vue.directive('focus', {
 
 Vue.mixin({
   methods: {
-    shapass: function(input, length=32) {
-      return btoa(sha256(input)).substr(0, length);
+    shapass: function(input, algo, length=32) {
+      if (algo === 'sha256-str') {
+        return btoa(sha256(input)).substr(0, length);
+      } else if (algo === 'sha256-bin') {
+        return base64js.fromByteArray(sha256.digest(input)).substr(0, length);
+      } else {
+        return "";
+      }
     },
     randomMask: function() {
       var masks = [
