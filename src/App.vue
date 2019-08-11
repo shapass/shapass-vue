@@ -389,7 +389,7 @@ export default {
   .password-visibility-toggle {
     position: absolute;
     right: 10px;
-    top: 35px;
+    top: 1.8em; // based on how font-size is calculated
   }
 
   .censored {
