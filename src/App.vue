@@ -263,6 +263,7 @@ export default {
       } else {
         this.$toasted.error('Something went wrong :(');
       }
+      this.currentUser.setAtLanding();
     },
     canLogin () {
       return this.notEmpty(this.state.master) && this.notEmpty(this.inputEmail);
