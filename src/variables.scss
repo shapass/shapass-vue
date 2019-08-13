@@ -17,11 +17,13 @@ $purple: #791E94;
 $dark: rgba(0, 0, 0, 0.6); //$black;
 $accent: $turquoise;
 $bright: $white;
+$persian-green: #00b295;
+$ruby: #d81159;
 
 $primary: $turquoise;
 $secondary: $orange;
 $active: $green;
-$background: lighten($dark-blue, 1);
+$background: $dark-blue;
 $background-highlight: lighten($gray-tv, 5); //rgba(128, 128, 128, 0.3); //$gray;
 $background-dark: $dark; //rgba(0, 0, 0, 0.8);
 
@@ -135,6 +137,7 @@ $m-font-lg: calc(0.7em + 2vmin);
 $m-body-font-size: $m-font-md;
 $m-label-font-size: calc(0.5em + 1vmin);
 $m-icon-size: calc(0.5em + 2vmin);
+$m-toolbar-ico-bg: none; //$background-highlight;
 $mobile-width: 480px;
 @mixin mobile {
   @media only screen and (max-width: #{$mobile-width}) {
@@ -142,6 +145,13 @@ $mobile-width: 480px;
   }
 }
 
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
 
 //
 // Global styles

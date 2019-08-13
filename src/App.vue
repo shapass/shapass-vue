@@ -61,14 +61,17 @@
 
   <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
     <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'">
+      <span v-if="this.$isMobile()"><kbd>save</kbd></span>
       <font-awesome-icon icon="save" />
       <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>s</kbd></span>
     </button>
     <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove" v-tooltip="'Remove the selected service from your list of services'">
+      <span v-if="this.$isMobile()"><kbd>delete</kbd></span>
       <font-awesome-icon icon="trash" />
       <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>del</kbd></span>
     </button>
     <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
+      <span v-if="this.$isMobile()"><kbd>copy</kbd></span>
       <font-awesome-icon icon="copy" />
       <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>c</kbd></span>
     </button>
@@ -468,7 +471,7 @@ export default {
   background: none;
   position: absolute;
   bottom: 20px;
-  right: 20px;
+  right: 0;
   left: 0;
   text-align: center;
   /* border-bottom: none; */
@@ -481,12 +484,12 @@ export default {
     height: auto;
     background: $toolbar-ico-bg;
     border: $toolbar-ico-border;
-    border-radius: 0; //50%;
+    border-radius: 0;
     padding: 10px;
     margin: 0 0.5em;
     transition: $transition-default;
 
-    &:hover {
+    &:hover, &:active {
       background: $toolbar-ico-hover-bg;
       border-color: $toolbar-ico-hover-bg;
       .svg-inline--fa {
@@ -508,6 +511,29 @@ export default {
     > span {
       margin-top: 10px;
       display: block;
+    }
+  }
+  @include mobile {
+    right: 20px;
+    bottom: 20px;
+    left: auto;
+
+    button {
+      float: right;
+      clear: both;
+      margin: 0.3em 0;
+      @include clearfix;
+
+      .svg-inline--fa {
+        display: inline-block;
+        float: left;
+      }
+
+      > span {
+        float: left;
+        display: inline-block;
+        margin: 0.2em 0.8em 0 0;
+      }
     }
   }
 }
