@@ -491,7 +491,7 @@ export default {
 
     &:hover, &:active {
       background: $toolbar-ico-hover-bg;
-      border-color: $toolbar-ico-hover-bg;
+      border-color: $toolbar-ico-hover-border-color;
       .svg-inline--fa {
         color: $toolbar-ico-hover-color;
       }

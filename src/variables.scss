@@ -70,12 +70,13 @@ $btn-ico-hover-bg: none;
 $btn-ico-hover-color: $primary; //secondary;
 $btn-ico-hover-border: none;
 $btn-ico-active-color: $primary;
-$toolbar-ico-bg: none; //$navbar-bg; //rgba(255, 255, 255, 0.04);
+$toolbar-ico-bg: transparent; //$navbar-bg; //rgba(255, 255, 255, 0.04);
 $toolbar-ico-color: $white;
+$toolbar-ico-border: 1px solid $toolbar-ico-bg;
 $toolbar-ico-hover-bg: $black;// $primary; //$background-highlight;
 $toolbar-ico-hover-color: $white; // $black; // $primary
+$toolbar-ico-hover-border-color: $primary;
 $toolbar-ico-size: 22px;
-$toolbar-ico-border: 0; //0px solid $background-highlight;
 $kbd-bg: $background-highlight; //#212529;
 $kbd-color: #fff;
 $tooltip-bg: $background-highlight;
