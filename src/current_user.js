@@ -5,16 +5,20 @@ const CurrentUser = {
   state: {
     email: null,      // email when logged in
     token: null,      // login token when logged in
-    step: 'Landing'   // login step: 'Login', 'SignUp', null, 'Landing'
+    step: 'Landing',  // login step: 'Login', 'SignUp', null, 'Landing'
+    loading: false,
   },
 
   signup (email, password, callback) {
+    this.state.loading = true;
     API.signup(email, password, (r) => {
+      this.state.loading = false;
       callback(r);
     });
   },
 
   login (email, password, callback) {
+    this.state.loading = true;
     API.login(email, password, (r, token) => {
       if (r) {
         this.setLoggedIn(email, token);
@@ -22,6 +26,7 @@ const CurrentUser = {
       } else {
         this.setLoggedOut();
       }
+      this.state.loading = false;
       callback(r);
     });
   },
@@ -35,10 +40,12 @@ const CurrentUser = {
   },
 
   logout (callback) {
+    this.state.loading = true;
     API.logout((r) => {
       if (r) {
         this.setLoggedOut();
       }
+      this.state.loading = false;
       callback(r);
     });
   },
@@ -92,6 +99,7 @@ const CurrentUser = {
     this.state.step = 'SignUp';
   },
   checkLoggedIn (callback) {
+    this.state.loading = true;
     var token = this.loadCookie();
     API.setToken(token);
     API.whoAmI(email => {
@@ -101,7 +109,12 @@ const CurrentUser = {
       } else {
         callback(false);
       }
+      this.state.loading = false;
     });
+  },
+
+  isLoading () {
+    return this.state.loading;
   },
 
   //

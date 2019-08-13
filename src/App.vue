@@ -274,7 +274,9 @@ export default {
     },
     afterLogin () {
       this.currentUser.setAtApp();
-      Store.reloadServices();
+      Store.reloadServices(() => {
+        this.focusServiceSelector();
+      });
     },
     afterLogout (r) {
       if (r) {

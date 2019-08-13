@@ -59,7 +59,7 @@ const Store = {
   },
 
   // reloads the services from the API, saves in localStorage and sets them in the current state
-  reloadServices () {
+  reloadServices (callback=null) {
     API.list((services) => {
       if (services !== null && services !== undefined) {
         var data = {};
@@ -76,6 +76,7 @@ const Store = {
         console.log("updated localStorage to", localStorage.shapassData);
       } // TODO: else?
       this.reloadStateServices();
+      if (callback) { callback(); }
     });
   },
 

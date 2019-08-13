@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 
 $s: 30px; // width & height of the overall element
 $w: 2;    // line width in px

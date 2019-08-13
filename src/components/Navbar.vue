@@ -2,18 +2,28 @@
 <div id="navbar" class="clearfix">
   <div id="navbar-content">
     <img v-on:click="goToLanding" src="logo.svg" id="logo" alt="ShaPass" v-if="!currentUser.atLanding()" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }"/>
+
+    <button class="btn" v-on:click="setAtLanding()" v-if="currentUser.isLoggingInOrSigningUp()" :disabled="currentUser.isLoading()">&lt; back</button>
+
+    <button class="btn" v-on:click="setSigningUp()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Register</button>
+    <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Login</button>
+
+    <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Logout</button>
     <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
-    <button class="btn" v-on:click="setAtLanding()" v-if="currentUser.isLoggingInOrSigningUp()">&lt; back</button>
-    <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Login</button>
-    <button class="btn" v-on:click="setSigningUp()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">Register</button>
-    <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()">Logout</button>
+
+    <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
   </div>
 </div>
 </template>
 
 <script>
+import InfiniteLoadingCircle from './InfiniteLoadingCircle.vue'
+
 export default {
   name: 'Navbar',
+  components: {
+    InfiniteLoadingCircle
+  },
   props: {
     afterLogout: Function,
     currentUser: Object
@@ -50,16 +60,29 @@ export default {
   #navbar-content {
     max-width: $content-width;
     margin: 0 auto;
+    @include clearfix;
   }
 
   .btn {
     /* float: right; */
     margin: 10px 0 10px 15px;
+    /* display: inline; */
+    float: right;
   }
 
   .user-email {
     text-transform: none;
     font-size: $label-font-size;
+    float: right;
+    margin: 16px 0 10px 15px;
+  }
+
+  .loader {
+    width: 26px;
+    height: 26px;
+    margin: 10px 0 10px 15px;
+    display: block;
+    float: right;
   }
 }
 
