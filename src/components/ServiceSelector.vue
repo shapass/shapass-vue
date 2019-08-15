@@ -131,12 +131,19 @@ export default {
 }
 
 .v-select.vs--disabled {
+  /* border-color: transparent; */
+
   .vs__dropdown-toggle {
     background: rgba($vs-selected-background, 0.3);
     /* background: $vs-selected-background; */
   }
+
   .vs__search {
     background: none;
+  }
+
+  .vs__selected {
+    background: transparent;
   }
 }
 
