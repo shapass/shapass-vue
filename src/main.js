@@ -1,5 +1,7 @@
 import Vue from 'vue';
+import VueRouter from 'vue-router';
 import App from './App.vue';
+import ResetPassword from './ResetPassword.vue';
 import vSelect from 'vue-select';
 import Toasted from 'vue-toasted';
 import VueClipboard from 'vue-clipboard2';
@@ -8,6 +10,8 @@ import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare, faSave, faTrash
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMobileDetection from "vue-mobile-detection";
 import VTooltip from 'v-tooltip';
+
+Vue.use(VueRouter);
 
 library.add(faEye);
 library.add(faEyeSlash);
@@ -22,7 +26,7 @@ Vue.config.productionTip = false;
 
 Vue.use(Toasted, {
   position: 'top-right',
-  duration: 3000,
+  duration: 4000,
   singleton: true
 });
 Vue.use(VueClipboard);
@@ -93,9 +97,18 @@ Vue.mixin({
   }
 });
 
+const routes = [
+  { path: '/', component: App },
+  { path: '/reset-password', component: ResetPassword }
+];
+
+const router = new VueRouter({
+  routes
+});
+
 var app = new Vue({
-  render: h => h(App),
-}).$mount('#app');
+  router
+}).$mount('#content');
 
 console.log("mobile?", app.$isMobile());
 VTooltip.enabled = !app.$isMobile(); //window.innerWidth > 768;

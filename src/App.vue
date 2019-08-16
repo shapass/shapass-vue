@@ -1,6 +1,6 @@
 <template>
 <div id="app" v-bind:class="{ mobile: this.$isMobile() }">
-  <Navbar :afterLogout="afterLogout" :currentUser="currentUser" />
+  <Navbar :afterLogout="afterLogout" :currentUser="currentUser" :showLoginSignup="true" />
   <div id="content-common" class="content-wrapper">
     <div class="container" id="service">
       <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :disabled="currentUser.isLoggingInOrSigningUp()" />
@@ -55,6 +55,8 @@
     </div>
     <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isLoggingInOrSigningUp()">
       <button class="btn btn-login" id="login-submit" @click="submitLogin" v-if="currentUser.isLoggingIn()" :disabled="!canLogin()">Login</button>
+      <router-link to="/reset-password" v-if="currentUser.isLoggingIn()">Forgot your password?</router-link>
+
       <button class="btn btn-signup" id="signup-submit" @click="submitSignUp" v-if="currentUser.isSigningUp()" :disabled="!canSignUp()">Register</button>
     </div>
   </div>
@@ -310,7 +312,7 @@ export default {
     }
   },
   mounted () {
-    // TODO: show loading while loading
+    this.currentUser.setAtLanding();
     this.currentUser.checkLoggedIn(r => {
       if (r) {
         Store.reloadServices();
@@ -321,15 +323,6 @@ export default {
 </script>
 
 <style lang="scss">
-
-#app {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  height: 100%;
-}
 
 #content-landing {
   #slogan {
@@ -543,5 +536,11 @@ export default {
 #login-registration-buttons {
   border: 0;
   padding: 10px 0;
+
+  a {
+    float: right;
+    font-size: $font-sm;
+    margin-top: 5px;
+  }
 }
 </style>

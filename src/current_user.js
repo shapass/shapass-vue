@@ -105,17 +105,27 @@ const CurrentUser = {
     API.whoAmI(email => {
       if (email !== null && email !== undefined) {
         this.setLoggedIn(email, token);
+        this.state.loading = false;
         callback(true);
       } else {
+        this.state.loading = false;
         callback(false);
       }
-      this.state.loading = false;
     });
   },
 
   isLoading () {
     return this.state.loading;
   },
+
+  resetPassword (email, callback) {
+    this.state.loading = true;
+    API.resetPassword(email, (r) => {
+      this.state.loading = false;
+      callback(r);
+    });
+  },
+
 
   //
   // Internal methods

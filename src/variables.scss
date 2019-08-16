@@ -32,11 +32,12 @@ $font-lg: $font-md + 4px;
 $font-sm: $font-md - 6px;
 
 $transition-default: all 0.3s linear;
+$transition-fast: all 0.2s linear;
 
 $content-width: 600px;
 $content-side-padding: 20px;
 $body-font-family: 'Source Code Pro', monospace;
-//$body-font-family: 'Roboto', Helvetica, Arial, sans-serif;
+$font-family-aux: 'Roboto', Helvetica, Arial, sans-serif;
 $body-background: $background; //rgba(0, 0, 0, 1);
 $body-font-color: $white;//$primary;
 $body-font-size: $font-md;
@@ -189,6 +190,15 @@ body {
   @include mobile { background: $m-body-background; }
 }
 
+#content {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+}
+
 .container {
   // max-width: 800px;
   position: relative;
@@ -203,6 +213,17 @@ body {
   /* border: 1px solid $primary; */
   /* padding: 5px 0; */
   /* transition: all 0.2s linear; */
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+  transition: $transition-fast;
+
+  &:hover, &:active {
+    color: $secondary;
+    text-decoration: underline;
+  }
 }
 
 button {

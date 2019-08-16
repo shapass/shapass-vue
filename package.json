@@ -20,6 +20,7 @@
     "vue": "^2.6.10",
     "vue-clipboard2": "^0.3.0",
     "vue-mobile-detection": "^1.0.0",
+    "vue-router": "^3.1.2",
     "vue-shortkey": "^3.1.7",
     "vue-toasted": "^1.1.27"
   },

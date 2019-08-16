@@ -14,8 +14,11 @@ export default {
 .loader {
   display: inline-block;
   position: relative;
-  width: 100%;
-  height: 100%;
+  /* width: 100%; */
+  /* max-width: 30px; */
+  /* height: 30px; */
+  width: 26px;
+  height: 26px;
 
   div {
     position: absolute;

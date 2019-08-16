@@ -109,6 +109,16 @@ const API = {
       }
     });
   },
+  resetPassword (email, callback) {
+    var data = { email: email };
+    this.request('resetpassword', 'post', this.loginData(data), (r) => {
+      if (r) {
+        callback(true);
+      } else {
+        callback(false);
+      }
+    });
+  },
 };
 
 export default API;

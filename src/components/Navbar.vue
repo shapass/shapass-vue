@@ -1,17 +1,29 @@
 <template>
 <div id="navbar" class="clearfix">
   <div id="navbar-content">
-    <img v-on:click="goToLanding" src="logo.svg" id="logo" alt="ShaPass" v-if="!currentUser.atLanding()" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }"/>
+    <div v-if="!showLoginSignup">
+      <router-link to="/">
+        <img src="logo.svg" id="logo" alt="ShaPass"/>
+      </router-link>
 
-    <button class="btn" v-on:click="setAtLanding()" v-if="currentUser.isLoggingInOrSigningUp()" :disabled="currentUser.isLoading()">&lt; back</button>
+      <router-link to="/">
+      <button class="btn">&lt; back</button>
+      </router-link>
+    </div>
 
-    <button class="btn" v-on:click="setSigningUp()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Register</button>
-    <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Login</button>
+    <div v-if="showLoginSignup">
+      <img v-on:click="goToLanding" src="logo.svg" id="logo" alt="ShaPass" v-if="!currentUser || !currentUser.atLanding()" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }"/>
 
-    <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Logout</button>
-    <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
+      <button class="btn" v-on:click="setAtLanding()" v-if="currentUser.isLoggingInOrSigningUp()" :disabled="currentUser.isLoading()">&lt; back</button>
 
-    <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+      <button class="btn" v-on:click="setSigningUp()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Register</button>
+      <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Login</button>
+
+      <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Logout</button>
+      <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
+
+      <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+    </div>
   </div>
 </div>
 </template>
@@ -26,7 +38,8 @@ export default {
   },
   props: {
     afterLogout: Function,
-    currentUser: Object
+    currentUser: Object,
+    showLoginSignup: Boolean
   },
   methods: {
     setAtLanding () {
@@ -78,8 +91,6 @@ export default {
   }
 
   .loader {
-    width: 26px;
-    height: 26px;
     margin: 10px 0 10px 15px;
     display: block;
     float: right;
