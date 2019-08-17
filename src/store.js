@@ -46,6 +46,7 @@ const Store = {
     this.state.prefix = null;
     this.state.master = null;
     this.state.service = null;
+    this.state.generated = null;
     this.state.algorithm = Configs.DEFAULT_ALGORITHM;
   },
 

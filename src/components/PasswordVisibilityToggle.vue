@@ -18,10 +18,11 @@
 </template>
 
 <script>
+import { Configs } from '../config.js'
+
 export default {
   name: 'PasswordVisibilityToggle',
   props: {
-    timeout: Number,
     value: Boolean,
   },
   methods: {
@@ -44,6 +45,7 @@ export default {
     return {
       visible: false,
       timeoutInstance: null,
+      timeout: Configs.PASSWORD_VISIBILITY_TIMEOUT,
     }
   },
   watch: {

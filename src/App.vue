@@ -21,12 +21,10 @@
     <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
       <label class="typewriter" for="master-input">Your master password:</label>
       <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:keyup.enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
-      <PasswordVisibilityToggle v-model="masterPasswordVisible" :timeout="passwordVisibilityTimeout" />
+      <PasswordVisibilityToggle v-model="masterPasswordVisible" />
     </div>
-    <div class="container" id="generated" v-if="state.generated">
-      <label class="typewriter">Generated password:</label>
-      <div id="generated-input" v-html="generatedClearText"></div>
-      <PasswordVisibilityToggle v-model="generatedPasswordVisible" :timeout="passwordVisibilityTimeout" />
+    <div class="container" id="generated">
+      <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
       <div class="container clearfix" id="configurations" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
         <!-- <label class="typewriter">Configure the generated password:</label> -->
         <div id="length">
@@ -88,30 +86,19 @@ import PasswordVisibilityToggle from './components/PasswordVisibilityToggle.vue'
 import { Configs } from './config.js'
 import Store from './store.js'
 import CurrentUser from './current_user.js'
+import GeneratedPassword from './components/GeneratedPassword.vue'
 
 export default {
   name: 'app',
   components: {
     Navbar,
     ServiceSelector,
-    PasswordVisibilityToggle
+    PasswordVisibilityToggle,
+    GeneratedPassword
   },
   watch: {
     "state.service" (val, prev) {
       Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
-      if (val !== prev) { this.generatePassword(); }
-    },
-    "state.master" (val, prev) {
-      if (val !== prev) { this.generatePassword(); }
-    },
-    "state.suffix" (val, prev) {
-      if (val !== prev) { this.generatePassword(); }
-    },
-    "state.outputLength" (val, prev) {
-      if (val !== prev) { this.generatePassword(); }
-    },
-    "state.algorithm" (val, prev) {
-      if (val !== prev) { this.generatePassword(); }
     },
     "currentUser.state.step" (val, prev) {
       if (this.currentUser.isLoggingInOrSigningUp()) {
@@ -126,8 +113,9 @@ export default {
       }
       // force-hide passwords when changing page
       if (val != prev) {
-        this.masterPasswordVisible = false;
-        this.generatedPasswordVisible = false;
+        // TODO: how to do this now with components?
+        // this.masterPasswordVisible = false;
+        // this.generatedPasswordVisible = false;
         this.inputEmail = null;
       }
     },
@@ -138,26 +126,8 @@ export default {
         this.masterPasswordType = 'password';
       }
     },
-    generatedPasswordVisible () {
-      this.setGeneratedPassword(this.state.generated);
-    },
   },
   methods: {
-    generatePassword () {
-      if (this.state.service !== null && this.state.service !== undefined) {
-        var input = this.state.service;
-        if (this.state.master !== null) {
-          input = `${input}${this.state.master}`;
-        }
-        var pass = this.shapass(input, this.state.algorithm, this.state.outputLength);
-        if (this.state.suffix !== null) {
-          pass = `${pass}${this.state.suffix.trim()}`;
-        }
-        this.setGeneratedPassword(pass);
-      } else {
-        this.setGeneratedPassword(null);
-      }
-    },
     copyToClipboard () {
       this.$copyText(this.state.generated).then(() => {
         this.$toasted.show('Copied', { duration: 1000 });
@@ -167,20 +137,6 @@ export default {
       }, () => {
         this.$toasted.error('Could not copy', { duration: 1000 });
       })
-    },
-    setGeneratedPassword (val) {
-      this.state.generated = val;
-      if (this.state.generated !== null) {
-        let maskHtml = `<span class="censored">${this.mask}</span>`;
-        this.generatedCensored = this.applyMask(this.state.generated, maskHtml, this.state.suffix);
-      } else {
-        this.generatedCensored = null;
-      }
-      if (this.generatedPasswordVisible) {
-        this.generatedClearText = this.state.generated;
-      } else {
-        this.generatedClearText = this.generatedCensored;
-      }
     },
     lengthAdd (v) {
       this.setLength(this.state.outputLength + v);
@@ -301,14 +257,8 @@ export default {
       currentUser: CurrentUser,           // shared user info
 
       inputEmail: null,                   // the email current in the input
-      generatedCensored: null,            // censored version of the generated password
-      generatedClearText: null,           // clear text version of the generated password
-      mask: this.randomMask(),            // mask to censor the generated password
       masterPasswordType: "password",     // input type to control visibility of the master password
       masterPasswordVisible: false,       // is the master password visible?
-      generatedPasswordVisible: false,    // is the generated password visible?
-
-      passwordVisibilityTimeout: Configs.PASSWORD_VISIBILITY_TIMEOUT,
     }
   },
   mounted () {
@@ -371,34 +321,20 @@ export default {
   max-width: $content-width;
 }
 
-#master, #generated {
+#master {
   position: relative;
 
-  > input, #generated-input {
+  > input {
     margin-top: 5px;
     padding-right: 45px;
     padding-left: 10px;
     width: calc(100% - 55px);
-  }
-  #generated-input {
-    word-break: break-all;
-    background: $generated-input-bg;
-    border: $generated-input-border;
-    color: $generated-input-color;
-    border: 1px solid $background-highlight;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    font-family: $font-family-titles;
   }
 
   .password-visibility-toggle {
     position: absolute;
     right: 10px;
     top: 1.95em; // based on how font-size is calculated
-  }
-
-  .censored {
-    color: $generated-input-censored-color;
   }
 }
 
