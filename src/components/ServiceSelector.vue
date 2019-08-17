@@ -148,20 +148,42 @@ export default {
 }
 
 /* make it look like a button to press on */
-.landing.v-select:not(.vs--open) .vs__dropdown-toggle {
-  background: $primary;
-  padding: 15px;
-  cursor: pointer;
+.landing.v-select:not(.vs--open) {
+  border: 0;
 
-  input::placeholder {
-    color: $vs-bg;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: $body-font-size;
-  }
+  .vs__dropdown-toggle {
+    padding: 0;
+    cursor: default;
+    border: 0;
 
-  .vs__selected-options input {
-    cursor: pointer;
+    input::placeholder {
+      color: $primary;
+      text-align: center;
+      text-transform: uppercase;
+      font-size: $body-font-size;
+      font-family: $font-family-titles;
+      transition: $transition-default;
+    }
+
+    &:hover, &:active {
+      input::placeholder {
+        color: $vs-bg;
+      }
+    }
+
+    .vs__selected-options input {
+      cursor: pointer;
+      background: $black;
+      padding: 15px;
+      border: 1px solid $primary;
+      transition: background $transition-speed-default linear;
+
+      &:hover, &:active {
+        background: $primary;
+        color: $primary;
+        border-color: $primary;
+      }
+    }
   }
 }
 .landing.v-select.selected:not(.vs--open) .vs__dropdown-toggle {
