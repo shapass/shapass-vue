@@ -53,7 +53,7 @@ const Store = {
   reloadStateServices () {
     var data = this.savedServices();
     this.state.services = this.savedServiceNames();
-    this.state.servicesForSelect = Object.keys(data).map(function(key) {
+    this.state.servicesForSelect = Object.keys(data).sort().map(function(key) {
       return { name: key, outputLength: data[key].outputLength, suffix: data[key].suffix, prefix: data[key].prefix };
     });
   },
