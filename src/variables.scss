@@ -30,14 +30,20 @@ $background-dark: $dark; //rgba(0, 0, 0, 0.8);
 $font-md: 20px;
 $font-lg: $font-md + 4px;
 $font-sm: $font-md - 6px;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+$font-family-titles: 'Source Code Pro', monospace;
+$font-family-text: 'Open Sans', sans-serif;
 
-$transition-default: all 0.3s linear;
-$transition-fast: all 0.2s linear;
+$transition-speed-default: 0.3s;
+$transition-speed-fast: 0.2s;
+$transition-default: all $transition-speed-default linear;
+$transition-fast: all $transition-speed-fast linear;
 
 $content-width: 600px;
 $content-side-padding: 20px;
-$body-font-family: 'Source Code Pro', monospace;
-$font-family-aux: 'Roboto', Helvetica, Arial, sans-serif;
+$body-font-family: $font-family-text;
+//$font-family-aux: 'Roboto', Helvetica, Arial, sans-serif;
 $body-background: $background; //rgba(0, 0, 0, 1);
 $body-font-color: $white;//$primary;
 $body-font-size: $font-md;
@@ -182,6 +188,7 @@ body {
   font-size: $body-font-size;
   @include mobile { font-size: $m-body-font-size; }
   font-family: $body-font-family;
+  font-weight: $font-weight-normal;
   color: $body-font-color;
   height: 100%;
   margin: 0;
@@ -244,6 +251,7 @@ button {
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s linear;
+  font-family: $font-family-titles;
 
   &:hover, &:active {
     background: $btn-hover-bg;
@@ -337,6 +345,7 @@ label {
   @include mobile { font-size: $m-label-font-size; }
   color: $label-color;
   display: inline;
+  font-family: $font-family-titles;
 
   /* &.typewriter { */
   /*   height: 14px; */
@@ -385,6 +394,7 @@ kbd {
   color: $kbd-color;
   background-color: $kbd-bg;
   border-radius: .2rem;
+  font-family: $font-family-titles;
 }
 
 kbd kbd {
@@ -510,4 +520,9 @@ img {
     opacity: 1;
     transition: opacity .15s;
   }
+}
+
+h1, h2, h3, h4, h5, h6, h7, h8 {
+  font-family: $font-family-titles;
+  color: $primary;
 }

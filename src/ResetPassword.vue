@@ -19,7 +19,6 @@
 
 <script>
 import Navbar from './components/Navbar.vue'
-import { Configs } from './config.js'
 import CurrentUser from './current_user.js'
 import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
 
@@ -38,7 +37,7 @@ export default {
   methods: {
     submit () {
       this.withDisabledButton("#reset-password-submit", (done) => {
-        this.currentUser.resetPassword(this.inputEmail, (r) => {
+        this.currentUser.resetPassword(this.inputEmail, () => {
           // we show a success msg even if there was an error in the API
           // to prevent people from figuring our what emails are registered
           this.$router.push('/')
@@ -64,14 +63,9 @@ export default {
   margin-top: 5%;
 }
 
-h3 {
-  text-align: center;
-}
-
 span {
-  font-family: $font-family-aux;
+  font-family: $font-family-text;
   /* font-size: $font-md; */
-  text-align: center;
   display: block;
 }
 

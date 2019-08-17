@@ -8,7 +8,7 @@
   </div>
   <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
     <div id="start" v-shortkey.once="['enter']" @shortkey="start">Press <kbd>enter</kbd> to start</div>
-    <div id="slogan">The password manager that <em>does not</em> store your passwords.</div>
+    <div id="slogan">The password manager<br/>that <em>does not</em> store<br/>your passwords.</div>
     <div id="logo-landing" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }">
       <img src="logo.svg" alt="Shapass" />
     </div>
@@ -330,6 +330,7 @@ export default {
     padding: 20px;
     font-size: $font-lg;
     text-align: center;
+    font-family: $font-family-titles;
 
     @include mobile {
       padding: 0;
@@ -387,12 +388,13 @@ export default {
     border: 1px solid $background-highlight;
     padding-top: 5px;
     padding-bottom: 5px;
+    font-family: $font-family-titles;
   }
 
   .password-visibility-toggle {
     position: absolute;
     right: 10px;
-    top: 1.75em; // based on how font-size is calculated
+    top: 1.95em; // based on how font-size is calculated
   }
 
   .censored {
