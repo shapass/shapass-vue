@@ -80,7 +80,7 @@ const API = {
       }
     });
   },
-  create (name, length, prefix, suffix, callback) {
+  create (name, length, prefix, suffix, algorithm, callback) {
     var data = { name: name };
     if (length !== null && length !== undefined) {
       data["length"] = length;
@@ -90,6 +90,9 @@ const API = {
     }
     if (suffix !== null && suffix !== undefined) {
       data["suffix"] = suffix;
+    }
+    if (algorithm !== null && algorithm !== undefined) {
+      data["algorithm"] = algorithm;
     }
     this.request('create', 'post', this.loginData(data), (r) => {
       if (r) {

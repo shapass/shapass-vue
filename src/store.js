@@ -103,7 +103,7 @@ const Store = {
   // saves the current state in localStorage and in the API
   saveCurrentState (callback) {
     if (this.state.service !== null && this.state.service !== undefined) {
-      API.create(this.state.service, this.state.outputLength, this.state.prefix, this.state.suffix, (r) => {
+      API.create(this.state.service, this.state.outputLength, this.state.prefix, this.state.suffix, this.state.algorithm, (r) => {
         console.log("remote save returned", r);
         if (r) {
           var data = this.savedServices();
