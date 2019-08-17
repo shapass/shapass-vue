@@ -27,7 +27,7 @@
       <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="masterConfirmation">
     </div>
     <div class="container" id="generated">
-      <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
+      <GeneratedPassword label="Generated password:" :state="state" :onlyIfMasterSet="true"></GeneratedPassword>
       <!-- <PasswordVisibilityToggle v-model="generatedPasswordVisible" /> -->
     </div>
     <button class="btn btn-set-password" id="set-password-submit" @click="submitSet" :disabled="!generated || currentUser.isLoading()">Set password</button>
@@ -107,10 +107,10 @@ export default {
     this.state.service = Configs.SHAPASS_SERVICE;
   },
   watch: {
-    master (val, prev) {
+    master () {
       this.setStateMaster();
     },
-    masterConfirmation (val, prev) {
+    masterConfirmation () {
       this.setStateMaster();
     },
   }

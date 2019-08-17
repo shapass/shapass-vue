@@ -97,7 +97,7 @@ export default {
     GeneratedPassword
   },
   watch: {
-    "state.service" (val, prev) {
+    "state.service" (val) {
       Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
     },
     "currentUser.state.step" (val, prev) {

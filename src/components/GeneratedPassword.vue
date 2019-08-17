@@ -13,14 +13,19 @@ export default {
   name: 'GeneratedPassword',
   props: {
     label: String,
-    state: Object
+    state: Object,
+    onlyIfMasterSet: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     PasswordVisibilityToggle
   },
   methods: {
     generatePassword: function() {
-      if (this.notEmpty(this.state.service) && this.notEmpty(this.state.master)) {
+      if (this.notEmpty(this.state.service) &&
+          (!this.onlyIfMasterSet || this.notEmpty(this.state.master))) {
         var input = this.state.service;
         if (this.state.master !== null) {
           input = `${input}${this.state.master}`;
@@ -36,7 +41,6 @@ export default {
     },
     setGeneratedPassword (val) {
       this.state.generated = val;
-      console.log("set", val);
       if (this.state.generated !== null) {
         let maskHtml = `<span class="censored">${this.mask}</span>`;
         this.generatedCensored = this.applyMask(this.state.generated, maskHtml, this.state.suffix);
@@ -63,6 +67,7 @@ export default {
     }
   },
   mounted () {
+    this.generatePassword();
   },
   watch: {
     "state.service" (val, prev) {
