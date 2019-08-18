@@ -125,6 +125,13 @@ const CurrentUser = {
       callback(r);
     });
   },
+  setPassword (email, token, password, callback) {
+    this.state.loading = true;
+    API.setPassword(email, token, password, (r) => {
+      this.state.loading = false;
+      callback(r);
+    });
+  },
 
 
   //

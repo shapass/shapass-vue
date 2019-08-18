@@ -54,7 +54,6 @@
     <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isLoggingInOrSigningUp()">
       <button class="btn btn-login" id="login-submit" @click="submitLogin" v-if="currentUser.isLoggingIn()" :disabled="!canLogin()">Login</button>
       <router-link to="/reset-password" v-if="currentUser.isLoggingIn()">Forgot your password?</router-link>
-
       <button class="btn btn-signup" id="signup-submit" @click="submitSignUp" v-if="currentUser.isSigningUp()" :disabled="!canSignUp()">Register</button>
     </div>
   </div>
@@ -262,6 +261,7 @@ export default {
     }
   },
   mounted () {
+    Store.clearEntries();
     this.currentUser.setAtLanding();
     this.currentUser.checkLoggedIn(r => {
       if (r) {

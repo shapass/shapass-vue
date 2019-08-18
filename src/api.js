@@ -114,7 +114,17 @@ const API = {
   },
   resetPassword (email, callback) {
     var data = { email: email };
-    this.request('resetpassword', 'post', this.loginData(data), (r) => {
+    this.request('resetpassword', 'post', data, (r) => {
+      if (r) {
+        callback(true);
+      } else {
+        callback(false);
+      }
+    });
+  },
+  setPassword (email, token, password, callback) {
+    var data = { email: email, token: token, password: password };
+    this.request('resetpassword', 'post', data, (r) => {
       if (r) {
         callback(true);
       } else {

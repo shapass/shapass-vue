@@ -327,18 +327,25 @@ input, select {
   padding: 5px 10px;
   width: calc(100% - 20px);
   transition: all 0.3s linear;
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    transition: all 0.3s linear;
+  }
+
+  &.wrong, &.invalid {
+    border-color: $ruby;
+  }
 }
-input:focus {
-  outline: none;
-  border-color: $primary;
-  transition: all 0.3s linear;
-}
+
 input::placeholder {
   color: $placeholder-color;
   opacity: 0.8;
   font-size: $placeholder-font-size;
   @include mobile { font-size: $m-body-font-size; }
 }
+
 label {
   text-transform: uppercase;
   font-size: $label-font-size;
@@ -346,21 +353,7 @@ label {
   color: $label-color;
   display: inline;
   font-family: $font-family-titles;
-
-  /* &.typewriter { */
-  /*   height: 14px; */
-  /*   overflow: hidden; */
-  /*   white-space: nowrap; /\* Keeps the content on a single line *\/ */
-  /*   margin: 0 auto; /\* Gives that scrolling effect as the typing happens *\/ */
-  /*   animation:  */
-  /*     typing 2s steps(40, end); */
-  /* } */
 }
-
-// @keyframes typing {
-//   from { width: 0 }
-//   to { width: 100% }
-// }
 
 .toasted {
   &.toasted-primary {

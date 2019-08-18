@@ -10,7 +10,7 @@
       <label class="typewriter" for="master-input">Your email</label>
       <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitReset" v-model="inputEmail" v-focus>
     </div>
-    <button class="btn btn-reset-password" id="reset-password-submit" @click="submitReset" :disabled="!isValidEmail() || currentUser.isLoading()">Reset password</button>
+    <button class="btn btn-reset-password" id="reset-password-submit" @click="submitReset" :disabled="!canSubmitReset()">Reset password</button>
     <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
   </div>
 
@@ -24,14 +24,14 @@
     </div>
     <div class="container" id="email">
       <label class="typewriter" for="master-input">Confirm your new master password</label>
-      <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="masterConfirmation">
+      <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="masterConfirmation" :class="{ wrong: masterConfirmation && !isConfirmationCorrect() }">
     </div>
     <div class="container" id="generated">
-      <GeneratedPassword label="Generated password:" :state="state" :onlyIfMasterSet="true"></GeneratedPassword>
-      <!-- <PasswordVisibilityToggle v-model="generatedPasswordVisible" /> -->
+      <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
     </div>
-    <button class="btn btn-set-password" id="set-password-submit" @click="submitSet" :disabled="!generated || currentUser.isLoading()">Set password</button>
+    <button class="btn btn-set-password" id="set-password-submit" @click="submitSet" :disabled="!canSubmitSet()">Set password</button>
     <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+    <router-link to="/reset-password">Request a new password reset e-mail</router-link>
   </div>
 </div>
 </template>
@@ -63,35 +63,51 @@ export default {
     }
   },
   methods: {
+    canSubmitReset() {
+      return this.isValidEmail() && !this.currentUser.isLoading();
+    },
+    canSubmitSet() {
+      return this.isConfirmationCorrect() && this.state.generated && !this.currentUser.isLoading();
+    },
     submitReset () {
-      this.withDisabledButton("#reset-password-submit", (done) => {
-        this.currentUser.resetPassword(this.inputEmail, () => {
-          // we show a success msg even if there was an error in the API
-          // to prevent people from figuring our what emails are registered
-          this.$router.push('/')
-          this.$toasted.success('Check you e-mail for instructions!');
-          done();
+      if (this.canSubmitReset()) {
+        this.withDisabledButton("#reset-password-submit", (done) => {
+          this.currentUser.resetPassword(this.inputEmail, () => {
+            // we show a success msg even if there was an error in the API
+            // to prevent people from figuring our what emails are registered
+            this.$router.push('/')
+            this.$toasted.success('Check you e-mail for instructions!');
+            done();
+          });
         });
-      });
+      }
     },
     submitSet () {
-      // this.withDisabledButton("#reset-password-submit", (done) => {
-      //   this.currentUser.resetPassword(this.inputEmail, () => {
-      //     // we show a success msg even if there was an error in the API
-      //     // to prevent people from figuring our what emails are registered
-      //     this.$router.push('/')
-      //     this.$toasted.success('Check you e-mail for instructions!');
-      //     done();
-      //   });
-      // });
+      if (this.canSubmitSet()) {
+        this.withDisabledButton("#set-password-submit", (done) => {
+          this.currentUser.setPassword(this.inputEmail, this.token, this.state.master, (r) => {
+            if (r) {
+              this.$router.push('/')
+              this.$toasted.success('Password reset successfully!');
+            } else {
+              this.$router.push('/reset-password')
+              this.$toasted.error('There was an error setting your password, please try again');
+            }
+            done();
+          });
+        });
+      }
     },
     isValidEmail () {
       // see https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
       var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
       return re.test(this.inputEmail);
     },
+    isConfirmationCorrect () {
+      return this.notEmpty(this.master) && this.notEmpty(this.masterConfirmation) && this.master === this.masterConfirmation;
+    },
     setStateMaster () {
-      if (this.notEmpty(this.master) && this.notEmpty(this.masterConfirmation) && this.master === this.masterConfirmation) {
+      if (this.isConfirmationCorrect()) {
         this.state.master = this.master;
       } else {
         this.state.master = null;
@@ -136,6 +152,12 @@ button {
 .loader {
   margin-left: 3%;
   float: left;
+}
+
+a {
+  float: right;
+  font-size: $font-sm;
+  margin-top: 5px;
 }
 
 </style>
