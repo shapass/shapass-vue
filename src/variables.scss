@@ -336,10 +336,17 @@ input, select {
     transition: all 0.3s linear;
   }
 
-  &.wrong, &.invalid, &:invalid {
+  &.wrong, &.wrong-live, &.invalid, &:invalid {
     border-color: $ruby;
     outline: none;
     box-shadow: 0 0 1.5px 1px $ruby;
+
+    // mark as wrong only when leaving the input
+    &:not(.wrong-live):focus {
+      border-color: $primary;
+      outline: none;
+      box-shadow: none;
+    }
   }
 }
 

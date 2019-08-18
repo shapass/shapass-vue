@@ -5,9 +5,8 @@
       <router-link to="/">
         <img src="logo.svg" id="logo" alt="ShaPass"/>
       </router-link>
-
       <router-link to="/">
-      <button class="btn">&lt; back</button>
+        <button class="btn">&lt; back</button>
       </router-link>
     </div>
 
@@ -16,7 +15,9 @@
 
       <button class="btn" v-on:click="setAtLanding()" v-if="currentUser.isLoggingInOrSigningUp()" :disabled="currentUser.isLoading()">&lt; back</button>
 
-      <button class="btn" v-on:click="setSigningUp()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Register</button>
+      <router-link to="/signup" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">
+        <button class="btn" v-on:click="setSigningUp()" :disabled="currentUser.isLoading()">Register</button>
+      </router-link>
       <button class="btn" v-on:click="setLoggingIn()" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Login</button>
 
       <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Logout</button>

@@ -3,7 +3,7 @@
   <Navbar :afterLogout="afterLogout" :currentUser="currentUser" :showLoginSignup="true" />
   <div id="content-common" class="content-wrapper">
     <div class="container" id="service">
-      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :disabled="currentUser.isLoggingInOrSigningUp()" />
+      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :disabled="currentUser.isLoggingInOrSigningUp()" :asButton="currentUser.atLanding()" />
     </div>
   </div>
   <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
@@ -52,7 +52,6 @@
     <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isLoggingInOrSigningUp()">
       <button class="btn btn-login" id="login-submit" @click="submitLogin" v-if="currentUser.isLoggingIn()" :disabled="!canLogin()">Login</button>
       <router-link to="/reset-password" v-if="currentUser.isLoggingIn()">Forgot your password?</router-link>
-      <button class="btn btn-signup" id="signup-submit" @click="submitSignUp" v-if="currentUser.isSigningUp()" :disabled="!canSignUp()">Register</button>
     </div>
   </div>
 
@@ -160,8 +159,6 @@ export default {
         this.copyToClipboard();
       } else if (this.currentUser.isLoggingIn()) {
         this.submitLogin();
-      } else if (this.currentUser.isSigningUp()) {
-        this.submitSignUp();
       }
     },
     save () {
@@ -203,24 +200,6 @@ export default {
         });
       }
     },
-    submitSignUp () {
-      if (this.canSignUp()) {
-        this.withDisabledButton("#signup-submit", (done) => {
-          this.currentUser.signup(this.inputEmail, this.state.generated, (r) => {
-            if (r) {
-              this.$toasted.success('Successfully registered!');
-              this.afterSignUp();
-            } else {
-              this.$toasted.error('Error registering');
-            }
-            done();
-          });
-        });
-      }
-    },
-    afterSignUp () {
-      this.submitLogin();
-    },
     afterLogin () {
       this.currentUser.setAtApp();
       Store.reloadServices(() => {
@@ -238,9 +217,6 @@ export default {
     canLogin () {
       return this.notEmpty(this.state.master) && this.notEmpty(this.inputEmail);
     },
-    canSignUp () {
-      return this.notEmpty(this.state.master) && this.notEmpty(this.inputEmail);
-    }
   },
   data () {
     return {
@@ -257,7 +233,15 @@ export default {
         Store.reloadServices();
       }
     });
-  }
+  },
+  beforeRouteLeave (to, from, next) {
+    // make sure this stuff won't affect other routes
+    Store.clearEntries();
+    this.masterPasswordVisible = false;
+    this.generatedPasswordVisible = false;
+    this.inputEmail = null;
+    next();
+  },
 }
 </script>
 

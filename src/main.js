@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import App from './App.vue';
-import ResetPassword from './ResetPassword.vue';
 import vSelect from 'vue-select';
 import Toasted from 'vue-toasted';
 import VueClipboard from 'vue-clipboard2';
@@ -10,6 +8,10 @@ import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare, faSave, faTrash
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMobileDetection from "vue-mobile-detection";
 import VTooltip from 'v-tooltip';
+
+import App from './App.vue';
+import ResetPassword from './ResetPassword.vue';
+import SignUp from './SignUp.vue';
 
 Vue.use(VueRouter);
 
@@ -109,13 +111,19 @@ Vue.mixin({
     },
     notEmpty: function(v) {
       return v !== null && v !== undefined && v !== '';
-    }
+    },
+    isValidEmail: function(email) {
+      // see https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+      var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+      return re.test(email);
+    },
   }
 });
 
 const routes = [
   { path: '/', component: App },
-  { path: '/reset-password', component: ResetPassword }
+  { path: '/reset-password', component: ResetPassword },
+  { path: '/signup', component: SignUp },
 ];
 
 const router = new VueRouter({
@@ -126,5 +134,5 @@ var app = new Vue({
   router
 }).$mount('#content');
 
-console.log("mobile?", app.$isMobile());
+// console.log("mobile?", app.$isMobile());
 VTooltip.enabled = !app.$isMobile(); //window.innerWidth > 768;

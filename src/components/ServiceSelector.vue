@@ -1,7 +1,7 @@
 <template>
   <div class="service-selector">
-    <label class="typewriter" v-if="!currentUser.atLanding()">What is this password for?</label>
-    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="currentUser.atLanding() ? 'Get started' : 'Search or enter a new one...'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, landing: currentUser.atLanding() }" transition="slide" :disabled="disabled">
+    <label class="typewriter" v-if="!asButton">What is this password for?</label>
+    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="asButton ? 'Get started' : 'Search or enter a new one...'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, 'as-button': asButton }" transition="slide" :disabled="disabled">
       <!-- <v-slot name="no-options">Sorry! no matching options.</v-slot> -->
       <!-- <v-slot name="spinner"> -->
       <!--   <div class="spinner">Loading...</div> -->
@@ -17,7 +17,11 @@ export default {
     value: String,
     services: Array,
     currentUser: Object,
-    disabled: Boolean
+    disabled: Boolean,
+    asButton: {
+      type: Boolean,
+      default: false
+    },
   },
   methods: {
     onSelectChange: function(v) {
@@ -25,13 +29,10 @@ export default {
     },
     onFocus: function() {
       this.service = null;
-      this.currentUser.state.step = null;
+      this.currentUser.state.step = null; // TODO
       this.$emit('input', null)
     },
     onBlur: function() {
-      // if (this.service === null) {
-      //   this.currentUser.state.step = 'Landing';
-      // }
     }
   },
   data () {
@@ -40,9 +41,7 @@ export default {
     }
   },
   mounted () {
-    // if (!this.$isMobile()) {
-    //   this.$el.getElementsByTagName('input')[0].focus();
-    // }
+    this.service = null;
   },
   watch: {
     value: function(val) {
@@ -148,7 +147,7 @@ export default {
 }
 
 /* make it look like a button to press on */
-.landing.v-select:not(.vs--open) {
+.as-button.v-select:not(.vs--open) {
   border: 0;
 
   .vs__dropdown-toggle {

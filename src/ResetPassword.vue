@@ -8,7 +8,7 @@
     </div>
     <div class="container" id="email">
       <label class="typewriter" for="master-input">Your email</label>
-      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitReset" v-model="inputEmail" v-focus>
+      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitReset" v-model="inputEmail" v-focus v-bind:class="{ wrong: notEmpty(inputEmail) && !isValidInputEmail() }">
     </div>
     <button class="btn btn-reset-password" id="reset-password-submit" @click="submitReset" :disabled="!canSubmitReset()">Reset password</button>
     <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
@@ -18,12 +18,12 @@
     <div class="container" id="label">
       <h3>Choose a new password</h3>
     </div>
-    <div class="container" id="email">
+    <div class="container" id="master">
       <PasswordVisibilityInput id="master-input" label="Your new master password" v-on:keyup:enter="submitSet" v-model="master" v-focus></PasswordVisibilityInput>
     </div>
-    <div class="container" id="email">
+    <div class="container" id="master-confirmation">
       <label class="typewriter" for="master-input">Confirm your new master password</label>
-      <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="masterConfirmation" :class="{ wrong: masterConfirmation && !isConfirmationCorrect() }">
+      <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="masterConfirmation" :class="{ 'wrong-live': masterConfirmation && !isConfirmationCorrect() }">
     </div>
     <div class="container" id="generated">
       <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     canSubmitReset() {
-      return this.isValidEmail() && !this.currentUser.isLoading();
+      return this.isValidInputEmail() && !this.currentUser.isLoading();
     },
     canSubmitSet() {
       return this.isConfirmationCorrect() && this.state.generated && !this.currentUser.isLoading();
@@ -98,10 +98,8 @@ export default {
         });
       }
     },
-    isValidEmail () {
-      // see https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
-      var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-      return re.test(this.inputEmail);
+    isValidInputEmail () {
+      return this.isValidEmail(this.inputEmail);
     },
     isConfirmationCorrect () {
       return this.notEmpty(this.master) && this.notEmpty(this.masterConfirmation) && this.master === this.masterConfirmation;
