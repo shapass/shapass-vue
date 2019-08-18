@@ -129,12 +129,12 @@ export default {
   methods: {
     copyToClipboard () {
       this.$copyText(this.state.generated).then(() => {
-        this.$toasted.show('Copied', { duration: 1000 });
+        this.$toasted.show('Password copied', { duration: 2000 });
         if (!this.$isMobile()) {
           this.focusMasterPassword();
         }
       }, () => {
-        this.$toasted.error('Could not copy', { duration: 1000 });
+        this.$toasted.error('Could not copy', { duration: 2000 });
       })
     },
     lengthAdd (v) {
