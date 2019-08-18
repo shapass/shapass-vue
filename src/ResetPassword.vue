@@ -19,8 +19,7 @@
       <h3>Choose a new password</h3>
     </div>
     <div class="container" id="email">
-      <label class="typewriter" for="master-input">Your new master password</label>
-      <input id="master-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="master" v-focus>
+      <PasswordVisibilityInput id="master-input" label="Your new master password" v-on:keyup:enter="submitSet" v-model="master" v-focus></PasswordVisibilityInput>
     </div>
     <div class="container" id="email">
       <label class="typewriter" for="master-input">Confirm your new master password</label>
@@ -40,7 +39,7 @@
 import Navbar from './components/Navbar.vue'
 import CurrentUser from './current_user.js'
 import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
-// import PasswordVisibilityToggle from './components/PasswordVisibilityToggle.vue'
+import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
 import GeneratedPassword from './components/GeneratedPassword.vue'
 import Store from './store.js'
 import { Configs } from './config.js'
@@ -50,6 +49,7 @@ export default {
   components: {
     Navbar,
     InfiniteLoadingCircle,
+    PasswordVisibilityInput,
     GeneratedPassword
   },
   data () {

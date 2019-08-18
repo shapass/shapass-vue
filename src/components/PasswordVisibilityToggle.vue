@@ -50,10 +50,10 @@ export default {
   },
   watch: {
     visible: function(val, prev) {
-      if (val != prev) {
+      if (val !== prev) {
         this.afterToggleVisibility();
+        this.$emit('input', val);
       }
-      this.$emit('input', val)
     },
     value: function(val) {
       this.visible = val;

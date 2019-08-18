@@ -19,9 +19,7 @@
       <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="enterOnInput" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()">
     </div>
     <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
-      <label class="typewriter" for="master-input">Your master password:</label>
-      <input id="master-input" :type="masterPasswordType" spellcheck="false" autocomplete="off" v-model="state.master" v-on:keyup.enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" placeholder="Type your password...">
-      <PasswordVisibilityToggle v-model="masterPasswordVisible" />
+      <PasswordVisibilityInput id="master-input" v-model="state.master" v-on:keyup:enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" label="Your master password:" placeholder="Type your password..." />
     </div>
     <div class="container" id="generated">
       <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
@@ -81,7 +79,7 @@
 <script>
 import Navbar from './components/Navbar.vue'
 import ServiceSelector from './components/ServiceSelector.vue'
-import PasswordVisibilityToggle from './components/PasswordVisibilityToggle.vue'
+import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
 import { Configs } from './config.js'
 import Store from './store.js'
 import CurrentUser from './current_user.js'
@@ -92,7 +90,7 @@ export default {
   components: {
     Navbar,
     ServiceSelector,
-    PasswordVisibilityToggle,
+    PasswordVisibilityInput,
     GeneratedPassword
   },
   watch: {
@@ -113,16 +111,10 @@ export default {
       // force-hide passwords when changing page
       if (val != prev) {
         // TODO: how to do this now with components?
+        // it think it'll be fixed when login/register are in diff routes
         // this.masterPasswordVisible = false;
         // this.generatedPasswordVisible = false;
         this.inputEmail = null;
-      }
-    },
-    masterPasswordVisible () {
-      if (this.masterPasswordVisible) {
-        this.masterPasswordType = 'text';
-      } else {
-        this.masterPasswordType = 'password';
       }
     },
   },
@@ -254,10 +246,7 @@ export default {
     return {
       state: Store.state,                 // shared state info
       currentUser: CurrentUser,           // shared user info
-
       inputEmail: null,                   // the email current in the input
-      masterPasswordType: "password",     // input type to control visibility of the master password
-      masterPasswordVisible: false,       // is the master password visible?
     }
   },
   mounted () {
@@ -323,19 +312,6 @@ export default {
 
 #master {
   position: relative;
-
-  > input {
-    margin-top: 5px;
-    padding-right: 45px;
-    padding-left: 10px;
-    width: calc(100% - 55px);
-  }
-
-  .password-visibility-toggle {
-    position: absolute;
-    right: 10px;
-    top: 1.95em; // based on how font-size is calculated
-  }
 }
 
 #configurations {

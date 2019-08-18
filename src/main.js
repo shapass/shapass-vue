@@ -37,10 +37,26 @@ Vue.use(VTooltip, { defaultDelay: 500 });
 
 Vue.directive('focus', {
   inserted: function (el, e) {
-    if (!e.hasOwnProperty('value') || e.value) {
-      el.focus();
-      if (el.value !== undefined && el.value !== null) {
-        el.select();
+    var target = null;
+
+    // if not an input, find the first one inside
+    if (el.tagName.match(/input/i)) {
+      target = el;
+    } else {
+      target = el.getElementsByTagName('input');
+      if (target.length > 0) {
+        target = target[0];
+      } else {
+        target = null;
+      }
+    }
+
+    // if v-focus has a value it has to be true
+    // and we need a target
+    if ((!e.hasOwnProperty('value') || e.value) && target !== null) {
+      target.focus();
+      if (target.value !== undefined && target.value !== null) {
+        target.select();
       }
     }
   }
