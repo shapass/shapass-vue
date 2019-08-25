@@ -1,6 +1,7 @@
 <template>
 <div id="app" v-bind:class="{ mobile: this.$isMobile() }">
-  <Navbar :afterLogout="afterLogout" :currentUser="currentUser" :showLoginSignup="true" />
+  <Navbar :currentUser="currentUser" :showLoginSignup="true" :logoutFn="logout" />
+
   <div class="content-wrapper">
     <div class="container" id="service">
       <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :asButton="currentUser.atLanding()" />
@@ -84,16 +85,17 @@ export default {
     PasswordVisibilityInput,
     GeneratedPassword
   },
+  props: {
+  },
   watch: {
     "state.service" (val) {
       Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
     },
-    "currentUser.state.step" (val, prev) {
+    "currentUser.state.step" () {
       if (this.currentUser.atLanding()) {
         Store.clearEntries();
       } else if (this.currentUser.atApp()) {
         Store.clearEntries();
-        this.focusServiceSelector();
       }
     },
   },
@@ -160,29 +162,33 @@ export default {
         this.focusServiceSelector();
       }
     },
-    afterLogout (r) {
-      if (r) {
-        this.$toasted.success('Bye!');
-      } else {
-        this.$toasted.error('Something went wrong :(');
-      }
-      this.currentUser.setAtLanding();
+    logout (r) {
+      this.currentUser.logout((r) => {
+        if (r) {
+          this.$toasted.success('Bye!');
+        } else {
+          this.$toasted.error('Something went wrong :(');
+        }
+        Store.clearEntriesAndServices();
+        this.currentUser.setAtLanding();
+      });
     },
   },
   data () {
     return {
-      state: Store.state,                 // shared state info
-      currentUser: CurrentUser,           // shared user info
+      state: Store.state,
+      currentUser: CurrentUser,
     }
   },
   mounted () {
-    Store.clearEntries();
-    if (this.currentUser.atApp()) {
-      this.focusServiceSelector();
-    }
+    Store.clearEntriesAndServices();
     this.currentUser.checkLoggedIn(r => {
       if (r) {
-        Store.reloadServices();
+        Store.reloadServices(() => {
+          if (this.currentUser.atApp()) {
+            this.focusServiceSelector();
+          }
+        });
       }
     });
   },

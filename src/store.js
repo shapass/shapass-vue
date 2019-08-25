@@ -19,6 +19,9 @@ const Store = {
   savedServices () {
     return JSON.parse(localStorage.shapassData || null) || {};
   },
+  clearSavedServices () {
+    return localStorage.shapassData = null;
+  },
   savedServiceNames () {
     var data = this.savedServices();
     return Object.keys(data);
@@ -48,6 +51,11 @@ const Store = {
     this.state.service = null;
     this.state.generated = null;
     this.state.algorithm = Configs.DEFAULT_ALGORITHM;
+  },
+  clearEntriesAndServices () {
+    this.clearEntries();
+    this.clearSavedServices();
+    this.reloadStateServices();
   },
 
   // reloads the list of service names from localStorage to current state

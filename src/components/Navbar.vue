@@ -41,18 +41,18 @@ export default {
     InfiniteLoadingCircle
   },
   props: {
-    afterLogout: Function,
     currentUser: Object,
     showLoginSignup: Boolean,
+    logoutFn: Function,
   },
   methods: {
     setAtLanding () {
       this.currentUser.setAtLanding();
     },
     logout () {
-      this.currentUser.logout((r) => {
-        this.afterLogout(r);
-      });
+      if (this.logoutFn) {
+        this.logoutFn();
+      }
     },
   }
 }

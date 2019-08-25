@@ -28,12 +28,12 @@
 
 <script>
 import Navbar from './components/Navbar.vue'
-import CurrentUser from './current_user.js'
 import ServiceSelector from './components/ServiceSelector.vue'
 import GeneratedPassword from './components/GeneratedPassword.vue'
 import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
 import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
 import Store from './store.js'
+import CurrentUser from './current_user.js'
 import { Configs } from './config.js'
 
 export default {
@@ -45,14 +45,16 @@ export default {
     PasswordVisibilityInput,
     GeneratedPassword
   },
+  props: {
+  },
   data () {
     return {
       state: Store.state,
-      currentUser: CurrentUser,
       inputEmail: null,
       generated: null,
       master: null,
-      masterConfirmation: null
+      masterConfirmation: null,
+      currentUser: CurrentUser
     }
   },
   methods: {

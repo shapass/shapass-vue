@@ -74,7 +74,6 @@ export default {
       if (val !== prev) { this.generatePassword(); }
     },
     "state.master" (val, prev) {
-      console.log("changed master");
       if (val !== prev) { this.generatePassword(); }
     },
     "state.suffix" (val, prev) {

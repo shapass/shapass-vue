@@ -11,6 +11,8 @@ const Steps = Object.freeze({
 
 const CurrentUser = {
   state: {
+    id: parseInt(Math.random() * 10000), // just to help with debug
+
     email: null,         // email when logged in
     token: null,         // login token when logged in
     step: Steps.LANDING, // controls where the user is at at the moment
@@ -35,7 +37,9 @@ const CurrentUser = {
         this._setLoggedOut();
       }
       this.state.loading = false;
-      callback(r);
+      if (callback) {
+        callback(r);
+      }
     });
   },
 
@@ -46,7 +50,25 @@ const CurrentUser = {
         this._setLoggedOut();
       }
       this.state.loading = false;
-      callback(r);
+      if (callback) {
+        callback(r);
+      }
+    });
+  },
+
+  checkLoggedIn (callback) {
+    this.state.loading = true;
+    var token = this.loadCookie();
+    API.setToken(token);
+    API.whoAmI(email => {
+      if (email !== null && email !== undefined) {
+        this._setLoggedIn(email, token);
+        this.state.loading = false;
+        callback(true);
+      } else {
+        this.state.loading = false;
+        callback(false);
+      }
     });
   },
 
@@ -94,21 +116,6 @@ const CurrentUser = {
   },
   setResettingPassword () {
     this.state.step = Steps.RESET;
-  },
-  checkLoggedIn (callback) {
-    this.state.loading = true;
-    var token = this.loadCookie();
-    API.setToken(token);
-    API.whoAmI(email => {
-      if (email !== null && email !== undefined) {
-        this._setLoggedIn(email, token);
-        this.state.loading = false;
-        callback(true);
-      } else {
-        this.state.loading = false;
-        callback(false);
-      }
-    });
   },
 
   isLoading () {

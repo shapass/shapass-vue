@@ -1,6 +1,7 @@
 <template>
 <div id="reset-password" v-bind:class="{ mobile: this.$isMobile() }">
   <Navbar :currentUser="currentUser" :showLoginSignup="false" />
+
   <div class="content-wrapper" v-if="!token">
     <div class="container" id="label">
       <h3>So you need a new password?</h3>
@@ -37,11 +38,11 @@
 
 <script>
 import Navbar from './components/Navbar.vue'
-import CurrentUser from './current_user.js'
 import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
 import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
 import GeneratedPassword from './components/GeneratedPassword.vue'
 import Store from './store.js'
+import CurrentUser from './current_user.js'
 import { Configs } from './config.js'
 
 export default {
@@ -52,14 +53,16 @@ export default {
     PasswordVisibilityInput,
     GeneratedPassword
   },
+  props: {
+  },
   data () {
     return {
       state: Store.state,
       inputEmail: null,
-      currentUser: CurrentUser,
       generated: null,
       master: null,
-      masterConfirmation: null
+      masterConfirmation: null,
+      currentUser: CurrentUser
     }
   },
   methods: {
