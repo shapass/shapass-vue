@@ -131,7 +131,11 @@ export default {
     masterConfirmation () {
       this.setStateMaster();
     },
-  }
+  },
+  beforeRouteLeave (to, from, next) {
+    this.disableSavePassword(this.$el);
+    next();
+  },
 }
 </script>
 

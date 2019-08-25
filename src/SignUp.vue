@@ -106,6 +106,10 @@ export default {
       this.setStateMaster();
     },
   },
+  beforeRouteLeave (to, from, next) {
+    this.disableSavePassword(this.$el);
+    next();
+  },
 }
 </script>
 

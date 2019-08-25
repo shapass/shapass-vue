@@ -50,7 +50,8 @@ export default {
       state: Store.state,
       inputEmail: null,
       generated: null,
-      master: null
+      master: null,
+      submitted: false
     }
   },
   methods: {
@@ -64,6 +65,7 @@ export default {
           this.currentUser.login(this.inputEmail, this.state.generated, (r) => {
             if (r) {
               this.currentUser.setAtApp();
+              this.submitted = true;
               this.$router.push('/')
               this.$toasted.success('Welcome!');
             } else {
@@ -85,6 +87,12 @@ export default {
     this.currentUser.setLoggingIn();
   },
   watch: {
+  },
+  beforeRouteLeave (to, from, next) {
+    if (!this.submitted) {
+      this.disableSavePassword(this.$el);
+    }
+    next();
   },
 }
 </script>

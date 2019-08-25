@@ -1,7 +1,8 @@
 <template>
 <div class="password-visibility-input">
   <label>{{ label }}</label>
-  <input :type="inputType" spellcheck="false" autocomplete="off" v-model="internalValue" v-on:keyup.enter="onEnter" :placeholder="placeholder">
+
+  <input :type="inputType" spellcheck="false" autocomplete="new-password" v-model="internalValue" v-on:keyup.enter="onEnter" :placeholder="placeholder">
   <PasswordVisibilityToggle v-model="isVisible" />
 </div>
 </template>
@@ -28,7 +29,7 @@ export default {
     return {
       internalValue: null,
       inputType: "password",
-      isVisible: false
+      isVisible: false,
     }
   },
   mounted () {
@@ -57,6 +58,7 @@ export default {
     padding-right: 45px;
     padding-left: 10px;
     width: calc(100% - 55px);
+
   }
 
   .password-visibility-toggle {

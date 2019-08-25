@@ -163,7 +163,7 @@ export default {
         this.focusServiceSelector();
       }
     },
-    logout (r) {
+    logout () {
       this.currentUser.logout((r) => {
         if (r) {
           this.$toasted.success('Bye!');
@@ -194,7 +194,7 @@ export default {
     });
   },
   beforeRouteLeave (to, from, next) {
-    // make sure this stuff won't affect other routes
+    this.disableSavePassword(this.$el);
     Store.clearEntries();
     this.masterPasswordVisible = false;
     this.generatedPasswordVisible = false;

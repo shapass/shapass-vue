@@ -118,6 +118,20 @@ Vue.mixin({
       var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
       return re.test(email);
     },
+
+    // "hack" to prevent browsers from asking if the user wants to save the password
+    // the only option that worked, and should be used on "beforeRouteLeave" methods
+    // failed attempts:
+    // * doing it on "beforeDestroy" inside the component with the input
+    // * setting autocomplete="off"
+    // * having a fake input with the same name
+    // * others from https://stackoverflow.com/questions/41217019/how-to-prevent-a-browser-from-storing-password
+    disableSavePassword: function(el) {
+      var elements = el.querySelectorAll("input[type=password]");
+      elements.forEach((e) => {
+        e.value = null;
+      });
+    }
   }
 });
 
