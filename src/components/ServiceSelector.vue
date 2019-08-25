@@ -1,7 +1,7 @@
 <template>
   <div class="service-selector">
     <label class="typewriter" v-if="!asButton">What is this password for?</label>
-    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="asButton ? 'Get started' : 'Search or enter a new one...'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="onFocus" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, 'as-button': asButton }" transition="slide" :disabled="disabled">
+    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="asButton ? 'Get started' : 'Search or enter a new one...'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="focused" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, 'as-button': asButton }" transition="slide" :disabled="disabled">
       <!-- <v-slot name="no-options">Sorry! no matching options.</v-slot> -->
       <!-- <v-slot name="spinner"> -->
       <!--   <div class="spinner">Loading...</div> -->
@@ -18,6 +18,7 @@ export default {
     services: Array,
     currentUser: Object,
     disabled: Boolean,
+    onFocus: Function,
     asButton: {
       type: Boolean,
       default: false
@@ -27,10 +28,12 @@ export default {
     onSelectChange: function(v) {
       this.$emit('input', v)
     },
-    onFocus: function() {
+    focused: function() {
       this.service = null;
-      this.currentUser.state.step = null; // TODO
       this.$emit('input', null)
+      if (this.onFocus) {
+        this.onFocus();
+      }
     },
     onBlur: function() {
     }

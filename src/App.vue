@@ -4,7 +4,7 @@
 
   <div class="content-wrapper">
     <div class="container" id="service">
-      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :asButton="currentUser.atLanding()" />
+      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :asButton="currentUser.atLanding()" :onFocus="serviceFocused" />
     </div>
   </div>
   <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
@@ -131,8 +131,9 @@ export default {
     focusServiceSelector () {
       this.focusInput('#service');
     },
-
-    // Pressed enter on an input, decide what to do
+    serviceFocused() {
+      this.currentUser.setAtApp();
+    },
     enterOnInput () {
       if (this.currentUser.atApp()) {
         this.copyToClipboard();
