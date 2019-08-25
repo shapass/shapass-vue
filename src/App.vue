@@ -49,12 +49,12 @@
   </div>
 
   <div class="clearfix" id="toolbar" v-if="state.generated">
-    <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'">
+    <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'" v-if="currentUser.isLoggedIn()">
       <span v-if="this.$isMobile()"><kbd>save</kbd></span>
       <font-awesome-icon icon="save" />
       <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>s</kbd></span>
     </button>
-    <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove" v-tooltip="'Remove the selected service from your list of services'">
+    <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove" v-tooltip="'Remove the selected service from your list of services'" v-if="currentUser.isLoggedIn()">
       <span v-if="this.$isMobile()"><kbd>delete</kbd></span>
       <font-awesome-icon icon="trash" />
       <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>del</kbd></span>

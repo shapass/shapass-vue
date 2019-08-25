@@ -72,6 +72,10 @@ const CurrentUser = {
     });
   },
 
+  isLoggedIn () {
+    return this.state.email !== null;
+  },
+
   getStep () {
     return this.state.step;
   },
@@ -86,9 +90,6 @@ const CurrentUser = {
   },
   isLoggingInOrSigningUp () {
     return !this.isLoggedIn() && (this.isLoggingIn() || this.isSigningUp());
-  },
-  isLoggedIn () {
-    return this.state.email !== null;
   },
   isLoggingIn () {
     return this.state.step === Steps.LOGIN;
