@@ -68,7 +68,7 @@ export default {
           this.currentUser.signup(this.inputEmail, this.state.generated, (r) => {
             if (r) {
               // TODO: show a 'waiting confirmation' page instead
-              this.$router.push('/')
+              this.$router.push('/login')
               this.$toasted.success('Successfully registered!');
             } else {
               this.$toasted.error('Error registering');
@@ -107,6 +107,9 @@ export default {
     },
   },
   beforeRouteLeave (to, from, next) {
+    // prevents the service input from not updating when going to /login
+    this.state.service = null;
+
     this.disableSavePassword(this.$el);
     next();
   },
