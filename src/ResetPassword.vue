@@ -23,14 +23,14 @@
     </div>
     <div class="container" id="master-confirmation">
       <label class="typewriter" for="master-input">Confirm your new master password</label>
-      <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="masterConfirmation" :class="{ 'wrong-live': masterConfirmation && !isConfirmationCorrect() }">
+      <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="masterConfirmation" :class="{ 'wrong-live': master && !isConfirmationCorrect() }">
     </div>
     <div class="container" id="generated">
       <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
     </div>
     <button class="btn btn-set-password" id="set-password-submit" @click="submitSet" :disabled="!canSubmitSet()">Set password</button>
     <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
-    <router-link to="/reset-password">Request a new password reset e-mail</router-link>
+    <router-link to="/reset-password">Not working?<br/>Request a new password reset e-mail</router-link>
   </div>
 </div>
 </template>
@@ -102,7 +102,7 @@ export default {
       return this.isValidEmail(this.inputEmail);
     },
     isConfirmationCorrect () {
-      return this.notEmpty(this.master) && this.notEmpty(this.masterConfirmation) && this.master === this.masterConfirmation;
+      return this.notEmpty(this.master) && this.master === this.masterConfirmation;
     },
     setStateMaster () {
       if (this.isConfirmationCorrect()) {
@@ -119,6 +119,7 @@ export default {
   },
   mounted () {
     this.state.service = Configs.SHAPASS_SERVICE;
+    this.currentUser.setResettingPassword();
   },
   watch: {
     master () {
@@ -139,7 +140,6 @@ export default {
 
 span {
   font-family: $font-family-text;
-  /* font-size: $font-md; */
   display: block;
 }
 
@@ -155,7 +155,8 @@ button {
 a {
   float: right;
   font-size: $font-sm;
-  margin-top: 5px;
+  margin-top: 0px;
+  text-align: right;
 }
 
 </style>

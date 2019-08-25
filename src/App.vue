@@ -1,9 +1,9 @@
 <template>
 <div id="app" v-bind:class="{ mobile: this.$isMobile() }">
   <Navbar :afterLogout="afterLogout" :currentUser="currentUser" :showLoginSignup="true" />
-  <div id="content-common" class="content-wrapper">
+  <div class="content-wrapper">
     <div class="container" id="service">
-      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :disabled="currentUser.isLoggingInOrSigningUp()" :asButton="currentUser.atLanding()" />
+      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :asButton="currentUser.atLanding()" />
     </div>
   </div>
   <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
@@ -14,16 +14,12 @@
     </div>
   </div>
   <div id="content-app" v-if="!currentUser.atLanding()" class="content-wrapper">
-    <div class="container" id="email" v-if="currentUser.isLoggingInOrSigningUp()">
-      <label class="typewriter" for="master-input">Your email</label>
-      <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="enterOnInput" v-model="inputEmail" v-focus="currentUser.isLoggingInOrSigningUp()">
-    </div>
-    <div class="container" id="master" v-if="state.service || currentUser.isLoggingInOrSigningUp()">
-      <PasswordVisibilityInput id="master-input" v-model="state.master" v-on:keyup:enter="enterOnInput" v-focus="!currentUser.isLoggingInOrSigningUp()" label="Your master password:" placeholder="Type your password..." />
+    <div class="container" id="master" v-if="state.service">
+      <PasswordVisibilityInput id="master-input" v-model="state.master" v-on:keyup:enter="enterOnInput" v-focus label="Your master password:" placeholder="Type your password..." />
     </div>
     <div class="container" id="generated">
       <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
-      <div class="container clearfix" id="configurations" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
+      <div class="container clearfix" id="configurations" v-if="state.generated">
         <!-- <label class="typewriter">Configure the generated password:</label> -->
         <div id="length">
           <label class="typewriter">Length:</label>
@@ -49,13 +45,9 @@
         </div>
       </div>
     </div>
-    <div class="container clearfix" id="login-registration-buttons" v-if="state.generated && currentUser.isLoggingInOrSigningUp()">
-      <button class="btn btn-login" id="login-submit" @click="submitLogin" v-if="currentUser.isLoggingIn()" :disabled="!canLogin()">Login</button>
-      <router-link to="/reset-password" v-if="currentUser.isLoggingIn()">Forgot your password?</router-link>
-    </div>
   </div>
 
-  <div class="clearfix" id="toolbar" v-if="state.generated && !currentUser.isLoggingInOrSigningUp()">
+  <div class="clearfix" id="toolbar" v-if="state.generated">
     <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'">
       <span v-if="this.$isMobile()"><kbd>save</kbd></span>
       <font-awesome-icon icon="save" />
@@ -97,23 +89,11 @@ export default {
       Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
     },
     "currentUser.state.step" (val, prev) {
-      if (this.currentUser.isLoggingInOrSigningUp()) {
-        Store.clearEntries();
-        this.state.service = Configs.SHAPASS_SERVICE;
-        this.focusEmail();
-      } else if (this.currentUser.atLanding()) {
+      if (this.currentUser.atLanding()) {
         Store.clearEntries();
       } else if (this.currentUser.atApp()) {
         Store.clearEntries();
         this.focusServiceSelector();
-      }
-      // force-hide passwords when changing page
-      if (val != prev) {
-        // TODO: how to do this now with components?
-        // it think it'll be fixed when login/register are in diff routes
-        // this.masterPasswordVisible = false;
-        // this.generatedPasswordVisible = false;
-        this.inputEmail = null;
       }
     },
   },
@@ -146,9 +126,6 @@ export default {
     focusMasterPassword () {
       this.focusInput('#master');
     },
-    focusEmail () {
-      this.focusInput('#email');
-    },
     focusServiceSelector () {
       this.focusInput('#service');
     },
@@ -157,8 +134,6 @@ export default {
     enterOnInput () {
       if (this.currentUser.atApp()) {
         this.copyToClipboard();
-      } else if (this.currentUser.isLoggingIn()) {
-        this.submitLogin();
       }
     },
     save () {
@@ -185,27 +160,6 @@ export default {
         this.focusServiceSelector();
       }
     },
-    submitLogin () {
-      if (this.canLogin()) {
-        this.withDisabledButton("#login-submit", (done) => {
-          this.currentUser.login(this.inputEmail, this.state.generated, (r) => {
-            if (r) {
-              this.$toasted.success('Welcome!');
-              this.afterLogin();
-            } else {
-              this.$toasted.error('Incorrect email or password, try again');
-            }
-            done();
-          });
-        });
-      }
-    },
-    afterLogin () {
-      this.currentUser.setAtApp();
-      Store.reloadServices(() => {
-        this.focusServiceSelector();
-      });
-    },
     afterLogout (r) {
       if (r) {
         this.$toasted.success('Bye!');
@@ -214,20 +168,18 @@ export default {
       }
       this.currentUser.setAtLanding();
     },
-    canLogin () {
-      return this.notEmpty(this.state.master) && this.notEmpty(this.inputEmail);
-    },
   },
   data () {
     return {
       state: Store.state,                 // shared state info
       currentUser: CurrentUser,           // shared user info
-      inputEmail: null,                   // the email current in the input
     }
   },
   mounted () {
     Store.clearEntries();
-    this.currentUser.setAtLanding();
+    if (this.currentUser.atApp()) {
+      this.focusServiceSelector();
+    }
     this.currentUser.checkLoggedIn(r => {
       if (r) {
         Store.reloadServices();
@@ -239,13 +191,12 @@ export default {
     Store.clearEntries();
     this.masterPasswordVisible = false;
     this.generatedPasswordVisible = false;
-    this.inputEmail = null;
     next();
   },
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 
 #content-landing {
   #slogan {
@@ -286,12 +237,6 @@ export default {
         float 3s ease-in-out infinite alternate;
     }
   }
-}
-
-.content-wrapper {
-  margin: 0 auto;
-  padding: 0 $content-side-padding;
-  max-width: $content-width;
 }
 
 #master {
@@ -428,17 +373,6 @@ export default {
         margin: 0.2em 0.8em 0 0;
       }
     }
-  }
-}
-
-#login-registration-buttons {
-  border: 0;
-  padding: 10px 0;
-
-  a {
-    float: right;
-    font-size: $font-sm;
-    margin-top: 5px;
   }
 }
 </style>

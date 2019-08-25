@@ -1,5 +1,5 @@
 <template>
-<div id="signup" v-bind:class="{ mobile: this.$isMobile() }">
+<div id="login" v-bind:class="{ mobile: this.$isMobile() }">
   <Navbar :currentUser="currentUser" :showLoginSignup="false" />
 
   <div class="content-wrapper">
@@ -11,16 +11,13 @@
       <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submit" v-model="inputEmail" v-focus v-bind:class="{ wrong: notEmpty(inputEmail) && !isValidInputEmail() }">
     </div>
     <div class="container" id="master">
-      <PasswordVisibilityInput id="master-input" label="Your master password" v-on:keyup:enter="submit" v-model="master"></PasswordVisibilityInput>
-    </div>
-    <div class="container" id="master-confirmation">
-      <label class="typewriter" for="master-input">Confirm your master password</label>
-      <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submit" v-model="masterConfirmation" :class="{ 'wrong-live': master && !isConfirmationCorrect() }">
+      <PasswordVisibilityInput id="master-input" label="Your master password" v-on:keyup:enter="submit" v-model="state.master"></PasswordVisibilityInput>
     </div>
     <div class="container" id="generated">
       <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
     </div>
-    <button class="btn btn-signup" id="signup-submit" @click="submit" :disabled="!canSubmit()">Register</button>
+    <button class="btn btn-login" id="login-submit" @click="submit" :disabled="!canSubmit()">Login</button>
+    <router-link to="/reset-password" v-if="currentUser.isLoggingIn()" class="forgot-password">Forgot your password?</router-link>
     <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
   </div>
 </div>
@@ -37,7 +34,7 @@ import Store from './store.js'
 import { Configs } from './config.js'
 
 export default {
-  name: 'signup',
+  name: 'login',
   components: {
     Navbar,
     ServiceSelector,
@@ -51,25 +48,24 @@ export default {
       currentUser: CurrentUser,
       inputEmail: null,
       generated: null,
-      master: null,
-      masterConfirmation: null
+      master: null
     }
   },
   methods: {
     canSubmit() {
-      return this.isValidInputEmail(this.inputEmail) && this.isConfirmationCorrect() &&
+      return this.isValidInputEmail(this.inputEmail) && this.notEmpty(this.state.master) &&
         this.state.generated && !this.currentUser.isLoading();
     },
     submit () {
       if (this.canSubmit()) {
-        this.withDisabledButton("#signup-submit", (done) => {
-          this.currentUser.signup(this.inputEmail, this.state.generated, (r) => {
+        this.withDisabledButton("#login-submit", (done) => {
+          this.currentUser.login(this.inputEmail, this.state.generated, (r) => {
             if (r) {
-              // TODO: show a 'waiting confirmation' page instead
+              this.currentUser.setAtApp();
               this.$router.push('/')
-              this.$toasted.success('Successfully registered!');
+              this.$toasted.success('Welcome!');
             } else {
-              this.$toasted.error('Error registering');
+              this.$toasted.error('Incorrect email or password, try again');
             }
             done();
           });
@@ -79,37 +75,27 @@ export default {
     isValidInputEmail () {
       return this.isValidEmail(this.inputEmail);
     },
-    isConfirmationCorrect () {
-      return this.notEmpty(this.master) && this.master === this.masterConfirmation;
-    },
-    setStateMaster () {
-      if (this.isConfirmationCorrect()) {
-        this.state.master = this.master;
-      } else {
-        this.state.master = null;
-      }
-    }
   },
   computed: {
   },
   mounted () {
     this.state.service = Configs.SHAPASS_SERVICE;
-    this.currentUser.setSigningUp();
+    this.currentUser.setLoggingIn();
   },
   watch: {
-    master () {
-      this.setStateMaster();
-    },
-    masterConfirmation () {
-      this.setStateMaster();
-    },
   },
 }
 </script>
 
 <style scoped lang="scss">
 
-#signup-submit {
+a.forgot-password {
+  float: right;
+  font-size: $font-sm;
+  margin-top: 5px;
+}
+
+#login-submit {
   float: left;
 }
 

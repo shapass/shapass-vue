@@ -12,6 +12,7 @@ import VTooltip from 'v-tooltip';
 import App from './App.vue';
 import ResetPassword from './ResetPassword.vue';
 import SignUp from './SignUp.vue';
+import Login from './Login.vue';
 
 Vue.use(VueRouter);
 
@@ -124,6 +125,7 @@ const routes = [
   { path: '/', component: App },
   { path: '/reset-password', component: ResetPassword },
   { path: '/signup', component: SignUp },
+  { path: '/login', component: Login },
 ];
 
 const router = new VueRouter({

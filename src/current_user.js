@@ -1,12 +1,20 @@
 import { Configs } from './config.js';
 import API from './api.js';
 
+const Steps = Object.freeze({
+  LANDING: 'landing',
+  APP: 'app',
+  LOGIN: 'login',
+  SIGNUP: 'signup',
+  RESET: 'reset-password',
+});
+
 const CurrentUser = {
   state: {
-    email: null,      // email when logged in
-    token: null,      // login token when logged in
-    step: 'Landing',  // login step: 'Login', 'SignUp', null, 'Landing'
-    loading: false,
+    email: null,         // email when logged in
+    token: null,         // login token when logged in
+    step: Steps.LANDING, // controls where the user is at at the moment
+    loading: false,      // true while actions are happening (e.g. sending api request)
   },
 
   signup (email, password, callback) {
@@ -21,39 +29,25 @@ const CurrentUser = {
     this.state.loading = true;
     API.login(email, password, (r, token) => {
       if (r) {
-        this.setLoggedIn(email, token);
+        this._setLoggedIn(email, token);
         this.saveCookie();
       } else {
-        this.setLoggedOut();
+        this._setLoggedOut();
       }
       this.state.loading = false;
       callback(r);
     });
-  },
-  setLoggedIn (email, token=undefined) {
-    this.state.email = email;
-    if (token !== null && token !== undefined) {
-      this.state.token = token;
-      API.setToken(token);
-    }
-    //this.state.step = null;
   },
 
   logout (callback) {
     this.state.loading = true;
     API.logout((r) => {
       if (r) {
-        this.setLoggedOut();
+        this._setLoggedOut();
       }
       this.state.loading = false;
       callback(r);
     });
-  },
-  setLoggedOut () {
-    this.state.email = null;
-    this.state.token = null;
-    API.setToken(null);
-    this.removeCookie();
   },
 
   getStep () {
@@ -69,34 +63,37 @@ const CurrentUser = {
     this._eraseCookie(Configs.LOGIN_COOKIE_NAME);
   },
   isLoggingInOrSigningUp () {
-    return (this.isLoggingIn() || this.isSigningUp()) && !this.isLoggedIn();
+    return !this.isLoggedIn() && (this.isLoggingIn() || this.isSigningUp());
   },
   isLoggedIn () {
     return this.state.email !== null;
   },
   isLoggingIn () {
-    return this.state.step === 'Login';
+    return this.state.step === Steps.LOGIN;
   },
   isSigningUp () {
-    return this.state.step === 'SignUp';
+    return this.state.step === Steps.SIGNUP;
   },
   atApp () {
-    return this.state.step === null;
+    return this.state.step === Steps.APP;
   },
   atLanding () {
-    return this.state.step === 'Landing';
+    return this.state.step === Steps.LANDING;
   },
   setAtLanding () {
-    this.state.step = 'Landing';
+    this.state.step = Steps.LANDING;
   },
   setAtApp () {
-    this.state.step = null;
+    this.state.step = Steps.APP;
   },
   setLoggingIn () {
-    this.state.step = 'Login';
+    this.state.step = Steps.LOGIN;
   },
   setSigningUp () {
-    this.state.step = 'SignUp';
+    this.state.step = Steps.SIGNUP;
+  },
+  setResettingPassword () {
+    this.state.step = Steps.RESET;
   },
   checkLoggedIn (callback) {
     this.state.loading = true;
@@ -104,7 +101,7 @@ const CurrentUser = {
     API.setToken(token);
     API.whoAmI(email => {
       if (email !== null && email !== undefined) {
-        this.setLoggedIn(email, token);
+        this._setLoggedIn(email, token);
         this.state.loading = false;
         callback(true);
       } else {
@@ -137,6 +134,22 @@ const CurrentUser = {
   //
   // Internal methods
   //
+
+  _setLoggedIn (email, token=undefined) {
+    this.state.email = email;
+    if (token !== null && token !== undefined) {
+      this.state.token = token;
+      API.setToken(token);
+    }
+  },
+
+  _setLoggedOut () {
+    this.state.email = null;
+    this.state.token = null;
+    API.setToken(null);
+    this.removeCookie();
+  },
+
   _setCookie (name, value, days) {
     var expires = "";
     if (days) {
@@ -159,6 +172,8 @@ const CurrentUser = {
   _eraseCookie (name) {
     document.cookie = name+'=; Max-Age=-99999999;';
   }
+
+
 };
 
 export default CurrentUser;
