@@ -9,7 +9,7 @@
   </div>
   <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
     <div id="start" v-shortkey.once="['enter']" @shortkey="start">Press <kbd>enter</kbd> to start</div>
-    <div id="slogan">The password manager<br/>that <em>does not</em> store<br/>your passwords.</div>
+    <div id="slogan">The password manager that <em>does not</em><br/>store your passwords.</div>
     <div id="logo-landing" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }">
       <!-- <img src="logo.svg" alt="Shapass" /> -->
     </div>

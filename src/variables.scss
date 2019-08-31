@@ -182,6 +182,22 @@ $mobile-width: 480px;
   }
 }
 
+@keyframes float-sm {
+  0% {
+    transform: translateY(-1px) rotate(0);
+  }
+  50% {
+    transform: rotate(-1deg);
+  }
+  100% {
+    transform: translateY(1px) rotate(0);
+  }
+}
+
+@keyframes blinker {
+  50% { opacity: 0.0; }
+}
+
 html {
   height: 100%;
 }
