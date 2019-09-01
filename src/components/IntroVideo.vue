@@ -1,18 +1,18 @@
 <template>
 <div class="intro-video clearfix">
   <!-- <div>{{ steps.current }}<div class="cursor"></div></div><br/> -->
-  <div class="mage">
+  <div class="wizard">
     <img src="logo.svg" alt="Shapass" />
-    <div class="text-balloon from-mage" x-placement="right">
+    <div class="text-balloon from-wizard" x-placement="right">
       <div class="arrow"></div><div class="text"></div>
     </div>
   </div>
   <div class="play">
-    <div class="text-balloon from-mage" x-placement="right">
+    <div class="text-balloon from-wizard" x-placement="right">
       <div class="arrow"></div>Let me tell you of my magic...
     </div>
     <div class="text-balloon from-user" x-placement="left" v-on:click="start">
-      Yes, please, show me!<div class="arrow"></div>
+      Yes, show me!<div class="arrow"></div>
       <font-awesome-icon icon="play-circle" />
     </div>
   </div>
@@ -27,22 +27,29 @@
 
 <script>
 
-var SCENES = {
-  "start": 0,
-  "intro": 5,
-  "service_1": 40,
-  "master": 70,
-  "master_show": 100,
-  "master_hide": 140,
-  "generated_show": 160,
-  "service_2": 205,
-  "service_3": 245,
-  "service_4": 275,
-  "service_5": 305,
-  "service_6": 335,
-  "service_7": 365,
-  "last": 395,
-};
+// name, duration, step it starts (calculated when mounted)
+var SCENES = [
+  [ "start", 3, 0 ],
+  [ "greeting", 25, 0 ],
+  [ "greeting_2", 35, 0 ],
+  [ "greeting_3", 30, 0 ],
+  [ "intro", 30, 0 ],
+  [ "service_1_intro", 20, 0 ],
+  [ "service_1", 20, 0 ],
+  [ "master", 35, 0 ],
+  [ "master_show", 35, 0 ],
+  [ "master_hide", 20, 0 ],
+  [ "generated_intro", 30, 0 ],
+  [ "generated_show", 40, 0 ],
+  [ "service_2", 40, 0 ],
+  [ "service_3", 30, 0 ],
+  [ "service_4", 30, 0 ],
+  [ "service_5", 30, 0 ],
+  [ "service_6", 40, 0 ],
+  [ "service_7", 20, 0 ],
+  [ "last", 40, 0 ],
+  [ "end_at", 0, 0 ],
+];
 
 export default {
   name: 'IntroVideo',
@@ -56,86 +63,114 @@ export default {
       this.step(0);
     },
     end: function() {
-      clearTimeout(this.timeout);
+      clearTimeout(this.steps.timeout);
+      clearInterval(this.wizard.interval);
       this.clear();
     },
     step: function(step) {
-      clearTimeout(this.timeout);
+      clearTimeout(this.steps.timeout);
       this.steps.current = step;
       this.act();
-      this.timeout = setTimeout(() => {
-        if (this.steps.current == this.steps.max) {
-          //this.steps.current = -1;
-          //this.step(this.steps.current + 1);
-          // TODO:
-          this.end();
+      this.steps.timeout = setTimeout(() => {
+        if (this.steps.current == this.stepfor("end_at")) {
+          if (this.steps.infinite) {
+            this.steps.current = -1;
+            this.step(this.steps.current + 1);
+          } else {
+            this.end();
+          }
         } else {
           this.step(this.steps.current + 1);
         }
       }, this.steps.duration);
     },
+    calculateSteps: function() {
+      var step = 0;
+      for (var i = 0; i < SCENES.length; i++) {
+        SCENES[i][2] = step;
+        step += SCENES[i][1];
+      }
+    },
+    stepfor: function(scene) {
+      for (var i = 0; i < SCENES.length; i++) {
+        if (SCENES[i][0] === scene) {
+          return SCENES[i][2];
+        }
+      }
+      return 0;
+    },
     act: function() {
-      if (this.steps.current == SCENES.start) {
+      if (this.steps.current == this.stepfor("start")) {
         this.clear();
-        this.$el.classList.add("playing");
         this.say(null);
-      } else if (this.steps.current == SCENES.intro) {
+        this.$el.classList.add("playing");
+      } else if (this.steps.current == this.stepfor("greeting")) {
+        this.say("Hi, I'm the password wizard");
+      } else if (this.steps.current == this.stepfor("greeting_2")) {
+        this.say("With my help you can create and manage better passwords");
+      } else if (this.steps.current == this.stepfor("greeting_3")) {
+        this.say("It's easy, let me guide you");
+      } else if (this.steps.current == this.stepfor("intro")-5) {
+        this.say(null);
+        this.$el.classList.add("demoing");
+      } else if (this.steps.current == this.stepfor("intro")) {
         this.say("To start, type the name of the website or the service you need a password for");
-      } else if (this.steps.current == SCENES.service_1) {
+      } else if (this.steps.current == this.stepfor("service_1_intro")) {
         this.say("Let's say you need a password for Twitter");
         this.show(this.el.service);
         this.typing(this.el.service);
-      } else if (this.steps.current >= SCENES.service_1+2 && this.steps.current < SCENES.master) {
-        this.vals.service = this.type("twitter", SCENES.service_1+2);
-      } else if (this.steps.current == SCENES.master) {
+      } else if (this.steps.current >= this.stepfor("service_1") && this.steps.current < this.stepfor("master")) {
+        this.vals.service = this.type("twitter", this.stepfor("service_1"));
+      } else if (this.steps.current == this.stepfor("master")) {
         this.show(this.el.plus);
         this.show(this.el.master);
         this.typing(this.el.master);
         this.say("Then you type your master password");
-      } else if (this.steps.current >= SCENES.master+2 && this.steps.current < SCENES.master_show) {
-        this.vals.master = this.type("••••••••••••••••", SCENES.master+2);
-      } else if (this.steps.current == SCENES.master_show) {
-        this.say("Make sure only <span class='em'>you</span> know this password!");
+      } else if (this.steps.current >= this.stepfor("master")+10 && this.steps.current < this.stepfor("master_show")) {
+        this.vals.master = this.type("••••••••••••••••", this.stepfor("master")+10);
+      } else if (this.steps.current == this.stepfor("master_show")) {
+        this.say("Make sure only you know this password!");
         this.vals.master = "mysecretpassword"
-      } else if (this.steps.current == SCENES.master_hide) {
+      } else if (this.steps.current == this.stepfor("master_hide")) {
         this.vals.master = "••••••••••••••••"
-      } else if (this.steps.current == SCENES.generated_show) {
-        this.say("I'll generate a <span class='em'>long and (very) hard-to-guess password</span> for you", "bottom");
-        // this.say("Based on the service and your master password, I'll generate a <span class='em'>long and (very) hard-to-guess password</span> for you", "bottom");
+      } else if (this.steps.current == this.stepfor("generated_intro")) {
+        this.say("I'll generate a long and (very) hard-to-guess password for you", "bottom");
+      } else if (this.steps.current == this.stepfor("generated_show")) {
         this.show(this.el.generated);
-      } else if (this.steps.current == SCENES.service_2) {
-        this.say("You can use the <span class='em'>same master password</span> for any other website you want", "bottom");
+      } else if (this.steps.current == this.stepfor("service_2")) {
+        this.say("You can use the same master password for any other website you want", "bottom");
         this.typing(this.el.service);
         this.select(this.el.service)
-      } else if (this.steps.current >= SCENES.service_2+2 && this.steps.current < SCENES.service_3) {
-        this.vals.service = this.type("gmail", SCENES.service_2+2);
-      } else if (this.steps.current == SCENES.service_3) {
+      } else if (this.steps.current >= this.stepfor("service_2")+2 && this.steps.current < this.stepfor("service_3")) {
+        this.vals.service = this.type("gmail", this.stepfor("service_2")+2);
+      } else if (this.steps.current == this.stepfor("service_3")) {
         this.select(this.el.service)
-      } else if (this.steps.current >= SCENES.service_3+2 && this.steps.current < SCENES.service_4) {
-        this.vals.service = this.type("amazon", SCENES.service_3+2);
-      } else if (this.steps.current == SCENES.service_4) {
-        this.say("As you can see, I'll generate a completely <span class='em'>unique</span>, long and hard-to-guess password for each website", "bottom");
+      } else if (this.steps.current >= this.stepfor("service_3")+2 && this.steps.current < this.stepfor("service_4")) {
+        this.vals.service = this.type("amazon", this.stepfor("service_3")+2);
+      } else if (this.steps.current == this.stepfor("service_4")) {
+        this.say("As you can see, I'll generate a completely unique, long and hard-to-guess password for each website", "bottom");
         this.select(this.el.service)
-      } else if (this.steps.current >= SCENES.service_4+2 && this.steps.current < SCENES.service_5) {
-        this.vals.service = this.type("instagram", SCENES.service_4+2);
-      } else if (this.steps.current == SCENES.service_5) {
+      } else if (this.steps.current >= this.stepfor("service_4")+2 && this.steps.current < this.stepfor("service_5")) {
+        this.vals.service = this.type("instagram", this.stepfor("service_4")+2);
+      } else if (this.steps.current == this.stepfor("service_5")) {
         this.select(this.el.service)
-      } else if (this.steps.current >= SCENES.service_5+2 && this.steps.current < SCENES.service_6) {
-        this.vals.service = this.type("spotify", SCENES.service_5+2);
-      } else if (this.steps.current == SCENES.service_6) {
+      } else if (this.steps.current >= this.stepfor("service_5")+2 && this.steps.current < this.stepfor("service_6")) {
+        this.vals.service = this.type("spotify", this.stepfor("service_5")+2);
+      } else if (this.steps.current == this.stepfor("service_6")) {
         this.select(this.el.service)
-      } else if (this.steps.current >= SCENES.service_6+2 && this.steps.current < SCENES.service_7) {
-        this.vals.service = this.type("battle.net", SCENES.service_6+2);
-      } else if (this.steps.current == SCENES.service_7) {
+      } else if (this.steps.current >= this.stepfor("service_6")+2 && this.steps.current < this.stepfor("service_7")) {
+        this.vals.service = this.type("battle.net", this.stepfor("service_6")+2);
+      } else if (this.steps.current == this.stepfor("service_7")) {
         this.select(this.el.service)
-      } else if (this.steps.current >= SCENES.service_7+2 && this.steps.current < SCENES.last) {
-        this.vals.service = this.type("shapass", SCENES.service_7+2);
-      } else if (this.steps.current >= SCENES.last) {
-        this.say("That's all for now, bye");
+      } else if (this.steps.current >= this.stepfor("service_7")+2 && this.steps.current < this.stepfor("last")) {
+        this.vals.service = this.type("shapass", this.stepfor("service_7")+2);
+      } else if (this.steps.current == this.stepfor("last")) {
+        this.say("That's all for now, have fun");
       }
     },
     clear: function() {
       this.$el.classList.remove("playing");
+      this.$el.classList.remove("demoing");
       this.say(null);
       Object.keys(this.vals).map((key) => {
         this.vals[key] = " ";
@@ -173,10 +208,12 @@ export default {
       return word.substring(0, letters);
     },
     say: function(words, position="top") {
-      var balloon = this.$el.querySelector(".mage .text-balloon");
-      balloon.querySelector("div.text").innerHTML = words;
+      clearInterval(this.wizard.interval);
+      var balloon = this.$el.querySelector(".wizard .text-balloon");
+
       if (words === null) {
         this.hide(balloon);
+        balloon.querySelector("div.text").innerHTML = null;
       } else {
         this.show(balloon);
       }
@@ -185,15 +222,37 @@ export default {
       } else {
         this.$el.classList.remove("say-at-bottom");
       }
+
+      if (words !== null) {
+        var letters = 1;
+        this.wizard.interval = setInterval(() => {
+          balloon.querySelector("div.text").innerHTML = words.substring(0, letters);
+          letters += 1;
+          if (letters > words.length) {
+            clearInterval(this.wizard.interval);
+          }
+        }, this.wizard.between_letters);
+      }
+    },
+    highlightStart: function() {
+      var balloon = this.$el.querySelector(".play .from-user");
+      balloon.classList.add("highlight");
+      setTimeout(() => {
+        balloon.classList.remove("highlight");
+      }, 1500);
     },
   },
   data () {
     return {
-      timeout: null,
       steps: {
+        timeout: null,
         current: 0,
-        max: 450,
         duration: 120, // 120
+        infinite: false
+      },
+      wizard: {
+        interval: null,
+        between_letters: 30,
       },
       el: {
         service: null,
@@ -213,7 +272,14 @@ export default {
     this.el.master = this.$el.querySelector(".input-master");
     this.el.generated = this.$el.querySelector(".input-generated");
     this.el.plus = this.$el.querySelector(".plus");
-    // this.start();
+    this.calculateSteps();
+
+    setTimeout(() => {
+      this.highlightStart();
+    }, 5000);
+    setInterval(() => {
+      this.highlightStart();
+    }, 30000);
   },
   watch: {
     "vals.service": function() {
@@ -239,7 +305,7 @@ export default {
   position: relative;
   transition: $transition-default;
 
-  .mage {
+  .wizard {
     text-align: center;
     /* flex-basis: 50%; */
     /* order: 1; */
@@ -267,7 +333,7 @@ export default {
     order: 2;
     flex-basis: 50%;
 
-    .from-mage {
+    .from-wizard {
       float: left;
       margin-left: -10%;
     }
@@ -281,6 +347,7 @@ export default {
       margin-top: 30px;
       cursor: pointer;
       transition: $transition-default;
+      white-space: nowrap;
 
       .arrow {
         border-color: $bg;
@@ -293,7 +360,7 @@ export default {
         animation: float-sm 5s ease-in-out infinite alternate;
       }
 
-      &:hover {
+      &:hover, &.highlight {
         transform: scale(1.1);
         $bg: $secondary; //lighten($primary, 10);
         background: $bg;
@@ -311,54 +378,51 @@ export default {
 }
 
 .intro-video.playing {
-  flex-direction: row;
-  position: relative;
-  transition: $transition-default;
 
   .play {
     display: none;
   }
 
-  .mage {
-    top: 0;
-    width: 100%;
-    transition: $transition-default;
-
-    img {
-      max-width: 40px;
-    }
-
+  .wizard {
     .text-balloon {
       position: absolute;
-      top: 0px;
-      bottom: auto;
-      max-width: 80%;
-      left: 70px;
-
+      top: 30px;
+      width: 250px;
+      right: -250px;
     }
   }
-  .text .em {
-    color: $primary;
-    font-weight: bold;
-    border-bottom: 1px dashed $primary;
-    font-style: normal;
-  }
 
-  .demo {
-    display: block;
-    order: 2;
-    flex-basis: 100%;
-    position: relative;
-  }
+  &.demoing {
+    .wizard {
+      top: 0;
+      width: 100%;
+      transition: $transition-default;
 
-  &.say-at-bottom {
-    .mage {
-      margin-top: 200px;
+      .text-balloon {
+        top: 0px;
+        bottom: auto;
+        max-width: 80%;
+        left: 70px;
+        width: auto;
+      }
+
+      img {
+        max-width: 40px;
+      }
     }
-    /* .demo .text-balloon { */
-    /*   bottom: -100px; */
-    /*   top: auto; */
-    /* } */
+
+    .demo {
+      display: block;
+      order: 2;
+      flex-basis: 100%;
+      position: relative;
+    }
+
+    &.say-at-bottom {
+      .wizard {
+        margin-top: 200px;
+      }
+    }
   }
 }
 
