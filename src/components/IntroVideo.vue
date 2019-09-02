@@ -332,7 +332,6 @@ export default {
       width: 80%;
       animation: float 3s ease-in-out infinite alternate;
       transition: $transition-default;
-      @include mobile { width: 70%; }
     }
 
     .text-balloon {
@@ -435,7 +434,7 @@ export default {
       position: absolute;
       top: 30px;
       width: 90%;
-      right: -90%;
+      right: -95%;
     }
   }
 
@@ -455,7 +454,6 @@ export default {
         left: 70px;
         width: auto;
         @include mobile {
-          /* top: -10px; */
           max-width: 70%;
         }
       }
