@@ -16,7 +16,7 @@
       <font-awesome-icon icon="play-circle" />
     </div>
   </div>
-  <div class="demo">
+ <div class="demo">
     <div class="input input-service clearfix"><span>{{ vals.service }}</span><div class="cursor"></div></div>
     <span class="plus">+</span>
     <div class="input input-master clearfix"><span>{{ vals.master }}</span><div class="cursor"></div></div>
@@ -33,20 +33,22 @@ var SCENES = [
   [ "greeting", 25, 0 ],
   [ "greeting_2", 35, 0 ],
   [ "greeting_3", 30, 0 ],
-  [ "intro", 30, 0 ],
+  [ "intro", 45, 0 ],
   [ "service_1_intro", 20, 0 ],
   [ "service_1", 20, 0 ],
-  [ "master", 35, 0 ],
+  [ "master_intro", 30, 0 ],
+  [ "master", 30, 0 ],
   [ "master_show", 35, 0 ],
-  [ "master_hide", 20, 0 ],
   [ "generated_intro", 30, 0 ],
-  [ "generated_show", 40, 0 ],
-  [ "service_2", 40, 0 ],
+  [ "generated_show", 30, 0 ],
+  [ "master_2", 40, 0 ],
+  [ "service_2", 30, 0 ],
   [ "service_3", 30, 0 ],
   [ "service_4", 30, 0 ],
   [ "service_5", 30, 0 ],
-  [ "service_6", 40, 0 ],
-  [ "service_7", 20, 0 ],
+  [ "service_6", 30, 0 ],
+  [ "service_7", 30, 0 ],
+  [ "remember", 60, 0 ],
   [ "last", 40, 0 ],
   [ "end_at", 0, 0 ],
 ];
@@ -107,38 +109,40 @@ export default {
       } else if (this.steps.current == this.stepfor("greeting")) {
         this.say("Hi, I'm the password wizard");
       } else if (this.steps.current == this.stepfor("greeting_2")) {
-        this.say("With my help you can create and manage better passwords");
+        this.say("I will help you create better passwords");
       } else if (this.steps.current == this.stepfor("greeting_3")) {
         this.say("It's easy, let me guide you");
       } else if (this.steps.current == this.stepfor("intro")-5) {
         this.say(null);
         this.$el.classList.add("demoing");
       } else if (this.steps.current == this.stepfor("intro")) {
-        this.say("To start, type the name of the website or the service you need a password for");
+        this.say("To start, type the name of the website or service you need a password for");
       } else if (this.steps.current == this.stepfor("service_1_intro")) {
         this.say("Let's say you need a password for Twitter");
         this.show(this.el.service);
         this.typing(this.el.service);
-      } else if (this.steps.current >= this.stepfor("service_1") && this.steps.current < this.stepfor("master")) {
+      } else if (this.steps.current >= this.stepfor("service_1") && this.steps.current < this.stepfor("master_intro")) {
         this.vals.service = this.type("twitter", this.stepfor("service_1"));
-      } else if (this.steps.current == this.stepfor("master")) {
+      } else if (this.steps.current == this.stepfor("master_intro")) {
+        this.say("Then, you will type a MASTER password");
+      } else if (this.steps.current >= this.stepfor("master") && this.steps.current < this.stepfor("master_show")) {
         this.show(this.el.plus);
         this.show(this.el.master);
         this.typing(this.el.master);
-        this.say("Then you type your master password");
-      } else if (this.steps.current >= this.stepfor("master")+10 && this.steps.current < this.stepfor("master_show")) {
-        this.vals.master = this.type("••••••••••••••••", this.stepfor("master")+10);
+        this.vals.master = this.type("••••••••••••••••", this.stepfor("master"));
       } else if (this.steps.current == this.stepfor("master_show")) {
-        this.say("Make sure only you know this password!");
+        this.say("I'll show it here, but make sure ONLY YOU know this password!");
         this.vals.master = "mysecretpassword"
-      } else if (this.steps.current == this.stepfor("master_hide")) {
-        this.vals.master = "••••••••••••••••"
       } else if (this.steps.current == this.stepfor("generated_intro")) {
-        this.say("I'll generate a long and (very) hard-to-guess password for you", "bottom");
+        this.say("I will generate a long and (very) hard-to-guess password for you", "bottom");
       } else if (this.steps.current == this.stepfor("generated_show")) {
         this.show(this.el.generated);
+        this.typing(this.el.generated);
+      } else if (this.steps.current == this.stepfor("master_2")) {
+        this.say("You can use the same master password for any other website you want");
+      } else if (this.steps.current == this.stepfor("service_2")-2) {
+        this.vals.master = "mysecretpassword"
       } else if (this.steps.current == this.stepfor("service_2")) {
-        this.say("You can use the same master password for any other website you want", "bottom");
         this.typing(this.el.service);
         this.select(this.el.service)
       } else if (this.steps.current >= this.stepfor("service_2")+2 && this.steps.current < this.stepfor("service_3")) {
@@ -162,10 +166,13 @@ export default {
         this.vals.service = this.type("battle.net", this.stepfor("service_6")+2);
       } else if (this.steps.current == this.stepfor("service_7")) {
         this.select(this.el.service)
-      } else if (this.steps.current >= this.stepfor("service_7")+2 && this.steps.current < this.stepfor("last")) {
+      } else if (this.steps.current >= this.stepfor("service_7")+2 && this.steps.current < this.stepfor("remember")) {
         this.vals.service = this.type("shapass", this.stepfor("service_7")+2);
+      } else if (this.steps.current == this.stepfor("remember")) {
+        this.say("I give you unique passwords for all websites, but you only have to remember one");
+        this.typing(this.el.master);
       } else if (this.steps.current == this.stepfor("last")) {
-        this.say("That's all for now, have fun");
+        this.say("Use me, and they SHA'll not PASS!");
       }
     },
     clear: function() {
@@ -183,16 +190,20 @@ export default {
       this.vals.generated = this.shapass(`${this.vals.service}${this.vals.master}`, 'sha256-bin', 32);
     },
     show: function(el) {
-      el.style.display = "block";
+      // el.style.display = "block";
+      el.style.opacity = 1;
     },
     hide: function(el) {
-      el.style.display = "none";
+      // el.style.display = "none";
+      el.style.opacity = 0;
     },
     typing: function(el) {
       Object.keys(this.el).map((key) => {
         this.el[key].classList.remove("typing");
       });
-      el.classList.add("typing");
+      if (el !== null) {
+        el.classList.add("typing");
+      }
     },
     select: function(el) {
       this.deselect();
@@ -313,7 +324,7 @@ export default {
     transition: $transition-default;
     position: absolute;
     left: 0;
-    top: 30px;
+    top: 50px;
     width: 50%;
     z-index: 999;
 
@@ -321,10 +332,12 @@ export default {
       width: 80%;
       animation: float 3s ease-in-out infinite alternate;
       transition: $transition-default;
+      @include mobile { width: 70%; }
     }
 
     .text-balloon {
-      display: none;
+      /* display: none; */
+      opacity: 0;
     }
   }
 
@@ -335,7 +348,6 @@ export default {
 
     .from-wizard {
       float: left;
-      margin-left: -10%;
     }
 
     .from-user {
@@ -348,6 +360,7 @@ export default {
       cursor: pointer;
       transition: $transition-default;
       white-space: nowrap;
+      margin-right: 10px;
 
       .arrow {
         border-color: $bg;
@@ -362,7 +375,7 @@ export default {
 
       &:hover, &.highlight {
         transform: scale(1.1);
-        $bg: $secondary; //lighten($primary, 10);
+        $bg: $secondary;
         background: $bg;
         border-color: $bg;
         color: $white;
@@ -373,11 +386,45 @@ export default {
 
   .demo {
     display: none;
-  }
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
 
+    .input-service {
+      width: calc(40% - 2.3em);
+      order: 1;
+    }
+
+    .input-master {
+      width: calc(60% - 2.3em);
+      order: 3;
+    }
+
+    .plus {
+      opacity: 0;
+      order: 2;
+      flex-grow: 1;
+      width: auto;
+      text-align: center;
+    }
+
+    .input-generated {
+      order: 4;
+      flex-basis: 100%;
+      word-break: break-all;
+      background: $generated-input-bg;
+      border: $generated-input-border;
+      color: $generated-input-color;
+      border: 1px solid $background-highlight;
+      font-family: $font-family-titles;
+      margin-top: 10px;
+      width: 100%;
+    }
+  }
 }
 
 .intro-video.playing {
+  padding-top: 100px;
 
   .play {
     display: none;
@@ -387,8 +434,8 @@ export default {
     .text-balloon {
       position: absolute;
       top: 30px;
-      width: 250px;
-      right: -250px;
+      width: 90%;
+      right: -90%;
     }
   }
 
@@ -397,13 +444,20 @@ export default {
       top: 0;
       width: 100%;
       transition: $transition-default;
+      @include mobile {
+        top: 20px;
+      }
 
       .text-balloon {
-        top: 0px;
+        top: -10px;
         bottom: auto;
         max-width: 80%;
         left: 70px;
         width: auto;
+        @include mobile {
+          /* top: -10px; */
+          max-width: 70%;
+        }
       }
 
       img {
@@ -412,7 +466,7 @@ export default {
     }
 
     .demo {
-      display: block;
+      display: flex;
       order: 2;
       flex-basis: 100%;
       position: relative;
@@ -420,7 +474,8 @@ export default {
 
     &.say-at-bottom {
       .wizard {
-        margin-top: 200px;
+        margin-top: 230px;
+        @include mobile { margin-top: 190px; }
       }
     }
   }
@@ -477,18 +532,20 @@ export default {
 }
 
 .input {
-  display: none;
+  opacity: 0;
   position: relative;
   background: none;
   font-family: $input-font-family;
   color: $input-font-color;
   border: 1px solid $background-highlight;
-  padding: 5px 10px;
-  min-height: $font-md + 10px;
+  padding: 0.3em 0.5em;
+  /* line-height: 1.2em; */
   width: calc(100% - 20px);
+  transition: $transition-default;
 
   span {
     float: left;
+    min-height: 1.5em;
   }
 
   &.typing {
@@ -516,7 +573,10 @@ export default {
     color: $primary;
     position: relative;
     opacity: 0.8;
+
     height: 2em;
+    @include mobile { height: 1.5em; }
+
     width: 2px;
     max-width: 2px;
     overflow: hidden;
@@ -525,38 +585,6 @@ export default {
     text-decoration: blink;
     animation: blinker 1s linear infinite;
   }
-}
-
-.plus {
-  display: none;
-}
-
-.input-service {
-  float: left;
-  width: calc(40% - 40px);
-}
-
-.input-master {
-  float: right;
-  width: calc(60% - 40px);
-}
-
-.plus {
-  float: left;
-  margin: 5px 12px;
-}
-
-.input-generated {
-  word-break: break-all;
-  background: $generated-input-bg;
-  border: $generated-input-border;
-  color: $generated-input-color;
-  border: 1px solid $background-highlight;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  font-family: $font-family-titles;
-  margin-top: 10px;
-  float: left;
 }
 
 </style>
