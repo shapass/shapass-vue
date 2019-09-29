@@ -80,7 +80,7 @@ const CurrentUser = {
     return this.state.step;
   },
   saveCookie () {
-    this._setCookie(Configs.LOGIN_COOKIE_NAME, this.state.token, 1);
+    this._setCookie(Configs.LOGIN_COOKIE_NAME, this.state.token, Configs.REMEMBER_ME_DAYS);
   },
   loadCookie () {
     return this._getCookie(Configs.LOGIN_COOKIE_NAME);

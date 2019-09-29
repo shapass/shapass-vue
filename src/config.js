@@ -7,6 +7,7 @@ export const Configs = Object.freeze({
   API_URL: 'https://shapass.com/api',      // URL of the API
   PASSWORD_VISIBILITY_TIMEOUT: 8000,       // time before passwords are hidden
   DEFAULT_ALGORITHM: 'sha256-bin',         // sha256-str, sha256-bin, sha256-bin-alfanum
+  REMEMBER_ME_DAYS: 90,                    // keep the login cookie for this amount of days
 
   boundedOutputLength: function(l) {
     if (l < Configs.MIN_LENGTH) {
