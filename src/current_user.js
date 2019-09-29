@@ -21,15 +21,15 @@ const CurrentUser = {
 
   signup (email, password, callback) {
     this.state.loading = true;
-    API.signup(email, password, (r) => {
+    API.signup(email, password, (r, code) => {
       this.state.loading = false;
-      callback(r);
+      callback(r, code);
     });
   },
 
   login (email, password, callback) {
     this.state.loading = true;
-    API.login(email, password, (r, token) => {
+    API.login(email, password, (r, token, code) => {
       if (r) {
         this._setLoggedIn(email, token);
         this.saveCookie();
@@ -38,7 +38,7 @@ const CurrentUser = {
       }
       this.state.loading = false;
       if (callback) {
-        callback(r);
+        callback(r, code);
       }
     });
   },

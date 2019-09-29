@@ -30,6 +30,7 @@ import GeneratedPassword from './components/GeneratedPassword.vue'
 import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
 import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
 import Store from './store.js'
+import API from './api.js'
 import CurrentUser from './current_user.js'
 import { Configs } from './config.js'
 
@@ -62,14 +63,20 @@ export default {
     submit () {
       if (this.canSubmit()) {
         this.withDisabledButton("#login-submit", (done) => {
-          this.currentUser.login(this.inputEmail, this.state.generated, (r) => {
+          this.currentUser.login(this.inputEmail, this.state.generated, (r, code) => {
             if (r) {
               this.currentUser.setAtApp();
               this.submitted = true;
               this.$router.push('/')
               this.$toasted.success('Welcome!');
             } else {
-              this.$toasted.error('Incorrect email or password, try again');
+              if (code == API.Errors.CodeIncorrectLoginInfo) {
+                this.$toasted.error('Incorrect email or password, try again');
+              } else if (code == API.Errors.CodeUserNotActivated) {
+                this.$toasted.error('User not yet confirmed, please check your email and follow the confirmation link');
+              } else {
+                this.$toasted.error('Error logging in, please try again later');
+              }
             }
             done();
           });

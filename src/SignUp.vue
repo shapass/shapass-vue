@@ -33,6 +33,7 @@ import GeneratedPassword from './components/GeneratedPassword.vue'
 import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
 import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
 import Store from './store.js'
+import API from './api.js'
 import CurrentUser from './current_user.js'
 import { Configs } from './config.js'
 
@@ -65,13 +66,19 @@ export default {
     submit () {
       if (this.canSubmit()) {
         this.withDisabledButton("#signup-submit", (done) => {
-          this.currentUser.signup(this.inputEmail, this.state.generated, (r) => {
+          this.currentUser.signup(this.inputEmail, this.state.generated, (r, code) => {
             if (r) {
               // TODO: show a 'waiting confirmation' page instead
               this.$router.push('/login')
               this.$toasted.success('Successfully registered!');
             } else {
-              this.$toasted.error('Error registering');
+              if (code == API.Errors.CodeIncorrectSignupInfo) {
+                this.$toasted.error('Invalid sign up information. Make sure this email is not already registered.');
+              } else if (code == API.Errors.CodeCouldNotSendEmail) {
+                this.$toasted.error('We could not send a confirmation email right now, please try again in a few minutes');
+              } else {
+                this.$toasted.error('Error registering, please try again later');
+              }
             }
             done();
           });

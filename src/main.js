@@ -30,7 +30,7 @@ Vue.config.productionTip = false;
 
 Vue.use(Toasted, {
   position: 'top-right',
-  duration: 4000,
+  duration: 5000,
   singleton: true
 });
 Vue.use(VueClipboard);

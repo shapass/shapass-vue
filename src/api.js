@@ -2,9 +2,27 @@ import { Configs } from './config.js';
 import axios from 'axios';
 
 const API = {
+  Errors: Object.freeze({
+	  CodeOK: 0,
+	  CodeInternalError: 1,
+	  CodeNotLoggedIn: 2,
+	  CodeIncorrectLoginInfo: 3,
+	  CodeIncorrectSignupInfo: 4,
+	  CodeUserNotActivated: 5,
+	  CodeUserDoesNotExist: 6,
+	  CodeRuleDoesNotExist: 7,
+	  CodeInvalidInput: 8,
+	  CodeInvalidToken: 9,
+	  CodeCouldNotSendEmail: 10,
+	  CodeInvalidAlgorithm: 11,
+	  CodeResetPasswordDelay: 12,
+	  CodeInvalidMethod: 13
+  }),
+
   state: {
     token: null
   },
+
   request (method, httpMethod, data, callback) {
     var url = `${Configs.API_URL}/${method}`;
     console.log("Sending request", url, httpMethod, data);
@@ -61,7 +79,7 @@ const API = {
       if (r) {
         callback(true, d.Token);
       } else {
-        callback(false, null);
+        callback(false, null, d !== null ? d.Code : null);
       }
     });
   },
@@ -72,11 +90,11 @@ const API = {
   },
   signup (email, password, callback) {
     var data = { email: email, password: password };
-    this.request('signup', 'post', data, (r) => {
+    this.request('signup', 'post', data, (r, d) => {
       if (r) {
         callback(true);
       } else {
-        callback(false);
+        callback(false, d !== null ? d.Code : null);
       }
     });
   },
