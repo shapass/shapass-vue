@@ -73,7 +73,7 @@ export default {
               if (code == API.Errors.CodeIncorrectLoginInfo) {
                 this.$toasted.error('Incorrect email or password, try again');
               } else if (code == API.Errors.CodeUserNotActivated) {
-                this.$toasted.error('User not yet confirmed, please check your email and follow the confirmation link');
+                this.$router.push({ path: 'pending', query: { email: this.inputEmail } })
               } else {
                 this.$toasted.error('Error logging in, please try again later');
               }

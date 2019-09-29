@@ -3,20 +3,20 @@ import axios from 'axios';
 
 const API = {
   Errors: Object.freeze({
-	  CodeOK: 0,
-	  CodeInternalError: 1,
-	  CodeNotLoggedIn: 2,
-	  CodeIncorrectLoginInfo: 3,
-	  CodeIncorrectSignupInfo: 4,
-	  CodeUserNotActivated: 5,
-	  CodeUserDoesNotExist: 6,
-	  CodeRuleDoesNotExist: 7,
-	  CodeInvalidInput: 8,
-	  CodeInvalidToken: 9,
-	  CodeCouldNotSendEmail: 10,
-	  CodeInvalidAlgorithm: 11,
-	  CodeResetPasswordDelay: 12,
-	  CodeInvalidMethod: 13
+    CodeOK: 0,
+    CodeInternalError: 1,
+    CodeNotLoggedIn: 2,
+    CodeIncorrectLoginInfo: 3,
+    CodeIncorrectSignupInfo: 4,
+    CodeUserNotActivated: 5,
+    CodeUserDoesNotExist: 6,
+    CodeRuleDoesNotExist: 7,
+    CodeInvalidInput: 8,
+    CodeInvalidToken: 9,
+    CodeCouldNotSendEmail: 10,
+    CodeInvalidAlgorithm: 11,
+    CodeResetPasswordDelay: 12,
+    CodeInvalidMethod: 13
   }),
 
   state: {

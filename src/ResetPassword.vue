@@ -5,7 +5,7 @@
   <div class="content-wrapper" v-if="!token">
     <div class="container" id="label">
       <h3>So you need a new password?</h3>
-      <span>Enter your e-mail below and (if you're a subscriber) we'll send you an e-mail with instructions to create a new password.</span>
+      <span>Enter your email below and we'll send you instructions to create a new password.</span>
     </div>
     <div class="container" id="email">
       <label class="typewriter" for="master-input">Your email</label>

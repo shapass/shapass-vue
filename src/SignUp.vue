@@ -68,9 +68,7 @@ export default {
         this.withDisabledButton("#signup-submit", (done) => {
           this.currentUser.signup(this.inputEmail, this.state.generated, (r, code) => {
             if (r) {
-              // TODO: show a 'waiting confirmation' page instead
-              this.$router.push('/login')
-              this.$toasted.success('Successfully registered!');
+              this.$router.push({ path: 'pending', query: { email: this.inputEmail } })
             } else {
               if (code == API.Errors.CodeIncorrectSignupInfo) {
                 this.$toasted.error('Invalid sign up information. Make sure this email is not already registered.');

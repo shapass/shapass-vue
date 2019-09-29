@@ -23,7 +23,7 @@
       <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
 
       <router-link to="/">
-        <button class="btn" :disabled="currentUser.isLoading()" v-if="currentUser.isLoggingInOrSigningUp()" v-on:click="setAtLanding">&lt; back</button>
+        <button class="btn" :disabled="currentUser.isLoading()" v-if="!currentUser.atLanding() && !currentUser.atApp()" v-on:click="setAtLanding">&lt; back</button>
       </router-link>
 
       <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
