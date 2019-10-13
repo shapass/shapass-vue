@@ -7,6 +7,7 @@ const Steps = Object.freeze({
   LOGIN: 'login',
   SIGNUP: 'signup',
   RESET: 'reset-password',
+  OTHER: 'other', // just a generic name for whatever other page
 });
 
 const CurrentUser = {
@@ -117,6 +118,9 @@ const CurrentUser = {
   },
   setResettingPassword () {
     this.state.step = Steps.RESET;
+  },
+  setAtOther () {
+    this.state.step = Steps.OTHER;
   },
 
   isLoading () {

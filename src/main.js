@@ -12,7 +12,7 @@ import VTooltip from 'v-tooltip';
 import App from './App.vue';
 import ResetPassword from './ResetPassword.vue';
 import SignUp from './SignUp.vue';
-import SignUpPending from './SignUpPending.vue';
+import SignUpConfirmation from './SignUpConfirmation.vue';
 import Login from './Login.vue';
 
 Vue.use(VueRouter);
@@ -141,7 +141,7 @@ const routes = [
   { path: '/', component: App },
   { path: '/reset-password', component: ResetPassword },
   { path: '/signup', component: SignUp },
-  { path: '/pending', component: SignUpPending },
+  { path: '/confirmation', component: SignUpConfirmation },
   { path: '/login', component: Login },
 ];
 
