@@ -17,7 +17,7 @@
   </div>
   <div id="content-app" v-if="!currentUser.atLanding()" class="content-wrapper">
     <div class="container" id="master" v-if="state.service">
-      <PasswordVisibilityInput id="master-input" v-model="state.master" v-on:keyup:enter="enterOnInput" v-focus label="Your master password:" placeholder="Type your password..." />
+      <PasswordVisibilityInput id="master-input" v-model="state.master" v-on:keyup:enter="enterOnInput" v-focus label="Your master password:" />
     </div>
     <div class="container" id="generated">
       <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>

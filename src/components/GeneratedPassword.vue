@@ -121,7 +121,7 @@ export default {
   .password-visibility-toggle {
     position: absolute;
     right: 10px;
-    top: 1.95em; // based on how font-size is calculated
+    top: 1.82em; // based on how font-size is calculated
   }
 }
 </style>
