@@ -1,12 +1,15 @@
 <template>
-  <div class="service-selector">
-    <label class="typewriter" v-if="!asButton">What is this password for?</label>
-    <v-select v-model="service" taggable selectOnTab filterable :clearable="false" :placeholder="asButton ? 'Get started' : 'Search or enter a new one...'" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="focused" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, 'as-button': asButton }" transition="slide" :disabled="disabled">
-      <!-- <v-slot name="no-options">Sorry! no matching options.</v-slot> -->
-      <!-- <v-slot name="spinner"> -->
-      <!--   <div class="spinner">Loading...</div> -->
-      <!-- </v-slot> -->
-    </v-select>
+<div class="service-selector">
+  <label class="typewriter" v-if="!asButton">What is this password for?</label>
+
+  <v-select v-model="service" taggable selectOnTab searchable :clearable="false" :placeholder="placeholder" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="focused" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, 'as-button': asButton, 'no-drop': !showDrop }" :disabled="disabled" :filterBy="filterBy" :noDrop="!showDrop">
+
+    <!-- this should never show up -->
+    <template slot="no-options">
+      Loading...
+    </template>
+
+  </v-select>
   </div>
 </template>
 
@@ -36,11 +39,30 @@ export default {
       }
     },
     onBlur: function() {
-    }
+    },
+    filterBy: function(option, label, search) {
+      return (label || "").toLowerCase().indexOf(search.toLowerCase()) > -1;
+    },
   },
   data () {
     return {
       service: null
+    }
+  },
+  computed: {
+    placeholder () {
+      if (this.asButton) {
+        return 'Get started';
+      } else {
+        if (this.services !== undefined && this.services.length > 0) {
+          return 'Type to search or add...';
+        } else {
+          return 'Type the name of a service (e.g. twitter)';
+        }
+      }
+    },
+    showDrop () {
+      return (this.services !== undefined && this.services.length > 0);
     }
   },
   mounted () {
@@ -65,48 +87,54 @@ export default {
 
   input::placeholder {
     color: $placeholder-color;
-    /* font-size: 18px; */
   }
 
   .vs__search {
-    /* width: auto; */
     transition: background 0.1s linear;
-    /* display: none; */
+    padding-left: 0px;
+  }
+  .vs__search:focus  {
+    padding-left: 0px;
   }
   &.vs--open .vs__search {
     display: inline;
   }
 
-  // the arrow
   .vs__actions {
-    display: none;
+    // the clear button
+    .vs__clear {
+      display: none;
+    }
   }
 
   .vs__dropdown-toggle {
     border-color: transparent;
     transition: border 0.1s linear;
     border-bottom: 0;
+    margin: 0;
+    padding: 2px 9px 7px 9px;
   }
   &.vs--open .vs__dropdown-toggle {
     border-color: $vs-border-color;
     background: $vs-dropdown-bg;
     border-bottom: 0;
   }
+  &.no-drop:focus-within {
+    border-color: $vs-border-color;
+    background: $vs-dropdown-bg;
+  }
 
   &.vs--single .vs__selected {
-    background: $vs-selected-background;
     color: $vs-selected-color;
-    /* width: 100%; */
-    border: $vs-selected-border;
-    padding: 2px 10px;
+    border-left: 0;
+    margin-left: 0;
+    padding-left: 0px;
   }
   .vs__selected {
-    /* width: 50%; */
+    font-family: $input-font-family;
   }
   &.vs--open .vs__selected {
     background: none;
-    /* color: $vs-dropdown-selected-color; */
-    /* opacity: 1; */
   }
 
   .vs__selected-options {
@@ -119,25 +147,20 @@ export default {
 
     li {
       color: $vs-dropdown-color;
-      padding: 5px;
-      margin: 0 5px;
+      padding: 7px;
+      margin: 0 7px;
 
       &.vs__dropdown-option--highlight {
-        color: $vs-state-active-color;
+        background: $vs-selected-background;
+        color: $vs-selected-color;
       }
-      /* &.vs__dropdown-option--selected { */
-      /*   color: $vs-dropdown-selected-color; */
-      /* } */
     }
   }
 }
 
-.v-select.vs--disabled {
-  /* border-color: transparent; */
-
+.v-select.vs--disabled/* , .v-select.selected  */{
   .vs__dropdown-toggle {
-    background: rgba($vs-selected-background, 0.3);
-    /* background: $vs-selected-background; */
+    background: $input-not-empty-bg;
   }
 
   .vs__search {
@@ -146,6 +169,7 @@ export default {
 
   .vs__selected {
     background: transparent;
+    /* color: $gray; */
   }
 }
 
@@ -160,10 +184,11 @@ export default {
 
     input::placeholder {
       color: $primary;
+      opacity: 1;
       text-align: center;
       text-transform: uppercase;
       font-size: $body-font-size;
-      font-family: $font-family-titles;
+      font-family: $input-font-family; //$font-family-titles;
       transition: $transition-default;
     }
 
@@ -185,6 +210,11 @@ export default {
         color: $primary;
         border-color: $primary;
       }
+    }
+
+    .vs__actions {
+      width: 0;
+      display: none;
     }
   }
 }

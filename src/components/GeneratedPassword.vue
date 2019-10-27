@@ -109,8 +109,8 @@ export default {
     border: $generated-input-border;
     color: $generated-input-color;
     border: 1px solid $background-highlight;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 8px;
+    padding-bottom: 9px;
     font-family: $font-family-titles;
 
     .censored {
@@ -121,7 +121,7 @@ export default {
   .password-visibility-toggle {
     position: absolute;
     right: 10px;
-    top: 1.82em; // based on how font-size is calculated
+    top: 2.0em; // based on how font-size is calculated
   }
 }
 </style>
