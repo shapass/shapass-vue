@@ -30,6 +30,7 @@ $background-dark: $dark; //rgba(0, 0, 0, 0.8);
 $font-md: 20px;
 $font-lg: $font-md + 4px;
 $font-sm: $font-md - 6px;
+$font-xs: $font-md - 8px;
 $font-weight-normal: 400;
 $font-weight-bold: 700;
 $font-family-titles: 'Source Code Pro', monospace;
@@ -80,7 +81,7 @@ $btn-ico-hover-border: none;
 $btn-ico-active-color: $primary;
 $toolbar-ico-bg: transparent; //$navbar-bg; //rgba(255, 255, 255, 0.04);
 $toolbar-ico-color: $white;
-$toolbar-ico-border: 1px solid $toolbar-ico-bg;
+$toolbar-ico-border: 1px solid $background-highlight;
 $toolbar-ico-hover-bg: $black;// $primary; //$background-highlight;
 $toolbar-ico-hover-color: $white; // $black; // $primary
 $toolbar-ico-hover-border-color: $primary;
@@ -107,6 +108,10 @@ $generated-input-bg: $background-highlight;
 $generated-input-color: $primary;
 $generated-input-censored-color: rgba(255, 255, 255, 0.3);
 $generated-input-border: none;
+
+$modal-bg: $black;
+$modal-border: 1px solid $background-highlight;
+$modal-color: $body-font-color;
 
 //
 // v-select
@@ -146,7 +151,7 @@ $vs-selected-border: none;
 // Mobile
 //
 // TODO: move all mobile things to a separate file
-$m-body-background: lighten($body-background, 5);
+$m-body-background: lighten($body-background, 3);
 $m-font-md: calc(0.5em + 2vmin);
 $m-font-lg: calc(0.7em + 2vmin);
 $m-body-font-size: $m-font-md;
@@ -569,4 +574,43 @@ img {
 h1, h2, h3, h4, h5, h6, h7, h8 {
   font-family: $font-family-titles;
   color: $primary;
+}
+
+
+//
+// vue-modal
+//
+
+.v--modal-overlay {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.v--modal-box.v--modal {
+  background: $modal-bg;
+  box-shadow: none;
+  border: $modal-border;
+  border-radius: 0;
+
+  .v--modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: $modal-color;
+    font-size: $font-xs;
+
+    .btn {
+      font-size: $font-xs;
+    }
+  }
+
+  // h3.modal-title {
+  //   font-size: $font-sm;
+  //   margin: 10px;
+  //   font-family: $font-family-text;
+  //   color: $body-font-color;
+  // }
+}
+
+[data-modal="configurations"] .v--modal {
+  top: 80px !important;
 }

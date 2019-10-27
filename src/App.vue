@@ -15,56 +15,76 @@
     </div>
     <IntroVideo></IntroVideo>
   </div>
+
+  <modal name="configurations" @opened="configurations_opened" @closed="configurations_closed" :width="this.$isMobile() ? '100%' : 600" :height="200" :pivotY="0.1" :minHeight="200">
+    <div class="v--modal-close">
+      <button class="btn" @click="$modal.hide('configurations')">close</button>
+    </div>
+    <!-- <h3 class="modal-title">Configure the generated password:</h3> -->
+    <div id="configurations" class="clearfix" v-if="state.generated">
+      <div id="length">
+        <label class="typewriter">Length:</label>
+        <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength" />
+        <button class="btn btn-ico btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
+          <font-awesome-icon icon="minus-square" />
+        </button>
+        <button class="btn btn-ico btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
+          <font-awesome-icon icon="plus-square" />
+        </button>
+      </div>
+      <div id="algorithm">
+        <label class="typewriter" for="algorithm-input">Algorithm:</label>
+        <select id="algorithm-input" v-model="state.algorithm" tabindex="-1">
+          <option>sha256-str</option>
+          <option>sha256-bin</option>
+          <!-- <option>sha256-bin-alfanum</option> -->
+        </select>
+      </div>
+      <div id="suffix">
+        <label class="typewriter" for="suffix-input">Suffix:</label>
+        <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" tabindex="-1">
+      </div>
+    </div>
+  </modal>
+
   <div id="content-app" v-if="!currentUser.atLanding()" class="content-wrapper">
     <div class="container" id="master" v-if="state.service">
       <PasswordVisibilityInput id="master-input" v-model="state.master" v-on:keyup:enter="enterOnInput" v-focus label="Your master password:" />
     </div>
     <div class="container" id="generated">
       <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
-      <div class="container clearfix" id="configurations" v-if="state.generated">
-        <!-- <label class="typewriter">Configure the generated password:</label> -->
-        <div id="length">
-          <label class="typewriter">Length:</label>
-          <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength" />
-          <button class="btn btn-ico btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
-            <font-awesome-icon icon="minus-square" />
-          </button>
-          <button class="btn btn-ico btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
-            <font-awesome-icon icon="plus-square" />
-          </button>
-        </div>
-        <div id="algorithm">
-          <label class="typewriter" for="algorithm-input">Algorithm:</label>
-          <select id="algorithm-input" v-model="state.algorithm" tabindex="-1">
-            <option>sha256-str</option>
-            <option>sha256-bin</option>
-            <!-- <option>sha256-bin-alfanum</option> -->
-          </select>
-        </div>
-        <div id="suffix">
-          <label class="typewriter" for="suffix-input">Suffix:</label>
-          <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" tabindex="-1">
-        </div>
-      </div>
     </div>
   </div>
 
-  <div class="clearfix" id="toolbar" v-if="state.generated">
-    <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'" v-if="currentUser.isLoggedIn()">
-      <span v-if="this.$isMobile()"><kbd>save</kbd></span>
-      <font-awesome-icon icon="save" />
-      <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>s</kbd></span>
-    </button>
-    <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove" v-tooltip="'Remove the selected service from your list of services'" v-if="currentUser.isLoggedIn()">
-      <span v-if="this.$isMobile()"><kbd>delete</kbd></span>
-      <font-awesome-icon icon="trash" />
-      <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>del</kbd></span>
-    </button>
-    <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
-      <span v-if="this.$isMobile()"><kbd>copy</kbd></span>
-      <font-awesome-icon icon="copy" />
-      <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>c</kbd></span>
-    </button>
+  <div class="clearfix content-wrapper" id="toolbar" v-if="state.generated">
+    <div class="toolbar-left">
+      <button class="btn btn-ico btn-configure" @click="configure" tabindex="-1" v-shortkey.once="['ctrl', '/']" @shortkey="configure" v-tooltip="'Configure the current service'">
+        <font-awesome-icon icon="cog" />
+        <span>configure</span>
+        <!-- <span v-if="this.$isMobile()">configure</span> -->
+        <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>/</kbd></span> -->
+      </button>
+      <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'" v-if="currentUser.isLoggedIn()">
+        <font-awesome-icon icon="save" />
+        <span>save</span>
+        <!-- <span v-if="this.$isMobile()">save</span> -->
+        <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>s</kbd></span> -->
+      </button>
+      <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove" v-tooltip="'Remove the selected service from your list of services'" v-if="currentUser.isLoggedIn()">
+        <font-awesome-icon icon="trash" />
+        <span>delete</span>
+        <!-- <span v-if="this.$isMobile()">delete</span> -->
+        <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>del</kbd></span> -->
+      </button>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
+        <font-awesome-icon icon="copy" />
+        <span>copy</span>
+        <!-- <span v-if="this.$isMobile()">copy</span> -->
+        <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>c</kbd></span> -->
+      </button>
+    </div>
   </div>
 </div>
 </template>
@@ -161,6 +181,20 @@ export default {
         }
       });
     },
+    configure () {
+      this.showConfigs = !this.showConfigs;
+      if (this.showConfigs) {
+        this.$modal.show('configurations');
+      } else {
+        this.$modal.hide('configurations');
+      }
+    },
+    configurations_opened () {
+      this.showConfigs = true;
+    },
+    configurations_closed () {
+      this.showConfigs = false;
+    },
     start () {
       if (this.currentUser.atLanding()) {
         this.focusServiceSelector();
@@ -182,6 +216,7 @@ export default {
     return {
       state: Store.state,
       currentUser: CurrentUser,
+      showConfigs: false
     }
   },
   mounted () {
@@ -205,6 +240,7 @@ export default {
   },
 }
 </script>
+
 
 <style scoped lang="scss">
 
@@ -315,17 +351,51 @@ export default {
 
 #toolbar {
   border: 0;
-  padding: 0;
   background: none;
-  position: absolute;
-  bottom: 20px;
-  right: 0;
-  left: 0;
-  text-align: center;
-  /* border-bottom: none; */
+  padding-top: 30px;
+  @include mobile {
+    padding-top: 10px;
+  }
+  padding-bottom: 10px;
+  text-align: right;
   width: auto;
-  /* max-width: $toolbar-width; */
-  margin: 0 auto;
+  /* border-top: 1px dashed $background-highlight;; */
+
+  .toolbar-left {
+    float: left;
+
+    button:first-child {
+      margin-left: 0;
+    }
+
+    @include mobile {
+      button {
+        display: block;
+        margin: 0.7em 0 0 0;
+      }
+      button:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .toolbar-right {
+    float: right;
+
+    button:first-child {
+      margin-left: 0;
+    }
+
+    @include mobile {
+      button {
+        clear: both;
+        margin: 0.7em 0 0 0;
+      }
+      button:first-child {
+        margin-top: 0;
+      }
+    }
+  }
 
   button {
     width: auto;
@@ -333,9 +403,10 @@ export default {
     background: $toolbar-ico-bg;
     border: $toolbar-ico-border;
     border-radius: 0;
-    padding: 10px;
-    margin: 0 0.5em;
+    padding: 10px 10px 12px 10px;
+    margin: 0.7em 0 0 1em;
     transition: $transition-default;
+    /* border: 1px solid $dark-gray; */
 
     &:hover, &:active {
       background: $toolbar-ico-hover-bg;
@@ -352,37 +423,18 @@ export default {
       margin: 0;
       border: 1px solid transparent;
       width: auto;
-      display: block;
+      display: inline-block;
       margin: 0 auto;
+      margin-bottom: -4px;
     }
 
     > span {
-      margin-top: 10px;
-      display: block;
-    }
-  }
-  @include mobile {
-    right: 20px;
-    bottom: 20px;
-    left: auto;
-
-    button {
-      float: right;
-      clear: both;
-      margin: 0.3em 0;
-      @include clearfix;
-
-      .svg-inline--fa {
-        display: inline-block;
-        float: left;
-      }
-
-      > span {
-        float: left;
-        display: inline-block;
-        margin: 0.2em 0.8em 0 0;
-      }
+      /* margin-top: 10px; */
+      /* display: block; */
+      display: inline-block;
+      margin-left: 10px;
     }
   }
 }
+
 </style>

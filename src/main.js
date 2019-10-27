@@ -4,10 +4,11 @@ import vSelect from 'vue-select';
 import Toasted from 'vue-toasted';
 import VueClipboard from 'vue-clipboard2';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare, faSave, faTrash, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faCopy, faPlusSquare, faMinusSquare, faSave, faTrash, faPlayCircle, faCog } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMobileDetection from "vue-mobile-detection";
 import VTooltip from 'v-tooltip';
+import VModal from 'vue-js-modal';
 
 import App from './App.vue';
 import ResetPassword from './ResetPassword.vue';
@@ -25,6 +26,7 @@ library.add(faMinusSquare);
 library.add(faSave);
 library.add(faTrash);
 library.add(faPlayCircle);
+library.add(faCog);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
@@ -39,6 +41,7 @@ Vue.component('v-select', vSelect);
 Vue.use(require('vue-shortkey'));
 Vue.use(VueMobileDetection);
 Vue.use(VTooltip, { defaultDelay: 500 });
+Vue.use(VModal);
 
 Vue.directive('focus', {
   inserted: function (el, e) {
