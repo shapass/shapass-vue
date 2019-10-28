@@ -1,5 +1,6 @@
 <template>
 <div id="app" v-bind:class="{ mobile: this.$isMobile() }">
+  <v-dialog/>
   <Navbar :currentUser="currentUser" :showLoginSignup="true" :logoutFn="logout" />
 
   <div class="content-wrapper">
@@ -70,7 +71,7 @@
         <!-- <span v-if="this.$isMobile()">save</span> -->
         <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>s</kbd></span> -->
       </button>
-      <button class="btn btn-ico btn-remove" @click="remove" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="remove" v-tooltip="'Remove the selected service from your list of services'" v-if="currentUser.isLoggedIn()">
+      <button class="btn btn-ico btn-remove" @click="removeConfirm" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="removeConfirm" v-tooltip="'Remove the selected service from your list of services'" v-if="currentUser.isLoggedIn()">
         <font-awesome-icon icon="trash" />
         <span>delete</span>
         <!-- <span v-if="this.$isMobile()">delete</span> -->
@@ -171,6 +172,24 @@ export default {
         }
       });
     },
+    removeConfirm () {
+      this.$modal.show('dialog', {
+        title: 'Confirmation',
+        text: `Are you sure you want to remove the service "${this.state.service}" from your list?`,
+        buttons: [
+          {
+            title: 'Yes',
+            handler: () => {
+              this.remove();
+            }
+          },
+          {
+            title: 'No',
+            default: true
+          }
+        ]
+      });
+    },
     remove () {
       Store.removeService((r, removed) => {
         if (r) {
@@ -179,6 +198,7 @@ export default {
         } else {
           this.$toasted.error(`Error removing`);
         }
+        this.$modal.hide('dialog');
       });
     },
     configure () {

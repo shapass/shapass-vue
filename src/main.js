@@ -41,7 +41,7 @@ Vue.component('v-select', vSelect);
 Vue.use(require('vue-shortkey'));
 Vue.use(VueMobileDetection);
 Vue.use(VTooltip, { defaultDelay: 500 });
-Vue.use(VModal);
+Vue.use(VModal, { dialog: true });
 
 Vue.directive('focus', {
   inserted: function (el, e) {

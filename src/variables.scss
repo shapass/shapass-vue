@@ -65,7 +65,7 @@ $btn-border: 1px solid $primary;
 $btn-bg: $black;
 $btn-color: #fff;
 $btn-font-size: $font-sm;
-$btn-font-family: $body-font-family;
+$btn-font-family: $font-family-titles;
 $btn-hover-border: $btn-border;
 $btn-hover-bg: $primary;
 $btn-hover-color: $black;
@@ -110,7 +110,8 @@ $generated-input-censored-color: rgba(255, 255, 255, 0.3);
 $generated-input-border: none;
 
 $modal-bg: $black;
-$modal-border: 1px solid $background-highlight;
+$modal-border-color: $background-highlight;
+$modal-border: 1px solid $modal-border-color;
 $modal-color: $body-font-color;
 
 //
@@ -286,7 +287,6 @@ button {
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s linear;
-  font-family: $font-family-titles;
 
   &:hover, &:active {
     background: $btn-hover-bg;
@@ -582,7 +582,7 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
 //
 
 .v--modal-overlay {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .v--modal-box.v--modal {
@@ -609,6 +609,27 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
   //   font-family: $font-family-text;
   //   color: $body-font-color;
   // }
+
+  .vue-dialog-buttons {
+    border-top-color: $modal-border-color;
+
+    button {
+      border-color: $modal-border-color;
+      background: $btn-bg;
+      color: $btn-color;
+      font-size: $btn-font-size;
+      font-family: $btn-font-family;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s linear;
+
+      &:hover, &:active {
+        background: $btn-hover-bg;
+        border: $btn-hover-border;
+        color: $btn-hover-color;
+      }
+    }
+  }
 }
 
 [data-modal="configurations"] .v--modal {
