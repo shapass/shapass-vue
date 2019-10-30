@@ -50,7 +50,7 @@ export default {
   },
   data () {
     return {
-      state: Store.state,
+      state: Store.getState(),
       inputEmail: null,
       generated: null,
       master: null,

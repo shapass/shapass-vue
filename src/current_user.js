@@ -57,6 +57,7 @@ const CurrentUser = {
     });
   },
 
+  // TODO: force re-login if there's no data encryption token saved
   checkLoggedIn (callback) {
     this.state.loading = true;
     var token = this.loadCookie();
@@ -151,6 +152,7 @@ const CurrentUser = {
     this.state.email = email;
     if (token !== null && token !== undefined) {
       this.state.token = token;
+      // TODO: generate the data encryption token and save with the other
       API.setToken(token);
     }
   },

@@ -113,13 +113,14 @@ export default {
   },
   watch: {
     "state.service" (val) {
-      Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
+      // Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
+      Store.onServiceChanged(val === null ? null : (typeof val === 'string' ? val : val.name));
     },
     "currentUser.state.step" () {
       if (this.currentUser.atLanding()) {
-        Store.clearEntries();
+        Store.clearState();
       } else if (this.currentUser.atApp()) {
-        Store.clearEntries();
+        Store.clearState();
       }
     },
   },
@@ -163,7 +164,7 @@ export default {
         this.copyToClipboard();
       }
     },
-    save () {
+    save () { // TODO: this is a global save now, the interface should reflect this
       Store.saveCurrentState((r, saved) => {
         if (r) {
           this.$toasted.show(`Configuration '${saved.service}' saved`);
@@ -227,23 +228,23 @@ export default {
         } else {
           this.$toasted.error('Something went wrong :(');
         }
-        Store.clearEntriesAndServices();
+        Store.clearStateAndStorage();
         this.currentUser.setAtLanding();
       });
     },
   },
   data () {
     return {
-      state: Store.state,
+      state: Store.getState(),
       currentUser: CurrentUser,
       showConfigs: false
     }
   },
   mounted () {
-    Store.clearEntriesAndServices();
+    Store.clearStateAndStorage();
     this.currentUser.checkLoggedIn(r => {
       if (r) {
-        Store.reloadServices(() => {
+        Store.fetchDataFromAPI(() => {
           if (this.currentUser.atApp()) {
             this.focusServiceSelector();
           }
@@ -253,7 +254,7 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     this.disableSavePassword(this.$el);
-    Store.clearEntries();
+    Store.clearState();
     this.masterPasswordVisible = false;
     this.generatedPasswordVisible = false;
     next();

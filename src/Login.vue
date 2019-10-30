@@ -48,7 +48,7 @@ export default {
   data () {
     return {
       currentUser: CurrentUser,
-      state: Store.state,
+      state: Store.getState(),
       inputEmail: null,
       generated: null,
       master: null,

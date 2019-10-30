@@ -150,6 +150,32 @@ const API = {
       }
     });
   },
+  load (key, callback) {
+    this.request('load', 'post', this.loginData(), (r, d) => {
+      console.log("--- LOAD DATA:", d);
+      if (r && d !== null && d !== undefined) {
+        var encrypted = JSON.parse(d.EncryptedData);
+        console.log("--- LOAD ENCRYPTED:", encrypted);
+        var decrypted = shapassDecrypt(key, encrypted);
+        console.log("--- LOAD DECRYPTED:", decrypted);
+        callback(true, encrypted, decrypted);
+      } else {
+        callback(false, null, null);
+      }
+    });
+  },
+  save (key, userData, callback) {
+    var encrypted = shapassEncrypt(key, JSON.stringify(userData));
+    var data = { data: JSON.stringify(encrypted) };
+    this.request('save', 'post', this.loginData(data), (r, data) => {
+      console.log("--- SAVE:", r, data);
+      if (r) {
+        callback(true, encrypted);
+      } else {
+        callback(false, null);
+      }
+    });
+  },
 };
 
 export default API;

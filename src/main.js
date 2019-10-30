@@ -78,7 +78,7 @@ Vue.mixin({
       } else if (algo === 'sha256-bin') {
         return base64js.fromByteArray(sha256.digest(input)).substr(0, length);
       } else {
-        return "";
+        return '';
       }
     },
     randomMask: function() {
