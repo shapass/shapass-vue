@@ -1,5 +1,6 @@
 import { Configs } from './config.js';
 import API from './api.js';
+import Store from './store.js';
 
 const Steps = Object.freeze({
   LANDING: 'landing',
@@ -28,10 +29,11 @@ const CurrentUser = {
     });
   },
 
-  login (email, password, callback) {
+  login (email, masterPassword, password, callback) {
     this.state.loading = true;
     API.login(email, password, (r, token, code) => {
       if (r) {
+        Store.generateEncryptToken(masterPassword, password);
         this._setLoggedIn(email, token);
         this.saveCookie();
       } else {
@@ -152,7 +154,6 @@ const CurrentUser = {
     this.state.email = email;
     if (token !== null && token !== undefined) {
       this.state.token = token;
-      // TODO: generate the data encryption token and save with the other
       API.setToken(token);
     }
   },
@@ -162,6 +163,7 @@ const CurrentUser = {
     this.state.token = null;
     API.setToken(null);
     this.removeCookie();
+    Store.clearStateAndStorage();
   },
 
   _setCookie (name, value, days) {

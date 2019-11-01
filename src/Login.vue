@@ -63,7 +63,7 @@ export default {
     submit () {
       if (this.canSubmit()) {
         this.withDisabledButton("#login-submit", (done) => {
-          this.currentUser.login(this.inputEmail, this.state.generated, (r, code) => {
+          this.currentUser.login(this.inputEmail, this.state.master, this.state.generated, (r, code) => {
             if (r) {
               this.currentUser.setAtApp();
               this.submitted = true;

@@ -10,6 +10,8 @@ import VueMobileDetection from "vue-mobile-detection";
 import VTooltip from 'v-tooltip';
 import VModal from 'vue-js-modal';
 
+import Utils from './utils.js';
+
 import App from './App.vue';
 import ResetPassword from './ResetPassword.vue';
 import SignUp from './SignUp.vue';
@@ -72,14 +74,8 @@ Vue.directive('focus', {
 
 Vue.mixin({
   methods: {
-    shapass: function(input, algo, length=32) {
-      if (algo === 'sha256-str') {
-        return btoa(sha256(input)).substr(0, length);
-      } else if (algo === 'sha256-bin') {
-        return base64js.fromByteArray(sha256.digest(input)).substr(0, length);
-      } else {
-        return '';
-      }
+    shapass: function(input, algo, length) {
+      return Utils.shapass(input, algo, length);
     },
     randomMask: function() {
       var masks = [

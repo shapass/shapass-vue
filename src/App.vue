@@ -113,7 +113,6 @@ export default {
   },
   watch: {
     "state.service" (val) {
-      // Store.loadStateConfigs(val === null ? null : (typeof val === 'string' ? val : val.name));
       Store.onServiceChanged(val === null ? null : (typeof val === 'string' ? val : val.name));
     },
     "currentUser.state.step" () {
@@ -228,7 +227,6 @@ export default {
         } else {
           this.$toasted.error('Something went wrong :(');
         }
-        Store.clearStateAndStorage();
         this.currentUser.setAtLanding();
       });
     },
@@ -241,7 +239,7 @@ export default {
     }
   },
   mounted () {
-    Store.clearStateAndStorage();
+    Store.reloadFromLocalStorage();
     this.currentUser.checkLoggedIn(r => {
       if (r) {
         Store.fetchDataFromAPI(() => {
