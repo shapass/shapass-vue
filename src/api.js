@@ -1,4 +1,5 @@
 import { Configs } from './config.js';
+import Utils from './utils.js';
 import axios from 'axios';
 
 const API = {
@@ -154,7 +155,7 @@ const API = {
     this.request('load', 'post', this.loginData(), (r, d) => {
       if (r && d !== null && d !== undefined) {
         var encrypted = d.EncryptedData;
-        var decrypted = shapassDecrypt(key, encrypted);
+        var decrypted = Utils.shapassDecrypt(key, encrypted);
         callback(true, encrypted, decrypted);
       } else {
         callback(false, null, null);
@@ -162,9 +163,9 @@ const API = {
     });
   },
   save (key, userData, callback) {
-    var encrypted = shapassEncrypt(key, userData);
+    var encrypted = Utils.shapassEncrypt(key, userData);
     var data = { data: encrypted };
-    this.request('save', 'post', this.loginData(data), (r, data) => {
+    this.request('save', 'post', this.loginData(data), (r) => {
       if (r) {
         callback(true, encrypted);
       } else {

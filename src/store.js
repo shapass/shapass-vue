@@ -140,7 +140,7 @@ const Store2 = {
 
   // save the `services` on the API
   _saveToAPI (callback) {
-    API.save(this.stored.encryptToken, this.stored.services, (r, encrypted) => {
+    API.save(this.stored.encryptToken, this.stored.services, (r) => {
       callback(r);
     });
   },
