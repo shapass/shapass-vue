@@ -62,7 +62,8 @@ const Store2 = {
 
   // reloads the data from the API, saves in localStorage and sets them in the current state
   fetchDataFromAPI (callback=null) {
-    if (this.stored.encryptToken !== null && this.stored.encryptToken !== undefined) {
+    if (this.stored.encryptToken !== null &&
+        this.stored.encryptToken !== undefined) {
       API.load(this.stored.encryptToken, (r, encrypted, decrypted) => {
         var invalid = decrypted === null || decrypted === undefined ||
             (typeof decrypted === 'string' && decrypted === '') ||
@@ -70,20 +71,41 @@ const Store2 = {
         if (r) {
           if (!invalid) {
             this.stored.services = decrypted;
+            this._afterFetchData(callback, !invalid);
           } else {
-            // TODO: try to get data from /list
-            this.stored.services = {};
+            API.list((services) => {
+              if (services !== null && services !== undefined) {
+                this.stored.services = {};
+                // TODO: service obj, parsing from old api
+                services.forEach((i) => {
+                  this.stored.services[i.Name] = {
+                    name: i.Name,
+                    outputLength: i.Length,
+                    prefix: i.Prefix,
+                    suffix: i.Suffix,
+                    algorithm: i.Algorithm,
+                  };
+                });
+              } else {
+                this.stored.services = {};
+              }
+              this._afterFetchData(callback, true);
+            });
           }
         } else {
           this.stored.services = {};
+          this._afterFetchData(callback, !invalid);
         }
-        this._saveToLocalStorage();
-        this._onServicesUpdated();
-        callback(!invalid);
       });
     } else {
       callback(false);
     }
+  },
+
+  _afterFetchData (callback, success) {
+    this._saveToLocalStorage();
+    this._onServicesUpdated();
+    callback(success);
   },
 
   // saves the current state in the API
