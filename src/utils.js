@@ -15,13 +15,16 @@ const Utils = {
   // Returns JSON in the format
   // { "iv":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "data":[<encrypted data] }
   shapassEncrypt (key, decrypted) {
-
     var ikey = (key instanceof Uint8Array) ? key : new TextEncoder("utf-8").encode(key);
     ikey = ikey.slice(0, 32);
     var iv = new Uint8Array(16);
     for(var i = 0; i < 16; i++) iv[i] = Math.random() * 100;
 
-    var str = (typeof decrypted == 'string') ? decrypted : JSON.stringify(decrypted);
+    if (typeof decrypted === 'string') {
+      var str = decrypted;
+    } else {
+      var str = JSON.stringify(decrypted);
+    }
 
     var bytesText = aesjs.utils.utf8.toBytes(str);
 

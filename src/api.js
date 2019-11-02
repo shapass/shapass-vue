@@ -159,6 +159,7 @@ const API = {
             (typeof encrypted !== 'string' || encrypted.trim() !== '');
         if (hasData) {
           var decrypted = Utils.shapassDecrypt(key, encrypted);
+          decrypted = JSON.parse(decrypted);
           callback(true, encrypted, decrypted);
         } else {
           callback(true, encrypted, null);

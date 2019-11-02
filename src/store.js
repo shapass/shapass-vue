@@ -64,15 +64,22 @@ const Store2 = {
   fetchDataFromAPI (callback=null) {
     if (this.stored.encryptToken !== null && this.stored.encryptToken !== undefined) {
       API.load(this.stored.encryptToken, (r, encrypted, decrypted) => {
-        var hasData = r && decrypted !== null && decrypted !== undefined;
-        if (hasData) {
-          this.stored.services = JSON.parse(decrypted);
+        var invalid = decrypted === null || decrypted === undefined ||
+            (typeof decrypted === 'string' && decrypted === '') ||
+            (Array.isArray(decrypted) && decrypted.length === 0);
+        if (r) {
+          if (!invalid) {
+            this.stored.services = decrypted;
+          } else {
+            // TODO: try to get data from /list
+            this.stored.services = {};
+          }
         } else {
-          this.stored.services = [];
+          this.stored.services = {};
         }
         this._saveToLocalStorage();
         this._onServicesUpdated();
-        callback(hasData);
+        callback(!invalid);
       });
     } else {
       callback(false);
