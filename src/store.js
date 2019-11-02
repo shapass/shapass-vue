@@ -64,14 +64,15 @@ const Store2 = {
   fetchDataFromAPI (callback=null) {
     if (this.stored.encryptToken !== null && this.stored.encryptToken !== undefined) {
       API.load(this.stored.encryptToken, (r, encrypted, decrypted) => {
-        if (r && decrypted !== null && decrypted !== undefined) {
+        var hasData = r && decrypted !== null && decrypted !== undefined;
+        if (hasData) {
           this.stored.services = JSON.parse(decrypted);
-          this._saveToLocalStorage();
-          this._onServicesUpdated();
-          callback(true);
         } else {
-          callback(false);
+          this.stored.services = [];
         }
+        this._saveToLocalStorage();
+        this._onServicesUpdated();
+        callback(hasData);
       });
     } else {
       callback(false);

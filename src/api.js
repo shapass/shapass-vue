@@ -155,8 +155,14 @@ const API = {
     this.request('load', 'post', this.loginData(), (r, d) => {
       if (r && d !== null && d !== undefined) {
         var encrypted = d.EncryptedData;
-        var decrypted = Utils.shapassDecrypt(key, encrypted);
-        callback(true, encrypted, decrypted);
+        var hasData = encrypted !== null && encrypted !== undefined &&
+            (typeof encrypted !== 'string' || encrypted.trim() !== '');
+        if (hasData) {
+          var decrypted = Utils.shapassDecrypt(key, encrypted);
+          callback(true, encrypted, decrypted);
+        } else {
+          callback(true, encrypted, null);
+        }
       } else {
         callback(false, null, null);
       }
