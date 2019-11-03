@@ -2,9 +2,7 @@ import { Configs } from './config.js';
 import API from './api.js';
 import Utils from './utils.js';
 
-// TODO: make each service a model
-
-const Store2 = {
+const Store = {
   // the current data, the inputs filled by the user
   state: {
     service: null,
@@ -32,26 +30,14 @@ const Store2 = {
     if (name !== null && name !== undefined) {
       var services = this.stored.services;
       this.state.service = name;
-      if (services[name] !== null && services[name] !== undefined) {
-        // TODO: service model with attrs
-        this.state.outputLength = services[name].outputLength;
-        this.state.suffix = services[name].suffix;
-        this.state.algorithm = services[name].algorithm;
-      } else {
-        this.state.outputLength = Configs.DEFAULT_LENGTH;
-        this.state.suffix = null;
-      }
+      Service.setStateFromService(this.state, name, services[name]);
     }
   },
 
   clearState () {
-    this.state.outputLength = Configs.DEFAULT_LENGTH;
-    this.state.suffix = null;
-    this.state.prefix = null;
+    Service.clearState(this.state);
     this.state.master = null;
-    this.state.service = null;
     this.state.generated = null;
-    this.state.algorithm = Configs.DEFAULT_ALGORITHM;
   },
 
   clearStateAndStorage () {
@@ -76,15 +62,8 @@ const Store2 = {
             API.list((services) => {
               if (services !== null && services !== undefined) {
                 this.stored.services = {};
-                // TODO: service obj, parsing from old api
                 services.forEach((i) => {
-                  this.stored.services[i.Name] = {
-                    name: i.Name,
-                    outputLength: i.Length,
-                    prefix: i.Prefix,
-                    suffix: i.Suffix,
-                    algorithm: i.Algorithm,
-                  };
+                  this.stored.services[i.Name] = Service.fromListAPI(i);
                 });
               } else {
                 this.stored.services = {};
@@ -107,14 +86,7 @@ const Store2 = {
     if (this.state.service !== null && this.state.service !== undefined) {
 
       // add the current state to the service list
-      // TODO: service model
-      this.stored.services[this.state.service] = {
-        service: this.state.service,
-        outputLength: this.state.outputLength,
-        suffix: this.state.suffix,
-        algorithm: this.state.algorithm,
-        prefix: null
-      };
+      this.stored.services[this.state.service] = Service.fromState(this.state);
       this._onServicesUpdated();
 
       // save locally, then remotely
@@ -171,6 +143,7 @@ const Store2 = {
     }
   },
 
+
   // INTERNAL
 
   // save the `services` on the API
@@ -205,10 +178,10 @@ const Store2 = {
       this.state.servicesForSelect = [];
     } else {
       this.state.servicesForSelect = Object.keys(services).sort().map(function(key) {
-        // TODO: service model with attrs
-        return { name: key, outputLength: services[key].outputLength,
-                 suffix: services[key].suffix, prefix: services[key].prefix };
+        return Service.attributes(services[key]);
       });
+      console.log('-- setting services from', services);
+      console.log('-- set services to', this.state.servicesForSelect);
     }
   },
 
@@ -219,4 +192,61 @@ const Store2 = {
   },
 };
 
-export default Store2;
+const Service = {
+  setStateFromService (state, name, service) {
+    if (service !== null && service !== undefined) {
+      state.outputLength = service.outputLength;
+      state.suffix = service.suffix;
+      state.prefix = service.prefix;
+      state.metadata = service.metadata;
+      state.algorithm = service.algorithm;
+    } else {
+      this.clearState(state);
+    }
+    state.service = name;
+  },
+
+  clearState (state) {
+    state.service = null;
+    state.outputLength = Configs.DEFAULT_LENGTH;
+    state.suffix = null;
+    state.prefix = null;
+    state.metadata = null;
+    state.algorithm = Configs.DEFAULT_ALGORITHM;
+  },
+
+  fromListAPI (response) {
+    return {
+      name: response.Name,
+      outputLength: response.Length,
+      prefix: response.Prefix,
+      suffix: response.Suffix,
+      algorithm: response.Algorithm,
+      metadata: response.Metadata,
+    };
+  },
+
+  fromState (state) {
+    return {
+      name: state.service,
+      outputLength: state.outputLength,
+      suffix: state.suffix,
+      algorithm: state.algorithm,
+      prefix: state.prefix,
+      metadata: state.metadata,
+    };
+  },
+
+  attributes (service) {
+    return {
+      name: service.name || service.service, // some old configs still use .service
+      outputLength: service.outputLength,
+      suffix: service.suffix,
+      prefix: service.prefix,
+      metadata: service.metadata,
+      algorithm: service.algorithm,
+    };
+  },
+};
+
+export default Store;
