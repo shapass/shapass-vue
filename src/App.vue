@@ -477,12 +477,12 @@ button.btn-toolbar {
 
 #service {
   flex-grow: 1;
-  flex-shrink: 1;
+  transition: flex 500ms ease-in-out;
+
 }
 
 #service-buttons {
   flex-grow: 0.00001;
-  flex-shrink: 1;
   display: flex;
   align-items: flex-end;
   padding-bottom: 0;

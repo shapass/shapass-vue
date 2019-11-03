@@ -392,6 +392,8 @@ label {
 }
 
 .toasted-container .toasted {
+  margin: 0;
+
   &.toasted-primary {
     border-radius: $notification-border-radius;
 
@@ -414,12 +416,18 @@ label {
     }
   }
 }
+
+.toasted-container.top-right, .toasted-container.top-center {
+  top: 10px !important;
+}
+
 @media only screen and (max-width: 600px) { // the media query toasted uses for mobile
-  .toasted-container.top-right {
+  .toasted-container.top-right, .toasted-container.top-center {
     top: 10px !important;
     left: 10px !important;
     right: 10px !important;
     min-width: auto;
+    transform: none;
   }
 }
 

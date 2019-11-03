@@ -34,9 +34,11 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.config.productionTip = false;
 
 Vue.use(Toasted, {
-  position: 'top-right',
+  position: 'bottom-center',
   duration: 5000,
-  singleton: true
+  singleton: true,
+  keepOnHover: true,
+  fullWidth: true
 });
 Vue.use(VueClipboard);
 Vue.component('v-select', vSelect);
