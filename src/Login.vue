@@ -1,6 +1,6 @@
 <template>
 <div id="login" v-bind:class="{ mobile: this.$isMobile() }">
-  <Navbar :currentUser="currentUser" :showLoginSignup="false" />
+  <Navbar :currentUser="currentUser" :showLoginSignup="false" :loading="currentUser.isLoading()" />
 
   <div class="content-wrapper">
     <div class="container" id="service">

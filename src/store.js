@@ -12,13 +12,14 @@ const Store = {
     master: null,
     generated: null,
     algorithm: Configs.DEFAULT_ALGORITHM,
-    servicesForSelect: []
+    servicesForSelect: [],
+    saving: false,
   },
 
   // the data stored in the localStorage
   stored: {
     encryptToken: null,
-    services: []
+    services: [],
   },
 
   getState () {
@@ -91,10 +92,10 @@ const Store = {
 
       // save locally, then remotely
       this._saveToLocalStorage();
-      this._saveToAPI((r) => {
-        callback(r, this.stored.services[this.state.service]);
-      });
+      callback(true, this.stored.services[this.state.service]);
 
+      // assynchronously
+      this._saveToAPI();
     } else {
       callback(false);
     }
@@ -113,9 +114,10 @@ const Store = {
 
       // save locally, then remotely
       this._saveToLocalStorage();
-      this._saveToAPI((r) => {
-        callback(r, name);
-      });
+      callback(true, name);
+
+      // assynchronously
+      this._saveToAPI();
     } else {
       callback(false, null);
     }
@@ -147,9 +149,11 @@ const Store = {
   // INTERNAL
 
   // save the `services` on the API
-  _saveToAPI (callback) {
+  _saveToAPI (callback=null) {
+    this.state.saving = true;
     API.save(this.stored.encryptToken, this.stored.services, (r) => {
-      callback(r);
+      this.state.saving = false;
+      if (callback !== null) { callback(r); }
     });
   },
 

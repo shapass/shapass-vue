@@ -1,7 +1,7 @@
 <template>
 <div id="app" v-bind:class="{ mobile: this.$isMobile() }">
   <v-dialog/>
-  <Navbar :currentUser="currentUser" :showLoginSignup="true" :logoutFn="logout" />
+  <Navbar :currentUser="currentUser" :showLoginSignup="true" :logoutFn="logout" :loading="currentUser.isLoading() || state.saving" />
 
   <div class="content-wrapper" id="service-wrapper">
     <div class="container" id="service">

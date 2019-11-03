@@ -1,6 +1,6 @@
 <template>
 <div id="reset-password" v-bind:class="{ mobile: this.$isMobile() }">
-  <Navbar :currentUser="currentUser" :showLoginSignup="false" />
+  <Navbar :currentUser="currentUser" :showLoginSignup="false" :loading="currentUser.isLoading()" />
 
   <div class="content-wrapper" v-if="!token">
     <div class="container" id="label">

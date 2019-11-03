@@ -7,26 +7,26 @@
 
     <div v-if="!showLoginSignup">
       <router-link to="/">
-        <button class="btn" :disabled="currentUser.isLoading()" v-on:click="setAtLanding">&lt; back</button>
+        <button class="btn" :disabled="loading" v-on:click="setAtLanding">&lt; back</button>
       </router-link>
     </div>
 
     <div v-if="showLoginSignup">
       <router-link to="/signup" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">
-        <button class="btn" :disabled="currentUser.isLoading()">Register</button>
+        <button class="btn" :disabled="loading">Register</button>
       </router-link>
       <router-link to="/login" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">
-        <button class="btn" :disabled="currentUser.isLoading()">Login</button>
+        <button class="btn" :disabled="loading">Login</button>
       </router-link>
 
-      <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()" :disabled="currentUser.isLoading()">Logout</button>
+      <button class="btn" v-on:click="logout" v-if="currentUser.isLoggedIn()" :disabled="loading">Logout</button>
       <label class="user-email" v-if="currentUser.isLoggedIn()">{{ currentUser.state.email }}</label>
 
       <router-link to="/">
-        <button class="btn" :disabled="currentUser.isLoading()" v-if="!currentUser.atLanding() && !currentUser.atApp()" v-on:click="setAtLanding">&lt; back</button>
+        <button class="btn" :disabled="loading" v-if="!currentUser.atLanding() && !currentUser.atApp()" v-on:click="setAtLanding">&lt; back</button>
       </router-link>
 
-      <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+      <InfiniteLoadingCircle v-if="loading"></InfiniteLoadingCircle>
     </div>
   </div>
 </div>
@@ -44,6 +44,7 @@ export default {
     currentUser: Object,
     showLoginSignup: Boolean,
     logoutFn: Function,
+    loading: Boolean,
   },
   methods: {
     setAtLanding () {
