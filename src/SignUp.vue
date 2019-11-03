@@ -20,8 +20,10 @@
     <div class="container" id="generated">
       <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
     </div>
-    <button class="btn btn-signup" id="signup-submit" @click="submit" :disabled="!canSubmit()">Register</button>
-    <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+    <div class="container">
+      <button class="btn btn-signup" id="signup-submit" @click="submit" :disabled="!canSubmit()">Register</button>
+      <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+    </div>
   </div>
 </div>
 </template>

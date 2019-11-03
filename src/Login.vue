@@ -16,9 +16,11 @@
     <div class="container" id="generated">
       <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
     </div>
-    <button class="btn btn-login" id="login-submit" @click="submit" :disabled="!canSubmit()">Login</button>
-    <router-link to="/reset-password" v-if="currentUser.isLoggingIn()" class="forgot-password">Forgot your password?</router-link>
-    <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+    <div class="container">
+      <button class="btn btn-login" id="login-submit" @click="submit" :disabled="!canSubmit()">Login</button>
+      <router-link to="/reset-password" v-if="currentUser.isLoggingIn()" class="forgot-password">Forgot your password?</router-link>
+      <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+    </div>
   </div>
 </div>
 </template>
@@ -57,13 +59,15 @@ export default {
   },
   methods: {
     canSubmit() {
-      return this.isValidInputEmail(this.inputEmail) && this.notEmpty(this.state.master) &&
+      return this.isValidInputEmail(this.inputEmail) &&
+        this.notEmpty(this.state.master) &&
         this.state.generated && !this.currentUser.isLoading();
     },
     submit () {
       if (this.canSubmit()) {
         this.withDisabledButton("#login-submit", (done) => {
           this.currentUser.login(this.inputEmail, this.state.master, this.state.generated, (r, code) => {
+            this.state.service = Configs.SHAPASS_SERVICE; // because login() clears the state
             if (r) {
               Store.clearState();
               this.currentUser.setAtApp();
