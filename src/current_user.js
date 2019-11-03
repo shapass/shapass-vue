@@ -159,11 +159,11 @@ const CurrentUser = {
   },
 
   _setLoggedOut () {
+    Store.clearStateAndStorage();
     this.state.email = null;
     this.state.token = null;
     API.setToken(null);
     this.removeCookie();
-    Store.clearStateAndStorage();
   },
 
   _setCookie (name, value, days) {

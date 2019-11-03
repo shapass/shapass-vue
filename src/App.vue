@@ -3,10 +3,24 @@
   <v-dialog/>
   <Navbar :currentUser="currentUser" :showLoginSignup="true" :logoutFn="logout" />
 
-  <div class="content-wrapper">
+  <div class="content-wrapper" id="service-wrapper">
     <div class="container" id="service">
       <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :asButton="currentUser.atLanding()" :onFocus="serviceFocused" />
     </div>
+
+    <div class="container" id="service-buttons" v-if="currentUser.atApp()">
+      <transition name="slide">
+        <button class="btn btn-ico btn-save btn-toolbar" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'" v-if="showSaveButton()">
+          <font-awesome-icon icon="save" />
+        </button>
+      </transition>
+      <transition name="slide">
+        <button class="btn btn-ico btn-remove btn-toolbar" @click="removeConfirm" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="removeConfirm" v-tooltip="'Remove the selected service from your list of services'" v-if="showRemoveButton()">
+          <font-awesome-icon icon="trash" />
+        </button>
+      </transition>
+    </div>
+
   </div>
   <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
     <div id="start" v-shortkey.once="['enter']" @shortkey="start">Press <kbd>enter</kbd> to start</div>
@@ -57,29 +71,17 @@
     </div>
   </div>
 
-  <div class="clearfix content-wrapper" id="toolbar" v-if="state.generated">
+  <div class="clearfix content-wrapper" id="toolbar" v-if="state.generated && currentUser.atApp()">
     <div class="toolbar-left">
-      <button class="btn btn-ico btn-configure" @click="configure" tabindex="-1" v-shortkey.once="['ctrl', '/']" @shortkey="configure" v-tooltip="'Configure the current service'">
+      <button class="btn btn-ico btn-configure btn-toolbar" @click="configure" tabindex="-1" v-shortkey.once="['ctrl', '/']" @shortkey="configure" v-tooltip="'Configure the current service'">
         <font-awesome-icon icon="cog" />
         <span>configure</span>
         <!-- <span v-if="this.$isMobile()">configure</span> -->
         <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>/</kbd></span> -->
       </button>
-      <button class="btn btn-ico btn-save" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'" v-if="currentUser.isLoggedIn()">
-        <font-awesome-icon icon="save" />
-        <span>save</span>
-        <!-- <span v-if="this.$isMobile()">save</span> -->
-        <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>s</kbd></span> -->
-      </button>
-      <button class="btn btn-ico btn-remove" @click="removeConfirm" tabindex="-1" v-shortkey.once="['ctrl', 'del']" @shortkey="removeConfirm" v-tooltip="'Remove the selected service from your list of services'" v-if="currentUser.isLoggedIn()">
-        <font-awesome-icon icon="trash" />
-        <span>delete</span>
-        <!-- <span v-if="this.$isMobile()">delete</span> -->
-        <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>del</kbd></span> -->
-      </button>
     </div>
     <div class="toolbar-right">
-      <button class="btn btn-ico btn-copy" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
+      <button class="btn btn-ico btn-copy btn-toolbar" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
         <font-awesome-icon icon="copy" />
         <span>copy</span>
         <!-- <span v-if="this.$isMobile()">copy</span> -->
@@ -230,6 +232,15 @@ export default {
         this.currentUser.setAtLanding();
       });
     },
+    showSaveButton () {
+      return this.currentUser.isLoggedIn() && this.currentUser.atApp() &&
+        this.state.service !== null && this.state.service !== undefined &&
+        !Store.isCurrentServiceSaved();
+    },
+    showRemoveButton () {
+      return this.currentUser.isLoggedIn() && this.currentUser.atApp() &&
+        Store.isCurrentServiceSaved();
+    }
   },
   data () {
     return {
@@ -264,6 +275,8 @@ export default {
 <style scoped lang="scss">
 
 #content-landing {
+  margin-top: 30px;
+
   #slogan {
     margin-top: 30px;
     padding: 20px;
@@ -378,7 +391,6 @@ export default {
   padding-bottom: 10px;
   text-align: right;
   width: auto;
-  /* border-top: 1px dashed $background-highlight;; */
 
   .toolbar-left {
     float: left;
@@ -416,44 +428,79 @@ export default {
     }
   }
 
-  button {
-    width: auto;
-    height: auto;
-    background: $toolbar-ico-bg;
-    border: $toolbar-ico-border;
-    border-radius: 0;
-    padding: 10px 10px 12px 10px;
+  .btn-toolbar {
     margin: 0.7em 0 0 1em;
-    transition: $transition-default;
-    /* border: 1px solid $dark-gray; */
+  }
+}
 
-    &:hover, &:active {
-      background: $toolbar-ico-hover-bg;
-      border-color: $toolbar-ico-hover-border-color;
-      .svg-inline--fa {
-        color: $toolbar-ico-hover-color;
-      }
-    }
+button.btn-toolbar {
+  width: auto;
+  height: auto;
+  background: $toolbar-ico-bg;
+  border: $toolbar-ico-border;
+  border-radius: 0;
+  padding: 10px 10px 12px 10px;
+  transition: $transition-default;
+
+  &:hover, &:active {
+    background: $toolbar-ico-hover-bg;
+    border: $toolbar-ico-border;
+    border-color: $toolbar-ico-hover-border-color;
 
     .svg-inline--fa {
-      font-size: $toolbar-ico-size;
-      color: $toolbar-ico-color;
-      padding: 0;
-      margin: 0;
-      border: 1px solid transparent;
-      width: auto;
-      display: inline-block;
-      margin: 0 auto;
-      margin-bottom: -4px;
-    }
-
-    > span {
-      /* margin-top: 10px; */
-      /* display: block; */
-      display: inline-block;
-      margin-left: 10px;
+      color: $toolbar-ico-hover-color;
     }
   }
+
+  .svg-inline--fa {
+    font-size: $toolbar-ico-size;
+    color: $toolbar-ico-color;
+    padding: 0;
+    margin: 0;
+    border: 1px solid transparent;
+    width: auto;
+    display: inline-block;
+    margin: 0 auto;
+    margin-bottom: -4px;
+  }
+
+  > span {
+    display: inline-block;
+    margin-left: 10px;
+  }
+}
+
+#service-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+#service {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+#service-buttons {
+  flex-grow: 0.00001;
+  flex-shrink: 1;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 0;
+
+  button {
+    margin-left: 1em;
+  }
+}
+
+.slide-enter-active {
+  transition: all .1s ease;
+}
+.slide-leave-active {
+  transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-enter, .slide-leave-to {
+  transform: translateX(50px);
+  opacity: 0;
 }
 
 </style>

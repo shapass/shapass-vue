@@ -102,12 +102,6 @@ const Store2 = {
     }
   },
 
-  _afterFetchData (callback, success) {
-    this._saveToLocalStorage();
-    this._onServicesUpdated();
-    callback(success);
-  },
-
   // saves the current state in the API
   saveCurrentState (callback) {
     if (this.state.service !== null && this.state.service !== undefined) {
@@ -168,6 +162,17 @@ const Store2 = {
     this._loadLocalStorage();
   },
 
+  isCurrentServiceSaved () {
+    if (this.state.service !== null && this.state.service !== undefined) {
+      var saved = this.stored.services[this.state.service];
+      return (saved !== undefined && saved !== null);
+    } else {
+      return false;
+    }
+  },
+
+  // INTERNAL
+
   // save the `services` on the API
   _saveToAPI (callback) {
     API.save(this.stored.encryptToken, this.stored.services, (r) => {
@@ -182,7 +187,10 @@ const Store2 = {
 
   // reads the data saved in localStorage into `stored`
   _loadLocalStorage () {
-    this.stored = JSON.parse(localStorage.shapassData || null) || {};
+    var l = JSON.parse(localStorage.shapassData || null) || {};
+    this.stored.encryptToken = l.encryptToken !== undefined ? l.encryptToken : '';
+    this.stored.services = l.services !== undefined ? l.services : [];
+    this._onServicesUpdated();
   },
 
   // save into local storage the info in this object
@@ -202,6 +210,12 @@ const Store2 = {
                  suffix: services[key].suffix, prefix: services[key].prefix };
       });
     }
+  },
+
+  _afterFetchData (callback, success) {
+    this._saveToLocalStorage();
+    this._onServicesUpdated();
+    callback(success);
   },
 };
 

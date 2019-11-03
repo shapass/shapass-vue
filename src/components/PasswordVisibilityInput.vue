@@ -53,6 +53,8 @@ export default {
 
 <style lang="scss">
 .password-visibility-input {
+  position: relative;
+
   input {
     margin-top: 5px;
     padding-right: 45px;

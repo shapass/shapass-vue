@@ -65,6 +65,7 @@ export default {
         this.withDisabledButton("#login-submit", (done) => {
           this.currentUser.login(this.inputEmail, this.state.master, this.state.generated, (r, code) => {
             if (r) {
+              Store.clearState();
               this.currentUser.setAtApp();
               this.submitted = true;
               this.$router.push('/')
