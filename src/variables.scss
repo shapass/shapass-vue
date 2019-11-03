@@ -591,6 +591,8 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
   box-shadow: none;
   border: $modal-border;
   border-radius: 0;
+  display: flex;
+  flex-direction: column;
 
   .v--modal-close {
     position: absolute;
@@ -604,14 +606,11 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
     }
   }
 
-  // h3.modal-title {
-  //   font-size: $font-sm;
-  //   margin: 10px;
-  //   font-family: $font-family-text;
-  //   color: $body-font-color;
-  // }
+  .modal-body {
+    flex-grow: 1;
+  }
 
-  .vue-dialog-buttons {
+  .vue-dialog-buttons, .v--modal-buttons {
     border-top-color: $modal-border-color;
 
     button {
@@ -623,12 +622,35 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
       text-transform: uppercase;
       cursor: pointer;
       transition: all 0.2s linear;
+      height: 40px;
+      line-height: 40px;
+      padding: 0;
 
       &:hover, &:active {
         background: $btn-hover-bg;
         border: $btn-hover-border;
         color: $btn-hover-color;
       }
+
+      &:focus {
+        border: $btn-hover-border;
+      }
+    }
+  }
+}
+
+.v--modal-buttons {
+  display: flex;
+  flex: 0 1 auto;
+  width: 100%;
+
+  button {
+    flex: 1 1 50%;
+    border-bottom: none;
+    border-left: none;
+
+    &:last-of-type {
+      border-right: none;
     }
   }
 }
