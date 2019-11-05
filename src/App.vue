@@ -50,8 +50,8 @@
       <div id="algorithm">
         <label class="typewriter" for="algorithm-input">Algorithm:</label>
         <select id="algorithm-input" v-model="state.algorithm" tabindex="22">
-          <option>sha256-str</option>
-          <option>sha256-bin</option>
+          <option value="sha256-bin">Default</option>
+          <option value="sha256-str">Legacy</option>
           <!-- <option>sha256-bin-alfanum</option> -->
         </select>
       </div>

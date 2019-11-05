@@ -18,7 +18,7 @@
           </router-link>
         </div>
         <div v-if="confirmed == 'false'">
-          <p>The confirmationof your account failed <span v-if="code">(code: {{ code }}) </span>:(</p>
+          <p>The confirmation of your account failed <span v-if="code">(code: {{ code }}) </span>:(</p>
           <p>Please try again or contact us informing the error you got.</p>
         </div>
       </div>
