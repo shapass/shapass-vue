@@ -1,19 +1,33 @@
 
 # Change Log
 
-## [0.4.0] - 2019-08-25
+## 0.5.0 - 2019-11-05
 
-* Split the application in more components and routes: login, sign up, reset password, and app.
+* Encrypt all user data when sending to the server. The server no longer receives
+  any clear text user data other than the email and the sign in password.
+  Users will be automatically migrated to the new format just by using the app.
+* Save and remove buttons are now at the side of the service selector and the
+  actions to save and remove from the API are asynchronous.
+* Rewrote the Store class to accommodate the changes listed above.
+* Moved notifications to the bottom so they won't cover other components
+  and will be less annoying.
+* Service configs are now in a modal window.
+
+## 0.4.0 - 2019-08-25
+
+* Split the application in more components and routes: login, sign up, reset
+  password, and app.
 * Lots of other fixes and improvements, mostly on usability/design.
 
-## [0.3.0] - 2019-08-12
+## 0.3.0 - 2019-08-12
 
-* Support to multiple algorithms (`sha256-bin` now the default) and several design and usability improvements.
+* Support to multiple algorithms (`sha256-bin` now the default) and several
+  design and usability improvements.
 
-## [0.2.0] - 2019-08-07
+## 0.2.0 - 2019-08-07
 
 * Kinda stable.
 
-## [0.1.0] - 2019-07-07
+## 0.1.0 - 2019-07-07
 
 * First.
