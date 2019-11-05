@@ -131,6 +131,13 @@ const Store = {
     this._saveToLocalStorage();
   },
 
+  // checks if the user has an encryptToken stored in localStorage
+  // won't load the data, just check it
+  hasEncryptToken (master, password) {
+    var l = JSON.parse(localStorage.shapassData || null) || {};
+    return (l.encryptToken !== undefined && l.encryptToken !== null);
+  },
+
   // reloads the data saved in localStorage (encrypt token and services)
   reloadFromLocalStorage () {
     this._loadLocalStorage();

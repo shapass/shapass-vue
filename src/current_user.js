@@ -66,9 +66,15 @@ const CurrentUser = {
     API.setToken(token);
     API.whoAmI(email => {
       if (email !== null && email !== undefined) {
-        this._setLoggedIn(email, token);
-        this.state.loading = false;
-        callback(true);
+        if (Store.hasEncryptToken()) {
+          this._setLoggedIn(email, token);
+          this.state.loading = false;
+          callback(true);
+        } else { // force login if the user has no token saved
+          this.state.loading = false;
+          this._setLoggedOut();
+          callback(false);
+        }
       } else {
         this.state.loading = false;
         callback(false);
