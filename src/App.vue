@@ -165,10 +165,10 @@ export default {
         this.copyToClipboard();
       }
     },
-    save () { // TODO: this is a global save now, the interface should reflect this
+    save () {
       Store.saveCurrentState((r, saved) => {
         if (r) {
-          this.$toasted.show(`Configuration '${saved.service}' saved`);
+          this.$toasted.show(`Configuration '${saved.name}' saved`);
         } else {
           this.$toasted.error(`Error saving`);
         }
