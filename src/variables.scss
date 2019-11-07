@@ -24,7 +24,7 @@ $primary: $turquoise;
 $secondary: $ruby;
 $active: $green;
 $background: $dark-blue;
-$background-highlight: lighten($gray-tv, 5); //rgba(128, 128, 128, 0.3); //$gray;
+$background-highlight: lighten($gray-tv, 10); //rgba(128, 128, 128, 0.3); //$gray;
 $background-dark: $dark; //rgba(0, 0, 0, 0.8);
 
 $font-md: 20px;
@@ -94,12 +94,12 @@ $tooltip-border: 1px solid $tooltip-bg; //$primary;
 $tooltip-font-size: $font-sm;
 
 $notification-border-radius: 0;
-$notification-bg: $persian-green;
+$notification-bg: $turquoise;
 $notification-border: 1px solid $notification-bg;
-$notification-color: $white;
-$notification-success-bg: $persian-green;
+$notification-color: $black;
+$notification-success-bg: $turquoise;
 $notification-success-border: 1px solid $notification-success-bg;
-$notification-success-color: $white;
+$notification-success-color: $black;
 $notification-error-bg: $ruby;
 $notification-error-border: 1px solid $notification-error-bg;
 $notification-error-color: $white;
@@ -391,28 +391,33 @@ label {
   display: inline;
 }
 
-.toasted-container .toasted {
-  margin: 0;
+.toasted-container {
+  text-align: center;
 
-  &.toasted-primary {
-    border-radius: $notification-border-radius;
+  .toasted {
+    margin: 0 auto;
+    max-width: $content-width;
 
-    &.default {
-      background: $notification-bg;
-      border: $notification-border;
-      color: $notification-color;
-    }
+    &.toasted-primary {
+      border-radius: $notification-border-radius;
 
-    &.success {
-      background: $notification-success-bg;
-      border: $notification-success-border;
-      color: $notification-success-color;
-    }
+      &.default {
+        background: $notification-bg;
+        border: $notification-border;
+        color: $notification-color;
+      }
 
-    &.error {
-      background: $notification-error-bg;
-      border: $notification-error-border;
-      color: $notification-error-color;
+      &.success {
+        background: $notification-success-bg;
+        border: $notification-success-border;
+        color: $notification-success-color;
+      }
+
+      &.error {
+        background: $notification-error-bg;
+        border: $notification-error-border;
+        color: $notification-error-color;
+      }
     }
   }
 }
