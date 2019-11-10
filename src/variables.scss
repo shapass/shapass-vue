@@ -24,7 +24,7 @@ $primary: $turquoise;
 $secondary: $ruby;
 $active: $green;
 $background: $dark-blue;
-$background-highlight: lighten($gray-tv, 10); //rgba(128, 128, 128, 0.3); //$gray;
+$background-highlight: lighten($gray-tv, 20); //rgba(128, 128, 128, 0.3); //$gray;
 $background-dark: $dark; //rgba(0, 0, 0, 0.8);
 
 $font-md: 20px;
@@ -107,7 +107,7 @@ $notification-error-bg: $ruby;
 $notification-error-border: 1px solid $notification-error-bg;
 $notification-error-color: $white;
 
-$generated-input-bg: $background-highlight;
+$generated-input-bg: darken($background-highlight, 10);
 $generated-input-color: $primary;
 $generated-input-censored-color: rgba(255, 255, 255, 0.3);
 $generated-input-border: none;
@@ -155,7 +155,7 @@ $vs-selected-border: none;
 // Mobile
 //
 // TODO: move all mobile things to a separate file
-$m-body-background: lighten($body-background, 3);
+$m-body-background: #0c1827; //lighten($body-background, 3);
 $m-font-md: calc(0.5em + 2vmin);
 $m-font-lg: calc(0.7em + 2vmin);
 $m-body-font-size: $m-font-md;

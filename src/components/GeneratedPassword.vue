@@ -108,7 +108,7 @@ export default {
     background: $generated-input-bg;
     border: $generated-input-border;
     color: $generated-input-color;
-    border: 1px solid $background-highlight;
+    border: 1px solid $generated-input-bg;
     padding-top: 8px;
     padding-bottom: 9px;
     font-family: $font-family-titles;
