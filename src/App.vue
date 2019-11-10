@@ -3,11 +3,11 @@
   <v-dialog/>
   <Navbar :currentUser="currentUser" :showLoginSignup="true" :logoutFn="logout" :loading="currentUser.isLoading() || state.saving" />
 
+  <!-- SERVICE SELECTOR (ON BOTH PAGES) -->
   <div class="content-wrapper" id="service-wrapper">
     <div class="container" id="service">
-      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :asButton="currentUser.atLanding()" :onFocus="serviceFocused" :disabled="modalOpened()" />
+      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :asButton="currentUser.atLanding()" :onFocus="serviceFocused" :onBlur="serviceBlurred" :disabled="modalOpened()" :tabindex="1" />
     </div>
-
     <div class="container" id="service-buttons" v-if="currentUser.atApp()">
       <transition name="slide">
         <button class="btn btn-ico btn-save btn-toolbar" @click="save" tabindex="-1" v-shortkey.once="['ctrl', 's']" @shortkey="save" v-tooltip="'Save the selected service in your list of services'" v-if="showSaveButton()">
@@ -20,15 +20,44 @@
         </button>
       </transition>
     </div>
-
   </div>
+
+  <!-- LANDING PAGE -->
   <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
     <div id="start" v-shortkey.once="['enter']" @shortkey="start">Press <kbd>enter</kbd> to start</div>
     <div id="slogan">The password manager that <em>does not</em> store your passwords.</div>
     <div id="logo-landing" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }">
-      <!-- <img src="logo.svg" alt="Shapass" /> -->
     </div>
     <IntroVideo></IntroVideo>
+  </div>
+
+  <!-- APP PAGE -->
+  <div id="content-app" v-if="!currentUser.atLanding()" class="content-wrapper">
+    <div class="container" id="master" v-if="state.service">
+      <PasswordVisibilityInput id="master-input" v-model="state.master" v-on:keyup:enter="enterOnInput" v-focus label="Your master password:" :tabindex="2" />
+    </div>
+    <div class="container" id="generated">
+      <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
+    </div>
+  </div>
+
+  <div class="clearfix content-wrapper" id="toolbar" v-if="state.generated && currentUser.atApp()">
+    <div class="toolbar-left">
+      <button class="btn btn-ico btn-configure btn-toolbar" @click="configure" tabindex="-1" v-shortkey.once="['ctrl', '/']" @shortkey="configure" v-tooltip="'Configure the current service'">
+        <font-awesome-icon icon="cog" />
+        <span>configure</span>
+        <!-- <span v-if="this.$isMobile()">configure</span> -->
+        <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>/</kbd></span> -->
+      </button>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-ico btn-copy btn-toolbar" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
+        <font-awesome-icon icon="copy" />
+        <span>copy</span>
+        <!-- <span v-if="this.$isMobile()">copy</span> -->
+        <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>c</kbd></span> -->
+      </button>
+    </div>
   </div>
 
   <modal name="configurations" @opened="configurations_opened" @closed="configurations_closed" :width="this.$isMobile() ? '100%' : 600" :height="250" :pivotY="0.1" :minHeight="250">
@@ -62,33 +91,6 @@
     </div>
   </modal>
 
-  <div id="content-app" v-if="!currentUser.atLanding()" class="content-wrapper">
-    <div class="container" id="master" v-if="state.service">
-      <PasswordVisibilityInput id="master-input" v-model="state.master" v-on:keyup:enter="enterOnInput" v-focus label="Your master password:" />
-    </div>
-    <div class="container" id="generated">
-      <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
-    </div>
-  </div>
-
-  <div class="clearfix content-wrapper" id="toolbar" v-if="state.generated && currentUser.atApp()">
-    <div class="toolbar-left">
-      <button class="btn btn-ico btn-configure btn-toolbar" @click="configure" tabindex="-1" v-shortkey.once="['ctrl', '/']" @shortkey="configure" v-tooltip="'Configure the current service'">
-        <font-awesome-icon icon="cog" />
-        <span>configure</span>
-        <!-- <span v-if="this.$isMobile()">configure</span> -->
-        <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>/</kbd></span> -->
-      </button>
-    </div>
-    <div class="toolbar-right">
-      <button class="btn btn-ico btn-copy btn-toolbar" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
-        <font-awesome-icon icon="copy" />
-        <span>copy</span>
-        <!-- <span v-if="this.$isMobile()">copy</span> -->
-        <!-- <span v-if="!this.$isMobile()"><kbd>ctrl</kbd>+<kbd>c</kbd></span> -->
-      </button>
-    </div>
-  </div>
 </div>
 </template>
 
@@ -159,6 +161,11 @@ export default {
     },
     serviceFocused() {
       this.currentUser.setAtApp();
+    },
+    // TODO: Hacky, but works.
+    // On vue-select 3.3 there's an attr for this: :select-on-key-codes="[13, 9]"
+    serviceBlurred() {
+      setTimeout(() => { this.focusInput('#master'); }, 50);
     },
     enterOnInput () {
       if (this.currentUser.atApp()) {

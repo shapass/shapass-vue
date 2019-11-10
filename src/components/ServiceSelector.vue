@@ -2,7 +2,7 @@
 <div class="service-selector">
   <label class="typewriter" v-if="!asButton">What is this password for?</label>
 
-  <v-select v-model="service" taggable selectOnTab searchable :clearable="false" :placeholder="placeholder" :options="services" label="name" v-on:input="onSelectChange" v-on:search:focus="focused" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, 'as-button': asButton, 'no-drop': !showDrop }" :disabled="disabled" :filterBy="filterBy" :noDrop="!showDrop">
+  <v-select v-model="service" taggable selectOnTab searchable :clearable="false" :placeholder="placeholder" :options="services" label="name" v-on:input="onInput" v-on:search:focus="focused" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, 'as-button': asButton, 'no-drop': !showDrop }" :disabled="disabled" :filterBy="filterBy" :noDrop="!showDrop" :tabindex="tabindex">
 
     <!-- this should never show up -->
     <template slot="no-options">
@@ -21,15 +21,26 @@ export default {
     services: Array,
     currentUser: Object,
     disabled: Boolean,
-    onFocus: Function,
+    onFocus: {
+      type: Function,
+      default: function () {}
+    },
+    onBlur: {
+      type: Function,
+      default: function () {}
+    },
+    tabindex: {
+      type: Number,
+      default: 1
+    },
     asButton: {
       type: Boolean,
       default: false
     },
   },
   methods: {
-    onSelectChange: function(v) {
-      this.$emit('input', v)
+    onInput: function(v) {
+      this.$emit('input', v);
     },
     focused: function() {
       this.service = null;
@@ -37,8 +48,6 @@ export default {
       if (this.onFocus) {
         this.onFocus();
       }
-    },
-    onBlur: function() {
     },
     filterBy: function(option, label, search) {
       return (label || "").toLowerCase().indexOf(search.toLowerCase()) > -1;
