@@ -13,7 +13,7 @@
     <!--   <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submit" v-model="inputEmail" v-focus v-bind:class="{ wrong: notEmpty(inputEmail) && !isValidInputEmail() }"> -->
     <!-- </div> -->
     <router-link to="/login" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">
-      <button class="btn">Login</button>
+      <button class="btn" tabindex="1">Login</button>
     </router-link>
     <!-- <button class="btn btn-sumit" id="btn-submit" @click="submit" :disabled="!canSubmit()">Send</button> -->
     <!-- <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle> -->

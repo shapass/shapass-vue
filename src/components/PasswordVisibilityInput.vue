@@ -2,7 +2,7 @@
 <div class="password-visibility-input">
   <label>{{ label }}</label>
 
-  <input :type="inputType" spellcheck="false" autocomplete="new-password" v-model="internalValue" v-on:keyup.enter="onEnter" :placeholder="placeholder" :tabindex="tabindex">
+  <input :type="inputType" spellcheck="false" autocomplete="new-password" v-model="internalValue" v-on:keyup.enter="onEnter" :placeholder="placeholder" :tabindex="tabindex != -9 ? tabindex : ''">
   <PasswordVisibilityToggle v-model="isVisible" />
 </div>
 </template>
@@ -18,7 +18,7 @@ export default {
     placeholder: String,
     tabindex: {
       type: Number,
-      default: 1
+      default: -9
     },
   },
   components: {

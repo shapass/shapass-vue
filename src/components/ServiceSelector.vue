@@ -214,7 +214,7 @@ export default {
       border: 1px solid $primary;
       transition: background $transition-speed-default linear;
 
-      &:hover, &:active {
+      &:hover, &:active, &:focus {
         background: $primary;
         color: $primary;
         border-color: $primary;

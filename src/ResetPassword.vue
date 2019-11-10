@@ -11,8 +11,10 @@
       <label class="typewriter" for="master-input">Your email</label>
       <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitReset" v-model="inputEmail" v-focus v-bind:class="{ wrong: notEmpty(inputEmail) && !isValidInputEmail() }">
     </div>
-    <button class="btn btn-reset-password" id="reset-password-submit" @click="submitReset" :disabled="!canSubmitReset()">Send</button>
-    <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+    <div class="container">
+      <button class="btn btn-reset-password" id="reset-password-submit" @click="submitReset" :disabled="!canSubmitReset()">Send</button>
+      <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+    </div>
   </div>
 
   <div class="content-wrapper" v-if="token">
@@ -20,18 +22,23 @@
       <h3>Choose a new password</h3>
     </div>
     <div class="container" id="master">
-      <PasswordVisibilityInput id="master-input" label="Your new master password" v-on:keyup:enter="submitSet" v-model="master" v-focus></PasswordVisibilityInput>
+      <PasswordVisibilityInput id="master-input" label="Your new master password" v-on:keyup:enter="submitSet" v-model="master" v-focus :tabindex="1"></PasswordVisibilityInput>
     </div>
     <div class="container" id="master-confirmation">
       <label class="typewriter" for="master-input">Confirm your new master password</label>
-      <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="masterConfirmation" :class="{ 'wrong-live': master && !isConfirmationCorrect() }">
+      <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="masterConfirmation" :class="{ 'wrong-live': master && !isConfirmationCorrect() }" tabindex="2">
     </div>
     <div class="container" id="generated">
       <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
     </div>
-    <button class="btn btn-set-password" id="set-password-submit" @click="submitSet" :disabled="!canSubmitSet()">Set password</button>
-    <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
-    <router-link to="/reset-password">Not working?<br/>Request a new password reset e-mail</router-link>
+    <div class="container">
+      <button class="btn btn-set-password" id="set-password-submit" @click="submitSet" :disabled="!canSubmitSet()" tabindex="3">Set password</button>
+      <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+      <div class="help-links">
+        <span>Need help?</span>
+        <router-link to="/reset-password" tabindex="4">Request a new password reset e-mail</router-link>
+      </div>
+    </div>
   </div>
 </div>
 </template>
@@ -155,11 +162,24 @@ button {
   float: left;
 }
 
-a {
-  float: right;
+.help-links {
+  display: block;
+  float: left;
   font-size: $font-sm;
-  margin-top: 0px;
-  text-align: right;
+  margin-top: 5px;
+  clear: both;
+  margin-top: 40px;
+
+  span {
+    color: $font-color-faded;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  a {
+    display: block;
+  }
 }
 
 </style>

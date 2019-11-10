@@ -43,7 +43,7 @@
 
   <div class="clearfix content-wrapper" id="toolbar" v-if="state.generated && currentUser.atApp()">
     <div class="toolbar-left">
-      <button class="btn btn-ico btn-configure btn-toolbar" @click="configure" tabindex="-1" v-shortkey.once="['ctrl', '/']" @shortkey="configure" v-tooltip="'Configure the current service'">
+      <button class="btn btn-ico btn-configure btn-toolbar" @click="configure" tabindex="3" v-shortkey.once="['ctrl', '/']" @shortkey="configure" v-tooltip="'Configure the current service'">
         <font-awesome-icon icon="cog" />
         <span>configure</span>
         <!-- <span v-if="this.$isMobile()">configure</span> -->
@@ -51,7 +51,7 @@
       </button>
     </div>
     <div class="toolbar-right">
-      <button class="btn btn-ico btn-copy btn-toolbar" @click="copyToClipboard" tabindex="-1" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
+      <button class="btn btn-ico btn-copy btn-toolbar" @click="copyToClipboard" tabindex="4" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
         <font-awesome-icon icon="copy" />
         <span>copy</span>
         <!-- <span v-if="this.$isMobile()">copy</span> -->
