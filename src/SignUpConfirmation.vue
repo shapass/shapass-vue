@@ -75,6 +75,10 @@ export default {
 p {
   font-family: $font-family-text;
   display: block;
+
+  b {
+    color: $primary;
+  }
 }
 
 .btn {

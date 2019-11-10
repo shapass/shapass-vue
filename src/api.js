@@ -180,6 +180,16 @@ const API = {
       }
     });
   },
+  resendVerification (email, callback) {
+    var data = { email: email };
+    this.request('resendverification', 'post', data, (r) => {
+      if (r) {
+        callback(true);
+      } else {
+        callback(false);
+      }
+    });
+  },
 };
 
 export default API;

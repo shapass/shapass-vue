@@ -14,6 +14,7 @@ import Utils from './utils.js';
 
 import App from './App.vue';
 import ResetPassword from './ResetPassword.vue';
+import ResendConfirmationEmail from './ResendConfirmationEmail.vue';
 import SignUp from './SignUp.vue';
 import SignUpConfirmation from './SignUpConfirmation.vue';
 import Login from './Login.vue';
@@ -141,6 +142,7 @@ Vue.mixin({
 const routes = [
   { path: '/', component: App },
   { path: '/reset-password', component: ResetPassword },
+  { path: '/resend-confirmation', component: ResendConfirmationEmail },
   { path: '/signup', component: SignUp },
   { path: '/confirmation', component: SignUpConfirmation },
   { path: '/login', component: Login },

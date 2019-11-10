@@ -18,8 +18,12 @@
     </div>
     <div class="container">
       <button class="btn btn-login" id="login-submit" @click="submit" :disabled="!canSubmit()">Login</button>
-      <router-link to="/reset-password" v-if="currentUser.isLoggingIn()" class="forgot-password">Forgot your password?</router-link>
       <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+      <div class="help-links">
+        <span>Need help?</span>
+        <router-link to="/reset-password">Forgot your password?</router-link>
+        <router-link to="/resend-confirmation">Did not receive your confirmation email?</router-link>
+      </div>
     </div>
   </div>
 </div>
@@ -111,10 +115,24 @@ export default {
 
 <style scoped lang="scss">
 
-a.forgot-password {
-  float: right;
+.help-links {
+  display: block;
+  float: left;
   font-size: $font-sm;
   margin-top: 5px;
+  clear: both;
+  margin-top: 40px;
+
+  span {
+    color: $font-color-faded;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  a {
+    display: block;
+  }
 }
 
 #login-submit {

@@ -35,6 +35,9 @@ $font-weight-normal: 400;
 $font-weight-bold: 700;
 $font-family-titles: 'Source Code Pro', monospace;
 $font-family-text: 'Open Sans', sans-serif;
+$font-color: $white;
+$font-color-highlight: $primary;
+$font-color-faded: $gray;
 
 $transition-speed-default: 0.3s;
 $transition-speed-fast: 0.2s;
@@ -46,7 +49,7 @@ $content-side-padding: 20px;
 $body-font-family: $font-family-text;
 //$font-family-aux: 'Roboto', Helvetica, Arial, sans-serif;
 $body-background: $background; //rgba(0, 0, 0, 1);
-$body-font-color: $white;//$primary;
+$body-font-color: $font-color;//$primary;
 $body-font-size: $font-md;
 $label-font-size: $font-sm;
 $label-font-family: $font-family-text;

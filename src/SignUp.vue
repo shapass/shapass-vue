@@ -23,6 +23,11 @@
     <div class="container">
       <button class="btn btn-signup" id="signup-submit" @click="submit" :disabled="!canSubmit()">Register</button>
       <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+      <div class="help-links">
+        <span>Need help?</span>
+        <router-link to="/reset-password">Forgot your password?</router-link>
+        <router-link to="/resend-confirmation">Did not receive your confirmation email?</router-link>
+      </div>
     </div>
   </div>
 </div>
@@ -132,6 +137,26 @@ export default {
 .loader {
   float: left;
   margin-left: 20px;
+}
+
+.help-links {
+  display: block;
+  float: left;
+  font-size: $font-sm;
+  margin-top: 5px;
+  clear: both;
+  margin-top: 40px;
+
+  span {
+    color: $font-color-faded;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  a {
+    display: block;
+  }
 }
 
 </style>

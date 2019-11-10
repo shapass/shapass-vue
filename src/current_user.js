@@ -151,6 +151,14 @@ const CurrentUser = {
     });
   },
 
+  resendVerification (email, callback) {
+    this.state.loading = true;
+    API.resendVerification(email, (r) => {
+      this.state.loading = false;
+      callback(r);
+    });
+  },
+
 
   //
   // Internal methods
