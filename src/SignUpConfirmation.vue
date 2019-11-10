@@ -29,15 +29,12 @@
 
 <script>
 import Navbar from './components/Navbar.vue'
-import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
 import CurrentUser from './current_user.js'
-import { Configs } from './config.js'
 
 export default {
   name: 'signup-confirmation',
   components: {
-    Navbar,
-    InfiniteLoadingCircle
+    Navbar
   },
   props: {
   },

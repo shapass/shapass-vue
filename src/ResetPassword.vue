@@ -22,10 +22,10 @@
       <h3>Choose a new password</h3>
     </div>
     <div class="container" id="master">
-      <PasswordVisibilityInput id="master-input" label="Your new master password" v-on:keyup:enter="submitSet" v-model="master" v-focus :tabindex="1"></PasswordVisibilityInput>
+      <PasswordVisibilityInput id="master-input" label="Your new password" v-on:keyup:enter="submitSet" v-model="master" v-focus :tabindex="1"></PasswordVisibilityInput>
     </div>
     <div class="container" id="master-confirmation">
-      <label class="typewriter" for="master-input">Confirm your new master password</label>
+      <label class="typewriter" for="master-input">Confirm your new password</label>
       <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submitSet" v-model="masterConfirmation" :class="{ 'wrong-live': master && !isConfirmationCorrect() }" tabindex="2">
     </div>
     <div class="container" id="generated">

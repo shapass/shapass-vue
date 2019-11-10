@@ -23,18 +23,12 @@
 
 <script>
 import Navbar from './components/Navbar.vue'
-import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
-import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
-import GeneratedPassword from './components/GeneratedPassword.vue'
-import Store from './store.js'
 import CurrentUser from './current_user.js'
-import { Configs } from './config.js'
 
 export default {
   name: 'resend-confirmation',
   components: {
-    Navbar,
-    InfiniteLoadingCircle
+    Navbar
   },
   props: {
   },

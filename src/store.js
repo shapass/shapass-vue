@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { Configs } from './config.js';
 import API from './api.js';
 import Utils from './utils.js';
@@ -133,7 +134,7 @@ const Store = {
 
   // checks if the user has an encryptToken stored in localStorage
   // won't load the data, just check it
-  hasEncryptToken (master, password) {
+  hasEncryptToken () {
     var l = JSON.parse(localStorage.shapassData || null) || {};
     return (l.encryptToken !== undefined && l.encryptToken !== null);
   },
@@ -191,8 +192,7 @@ const Store = {
       this.state.servicesForSelect = Object.keys(services).sort().map(function(key) {
         return Service.attributes(services[key]);
       });
-      console.log('-- setting services from', services);
-      console.log('-- set services to', this.state.servicesForSelect);
+      Vue.$log.info('Set servicesForSelect from', services, 'to', this.state.servicesForSelect);
     }
   },
 

@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { Configs } from './config.js';
 import Utils from './utils.js';
 import axios from 'axios';
@@ -26,7 +27,7 @@ const API = {
 
   request (method, httpMethod, data, callback) {
     var url = `${Configs.API_URL}/${method}`;
-    console.log("Sending request", url, httpMethod, data);
+    Vue.$log.info("Sending request", url, httpMethod, data);
     axios({
       method: httpMethod,
       url: url,
@@ -35,10 +36,10 @@ const API = {
         'Content-Type': 'application/json'
       }
     }).then(response => {
-      console.log("Success response:", url, response.data);
+      Vue.$log.info("Success response:", url, response.data);
       callback(response.data.Status === 'OK', response.data);
     }).catch(error => {
-      console.log("Error response:", url, error);
+      Vue.$log.info("Error response:", url, error);
       callback(false, null, error);
     });
   },

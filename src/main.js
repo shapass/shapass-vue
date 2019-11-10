@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMobileDetection from "vue-mobile-detection";
 import VTooltip from 'v-tooltip';
 import VModal from 'vue-js-modal';
+import VueLogger from 'vuejs-logger';
 
 import Utils from './utils.js';
 
@@ -18,6 +19,8 @@ import ResendConfirmationEmail from './ResendConfirmationEmail.vue';
 import SignUp from './SignUp.vue';
 import SignUpConfirmation from './SignUpConfirmation.vue';
 import Login from './Login.vue';
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 Vue.use(VueRouter);
 
@@ -47,6 +50,17 @@ Vue.use(require('vue-shortkey'));
 Vue.use(VueMobileDetection);
 Vue.use(VTooltip, { defaultDelay: 500 });
 Vue.use(VModal, { dialog: true });
+
+const options = {
+  isEnabled: true,
+  logLevel : isProduction ? 'error' : 'debug',
+  stringifyArguments : false,
+  showLogLevel : true,
+  showMethodName : true,
+  separator: '|',
+  showConsoleColors: true
+};
+Vue.use(VueLogger, options);
 
 Vue.directive('focus', {
   inserted: function (el, e) {
@@ -157,5 +171,4 @@ var app = new Vue({
   router
 }).$mount('#content');
 
-// console.log("mobile?", app.$isMobile());
 VTooltip.enabled = !app.$isMobile(); //window.innerWidth > 768;
