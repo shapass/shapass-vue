@@ -91,6 +91,10 @@
     </div>
   </modal>
 
+  <!-- FAQ (AT LANDING PAGE) -->
+  <div v-if="currentUser.atLanding()" class="content-wrapper">
+    <FAQ></FAQ>
+  </div>
 </div>
 </template>
 
@@ -103,6 +107,7 @@ import Store from './store.js'
 import CurrentUser from './current_user.js'
 import GeneratedPassword from './components/GeneratedPassword.vue'
 import IntroVideo from './components/IntroVideo.vue'
+import FAQ from './components/FAQ.vue'
 
 export default {
   name: 'app',
@@ -112,6 +117,7 @@ export default {
     PasswordVisibilityInput,
     GeneratedPassword,
     IntroVideo,
+    FAQ,
   },
   props: {
   },
@@ -500,7 +506,6 @@ button.btn-toolbar {
 #service {
   flex-grow: 1;
   transition: flex 500ms ease-in-out;
-
 }
 
 #service-buttons {
@@ -523,6 +528,19 @@ button.btn-toolbar {
 .slide-enter, .slide-leave-to {
   transform: translateX(50px);
   opacity: 0;
+}
+
+#faq {
+  clear: both;
+  margin-top: 200px;
+  margin-bottom: 100px;
+  padding-top: 40px;
+  border-top: 1px dashed $background-highlight;
+
+  @include mobile {
+    margin-top: 80px;
+  }
+
 }
 
 </style>
