@@ -27,10 +27,11 @@ $background: $dark-blue;
 $background-highlight: lighten($gray-tv, 20); //rgba(128, 128, 128, 0.3); //$gray;
 $background-dark: $dark; //rgba(0, 0, 0, 0.8);
 
-$font-md: 20px;
-$font-lg: $font-md + 4px;
-$font-sm: $font-md - 6px;
-$font-xs: $font-md - 8px;
+$font-md: 18px;
+$font-lg: $font-md + 6px;
+$font-md-sm: $font-md - 2px;
+$font-sm: $font-md - 4px;
+$font-xs: $font-md - 6px;
 $font-weight-normal: 400;
 $font-weight-bold: 700;
 $font-family-titles: 'Source Code Pro', monospace;
@@ -256,12 +257,15 @@ body {
 
 a {
   color: $primary;
-  text-decoration: none;
+  text-decoration: underline;
   transition: $transition-fast;
+  //border-bottom: 1px dashed $primary;
 
-  &:hover, &:active {
+  &:hover, &:active, &:focus {
     color: $secondary;
     text-decoration: underline;
+    //border-bottom-color: $secondary;
+    //border-bottom-style: solid;
   }
 }
 
@@ -581,7 +585,8 @@ img {
 }
 
 h1, h2, h3, h4, h5, h6, h7, h8 {
-  font-family: $font-family-titles;
+  //font-family: $font-family-titles;
+  font-family: $font-family-text;
   color: $primary;
 }
 
@@ -664,5 +669,5 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
 }
 
 [data-modal="configurations"] .v--modal {
-  top: 80px !important;
+  top: 65px !important;
 }
