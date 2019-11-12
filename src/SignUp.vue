@@ -96,13 +96,6 @@ export default {
     isConfirmationCorrect () {
       return this.notEmpty(this.master) && this.master === this.masterConfirmation;
     },
-    setStateMaster () {
-      if (this.isConfirmationCorrect()) {
-        this.state.master = this.master;
-      } else {
-        this.state.master = null;
-      }
-    }
   },
   computed: {
   },
@@ -112,10 +105,7 @@ export default {
   },
   watch: {
     master () {
-      this.setStateMaster();
-    },
-    masterConfirmation () {
-      this.setStateMaster();
+      this.state.master = this.master;
     },
   },
   beforeRouteLeave (to, from, next) {
