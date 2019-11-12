@@ -7,6 +7,7 @@
       <h3>Didn't receive your confirmation email?</h3>
       <!-- <span>Enter your email below and we'll send you a confirmation email if your registration is still pending.</span> -->
       <span>Just sign into your account and we will send you another one.</span>
+      <span class="note"><b>Note:</b> If you just tried it please wait a few minutes. We won't send you more than one email every few minutes to prevent spam.</span>
     </div>
     <!-- <div class="container" id="email"> -->
     <!--   <label class="typewriter" for="master-input">Your email</label> -->
@@ -78,6 +79,13 @@ button {
 
 #email {
   padding-bottom: 30px;
+}
+
+.note {
+  display: block;
+  margin-top: 20px;
+  color: $font-color-faded;
+  font-size: $font-sm;
 }
 
 </style>
