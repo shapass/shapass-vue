@@ -79,9 +79,9 @@ const API = {
     var data = { email: email, password: password };
     this.request('login', 'post', data, (r, d) => {
       if (r) {
-        callback(true, d.Token);
+        callback(true, d.Token, d.LoginCount);
       } else {
-        callback(false, null, d !== null ? d.Code : null);
+        callback(false, null, null, d !== null ? d.Code : null);
       }
     });
   },

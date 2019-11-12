@@ -19,6 +19,7 @@ import ResendConfirmationEmail from './ResendConfirmationEmail.vue';
 import SignUp from './SignUp.vue';
 import SignUpConfirmation from './SignUpConfirmation.vue';
 import Login from './Login.vue';
+import Welcome from './Welcome.vue';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -160,6 +161,7 @@ const routes = [
   { path: '/signup', component: SignUp },
   { path: '/confirmation', component: SignUpConfirmation },
   { path: '/login', component: Login },
+  { path: '/welcome', component: Welcome },
 ];
 
 const router = new VueRouter({

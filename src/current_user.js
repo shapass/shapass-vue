@@ -31,7 +31,7 @@ const CurrentUser = {
 
   login (email, masterPassword, password, callback) {
     this.state.loading = true;
-    API.login(email, password, (r, token, code) => {
+    API.login(email, password, (r, token, loginCount, code) => {
       if (r) {
         Store.generateEncryptToken(masterPassword, password);
         this._setLoggedIn(email, token);
@@ -41,7 +41,7 @@ const CurrentUser = {
       }
       this.state.loading = false;
       if (callback) {
-        callback(r, code);
+        callback(r, loginCount == 0, code);
       }
     });
   },

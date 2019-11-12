@@ -70,14 +70,18 @@ export default {
     submit () {
       if (this.canSubmit()) {
         this.withDisabledButton("#login-submit", (done) => {
-          this.currentUser.login(this.inputEmail, this.state.master, this.state.generated, (r, code) => {
+          this.currentUser.login(this.inputEmail, this.state.master, this.state.generated, (r, firstAccess, code) => {
             this.state.service = Configs.SHAPASS_SERVICE; // because login() clears the state
             if (r) {
               Store.clearState();
               this.currentUser.setAtApp();
               this.submitted = true;
-              this.$router.push('/')
-              this.$toasted.success('Welcome!');
+              if (firstAccess) {
+                this.$router.push('/welcome')
+              } else {
+                this.$router.push('/')
+                this.$toasted.success('Welcome!');
+              }
             } else {
               if (code == API.Errors.CodeIncorrectLoginInfo) {
                 this.$toasted.error('Incorrect email or password, try again');
