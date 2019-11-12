@@ -75,7 +75,7 @@ export default {
     }
   },
   mounted () {
-    this.service = null;
+    this.service = this.value;
   },
   watch: {
     value: function(val) {

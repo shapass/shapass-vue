@@ -278,6 +278,8 @@ export default {
     }
   },
   mounted () {
+    this.state.service = null;
+    this.currentUser.setAtLanding();
     Store.reloadFromLocalStorage();
     this.currentUser.checkLoggedIn(r => {
       if (r) {
