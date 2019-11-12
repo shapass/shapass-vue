@@ -95,7 +95,7 @@ export default {
     submitSet () {
       if (this.canSubmitSet()) {
         this.withDisabledButton("#set-password-submit", (done) => {
-          this.currentUser.setPassword(this.inputEmail, this.token, this.state.master, (r) => {
+          this.currentUser.setPassword(this.inputEmail, this.token, this.state.generated, (r) => {
             if (r) {
               this.$router.push('/')
               this.$toasted.success('Password reset successfully!');
