@@ -226,21 +226,27 @@ export default {
     },
     configurations_opened () {
       this.showConfigs = true;
+      this.stateBeforeConfigs = Store.fromState();
     },
     configurations_closed () {
       this.showConfigs = false;
-      this.configurationsCancel(); // to cancel if didn't click the btn
+      Store.toState(this.stateBeforeConfigs);
     },
     configurationsCancel () {
-      Store.reloadFromLocalStorage();
-      Store.onServiceChanged(this.state.service);
       this.$modal.hide('configurations');
     },
     configurationsSave () {
-      Store.saveCurrentState(() => {
+      if (Store.isCurrentServiceSaved()) {
+        Store.saveCurrentState(() => {
+          this.stateBeforeConfigs = Store.fromState();
+          this.$toasted.success('Configurations saved!');
+          this.$modal.hide('configurations');
+        });
+      } else {
+        this.stateBeforeConfigs = Store.fromState();
         this.$toasted.success('Configurations saved!');
         this.$modal.hide('configurations');
-      });
+      }
     },
     modalOpened () {
       return this.showConfigs;

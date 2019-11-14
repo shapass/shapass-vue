@@ -153,6 +153,14 @@ const Store = {
     }
   },
 
+  fromState () {
+    return Service.fromState(this.state);
+  },
+
+  toState (attrs) {
+    return Service.toState(this.state, attrs);
+  },
+
 
   // INTERNAL
 
@@ -246,6 +254,14 @@ const Service = {
       prefix: state.prefix,
       metadata: state.metadata,
     };
+  },
+
+  toState (state, attrs) {
+    state.service = attrs.name;
+    state.outputLength = attrs.outputLength;
+    state.suffix = attrs.suffix;
+    state.algorithm = attrs.algorithm;
+    state.metadata = attrs.metadata;
   },
 
   attributes (service) {

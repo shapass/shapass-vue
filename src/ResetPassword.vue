@@ -86,7 +86,7 @@ export default {
             // we show a success msg even if there was an error in the API
             // to prevent people from figuring our what emails are registered
             this.$router.push('/')
-            this.$toasted.success('Check you e-mail for instructions!');
+            this.$toasted.success('Check your email for instructions!');
             done();
           });
         });
