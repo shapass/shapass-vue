@@ -82,11 +82,13 @@ export default {
     submitReset () {
       if (this.canSubmitReset()) {
         this.withDisabledButton("#reset-password-submit", (done) => {
-          this.currentUser.resetPassword(this.inputEmail, () => {
-            // we show a success msg even if there was an error in the API
-            // to prevent people from figuring our what emails are registered
-            this.$router.push('/')
-            this.$toasted.success('Check your email for instructions!');
+          this.currentUser.resetPassword(this.inputEmail, (r, code) => {
+            if (r) {
+              this.$router.push('/')
+              this.$toasted.success('Check your email for instructions!');
+            } else {
+              this.$toasted.error(`There was an error setting your password, please try again later or contact us (code: ${code})`);
+            }
             done();
           });
         });
@@ -95,13 +97,12 @@ export default {
     submitSet () {
       if (this.canSubmitSet()) {
         this.withDisabledButton("#set-password-submit", (done) => {
-          this.currentUser.setPassword(this.inputEmail, this.token, this.state.generated, (r) => {
+          this.currentUser.setPassword(this.email, this.token, this.state.generated, (r, code) => {
             if (r) {
-              this.$router.push('/')
+              this.$router.push('/login')
               this.$toasted.success('Password reset successfully!');
             } else {
-              this.$router.push('/reset-password')
-              this.$toasted.error('There was an error setting your password, please try again');
+              this.$toasted.error(`There was an error setting your password, please try again later or contact us (code: ${code})`);
             }
             done();
           });
@@ -114,18 +115,14 @@ export default {
     isConfirmationCorrect () {
       return this.notEmpty(this.master) && this.master === this.masterConfirmation;
     },
-    setStateMaster () {
-      if (this.isConfirmationCorrect()) {
-        this.state.master = this.master;
-      } else {
-        this.state.master = null;
-      }
-    }
   },
   computed: {
     token () {
       return this.$route.query.t;
-    }
+    },
+    email () {
+      return this.$route.query.email;
+    },
   },
   mounted () {
     this.state.service = Configs.SHAPASS_SERVICE;
@@ -133,10 +130,7 @@ export default {
   },
   watch: {
     master () {
-      this.setStateMaster();
-    },
-    masterConfirmation () {
-      this.setStateMaster();
+      this.state.master = this.master;
     },
   },
   beforeRouteLeave (to, from, next) {

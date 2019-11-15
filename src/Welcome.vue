@@ -9,7 +9,7 @@
       <p>Before you start, there is a small list of <em>extremely important</em> things you need to know:</p>
       <ul>
         <li>
-          All the data we store in our servers is cryptographed in your browser using your login password. This is great for you because we don't have access to your information. However, if you forget your password we won't be able to recover your data. So do not forget it!
+          All the data we store in our servers is cryptographed in your browser using your login password. This is great for you because we don't have access to your information. However, if you forget your password we won't be able to recover your data. So do not forget it! It can help if you:
           <span class="note">Write it down in a piece of paper and put it in a safe place.</span>
           <span class="note">Don't use it as your master password.</span>
         </li>

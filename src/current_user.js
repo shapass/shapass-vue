@@ -138,16 +138,16 @@ const CurrentUser = {
 
   resetPassword (email, callback) {
     this.state.loading = true;
-    API.resetPassword(email, (r) => {
+    API.resetPassword(email, (r, code) => {
       this.state.loading = false;
-      callback(r);
+      callback(r, code);
     });
   },
   setPassword (email, token, password, callback) {
     this.state.loading = true;
-    API.setPassword(email, token, password, (r) => {
+    API.setPassword(email, token, password, (r, code) => {
       this.state.loading = false;
-      callback(r);
+      callback(r, code);
     });
   },
 
