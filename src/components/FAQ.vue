@@ -23,6 +23,7 @@
           <li>We don't store your passwords nor the information of the services you use.</li>
           <li>You don't have to trust us on this, you can verify in your browser what we have access to.</li>
           <li>It's based on an open algorithm, so you are not forever depending on us. We're here to help, not lock you up on our service.</li>
+          <li>It's simple and we'll keep it this way. We won't offer you dozens of plans, options to choose from, complicated stuff you don't want nor need.</li>
           <li>We use it, we built it for ourselves and we'll continually make it better.</li>
         </ul>
       </div>
@@ -93,7 +94,17 @@
         <p>We don't want you locked up on our service. We want Shapass to help you and want you to use it because it does so.</p>
       </div>
     </li>
-</ul>
+
+    <li data-collapse class="collapsed">
+      <h3 data-collapse-toggle v-on:click="collapse">How can I contact you?</h3>
+      <div data-collapse-content>
+        <ul>
+          <li>Send us a message on Twitter <a href="https://twitter.com/shapassed" target="_blank">@shapassed</a>; or</li>
+          <li>Send an email to <a href="mailto:contact@shapass.com">contact@shapass.com</a>.</li>
+        </ul>
+      </div>
+    </li>
+  </ul>
 </div>
 </template>
 
