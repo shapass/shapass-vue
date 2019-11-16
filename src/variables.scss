@@ -19,6 +19,7 @@ $accent: $turquoise;
 $bright: $white;
 $persian-green: #00b295;
 $ruby: #d81159;
+$twitter-blue: #1ea0f2;
 
 $primary: $turquoise;
 $secondary: $ruby;
@@ -230,7 +231,7 @@ body {
   @include mobile { background: $m-body-background; }
 }
 
-#content {
+#site {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -238,6 +239,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
+}
+
+.site-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+#content {
+  flex: 1 0 auto;
 }
 
 .content-wrapper {

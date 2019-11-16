@@ -38,7 +38,6 @@
         <blockquote>
         <kbd>shapass(twitterbananabread)</kbd> = <kbd>jarSzI8XV4UhEi443jRTYL3pPSoxPVmg</kbd>
         </blockquote>
-        </p>
         <p>The <kbd>shapass()</kbd> function applies a <a href="https://en.wikipedia.org/wiki/SHA-2" target="_blank">SHA256</a> function to the input and then converts the output to <a href="https://en.wikipedia.org/wiki/Base64" target="_blank">Base64</a>. With the default configurations the generated password will have 32 characters. There are a few more technical details on how this is done, we will write about it in the future.</p>
         <p>The way SHA functions work makes it virtually impossible to find out the inputs by having only the output, so no one will ever be able to guess your master password even if your generated password is leaked by some website. Not even by having both the output and the identifier you used.</p>
       </div>

@@ -1,7 +1,8 @@
 <template>
-<div id="login" v-bind:class="{ mobile: this.$isMobile() }">
+<div id="login" v-bind:class="{ mobile: this.$isMobile() }" class="site-wrapper">
   <Navbar :currentUser="currentUser" :showLoginSignup="false" :loading="currentUser.isLoading()" />
 
+  <div id="content">
   <div class="content-wrapper">
     <div class="container" id="service">
       <ServiceSelector v-model="state.service" :currentUser="currentUser" :disabled="true" :asButton="false" />
@@ -26,11 +27,15 @@
       </div>
     </div>
   </div>
+  </div>
+
+  <Footer />
 </div>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 import ServiceSelector from './components/ServiceSelector.vue'
 import GeneratedPassword from './components/GeneratedPassword.vue'
 import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
@@ -44,6 +49,7 @@ export default {
   name: 'login',
   components: {
     Navbar,
+    Footer,
     ServiceSelector,
     InfiniteLoadingCircle,
     PasswordVisibilityInput,
@@ -146,6 +152,10 @@ export default {
 .loader {
   float: left;
   margin-left: 20px;
+}
+
+.content-wrapper {
+  flex: 1 0 auto;
 }
 
 </style>

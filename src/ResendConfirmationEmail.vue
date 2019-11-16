@@ -1,7 +1,8 @@
 <template>
-<div id="resend-confirmation" v-bind:class="{ mobile: this.$isMobile() }">
+<div id="resend-confirmation" v-bind:class="{ mobile: this.$isMobile() }" class="site-wrapper">
   <Navbar :currentUser="currentUser" :showLoginSignup="false" :loading="currentUser.isLoading()" />
 
+  <div id="content">
   <div class="content-wrapper">
     <div class="container" id="label">
       <h3>Didn't receive your confirmation email?</h3>
@@ -19,17 +20,22 @@
     <!-- <button class="btn btn-sumit" id="btn-submit" @click="submit" :disabled="!canSubmit()">Send</button> -->
     <!-- <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle> -->
   </div>
+  </div>
+
+  <Footer />
 </div>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 import CurrentUser from './current_user.js'
 
 export default {
   name: 'resend-confirmation',
   components: {
-    Navbar
+    Navbar,
+    Footer,
   },
   props: {
   },

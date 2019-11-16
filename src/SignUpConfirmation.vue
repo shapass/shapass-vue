@@ -1,6 +1,8 @@
 <template>
-<div id="signup-confirmation" v-bind:class="{ mobile: this.$isMobile() }">
+<div id="signup-confirmation" v-bind:class="{ mobile: this.$isMobile() }" class="site-wrapper">
   <Navbar :currentUser="currentUser" :showLoginSignup="false" :loading="currentUser.isLoading()" />
+
+  <div id="content">
 
   <div class="content-wrapper">
     <div class="container" id="label">
@@ -24,17 +26,22 @@
       </div>
     </div>
   </div>
+  </div>
+
+  <Footer />
 </div>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 import CurrentUser from './current_user.js'
 
 export default {
   name: 'signup-confirmation',
   components: {
-    Navbar
+    Navbar,
+    Footer,
   },
   props: {
   },

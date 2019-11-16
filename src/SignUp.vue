@@ -1,6 +1,8 @@
 <template>
-<div id="signup" v-bind:class="{ mobile: this.$isMobile() }">
+<div id="signup" v-bind:class="{ mobile: this.$isMobile() }" class="site-wrapper">
   <Navbar :currentUser="currentUser" :showLoginSignup="false" :loading="currentUser.isLoading()" />
+
+  <div id="content">
 
   <div class="content-wrapper">
     <div class="container" id="service">
@@ -29,12 +31,17 @@
         <router-link to="/resend-confirmation">Did not receive your confirmation email?</router-link>
       </div>
     </div>
+
   </div>
+  </div>
+
+  <Footer />
 </div>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 import ServiceSelector from './components/ServiceSelector.vue'
 import GeneratedPassword from './components/GeneratedPassword.vue'
 import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
@@ -48,6 +55,7 @@ export default {
   name: 'signup',
   components: {
     Navbar,
+    Footer,
     ServiceSelector,
     InfiniteLoadingCircle,
     PasswordVisibilityInput,

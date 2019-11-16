@@ -1,6 +1,8 @@
 <template>
-<div id="welcome" v-bind:class="{ mobile: this.$isMobile() }">
+<div id="welcome" v-bind:class="{ mobile: this.$isMobile() }" class="site-wrapper">
   <Navbar :currentUser="currentUser" :showLoginSignup="false" :loading="currentUser.isLoading()" />
+
+  <div id="content">
 
   <div class="content-wrapper">
     <div class="container" id="label">
@@ -21,17 +23,22 @@
       <button class="btn" tabindex="1">Get started!</button>
     </router-link>
   </div>
+  </div>
+
+  <Footer />
 </div>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 import CurrentUser from './current_user.js'
 
 export default {
   name: 'welcome',
   components: {
-    Navbar
+    Navbar,
+    Footer,
   },
   props: {
   },

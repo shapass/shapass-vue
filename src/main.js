@@ -171,6 +171,6 @@ const router = new VueRouter({
 
 var app = new Vue({
   router
-}).$mount('#content');
+}).$mount('#site');
 
 VTooltip.enabled = !app.$isMobile(); //window.innerWidth > 768;

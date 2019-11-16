@@ -1,7 +1,9 @@
 <template>
-<div id="app" v-bind:class="{ mobile: this.$isMobile() }">
+<div id="app" v-bind:class="{ mobile: this.$isMobile() }" class="site-wrapper">
   <v-dialog/>
   <Navbar :currentUser="currentUser" :showLoginSignup="true" :logoutFn="logout" :loading="currentUser.isLoading() || state.saving" />
+
+  <div id="content">
 
   <!-- SERVICE SELECTOR (ON BOTH PAGES) -->
   <div class="content-wrapper" id="service-wrapper">
@@ -95,11 +97,16 @@
   <div v-if="currentUser.atLanding()" class="content-wrapper">
     <FAQ></FAQ>
   </div>
+
+  </div>
+
+  <Footer />
 </div>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 import ServiceSelector from './components/ServiceSelector.vue'
 import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
 import { Configs } from './config.js'
@@ -113,6 +120,7 @@ export default {
   name: 'app',
   components: {
     Navbar,
+    Footer,
     ServiceSelector,
     PasswordVisibilityInput,
     GeneratedPassword,
@@ -541,7 +549,7 @@ button.btn-toolbar {
 #faq {
   clear: both;
   margin-top: 200px;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
   padding-top: 40px;
   border-top: 1px dashed $background-highlight;
 

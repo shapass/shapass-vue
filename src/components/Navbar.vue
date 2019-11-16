@@ -2,7 +2,7 @@
 <div id="navbar" class="clearfix">
   <div id="navbar-content">
     <router-link to="/">
-      <img src="logo.svg" id="logo" alt="ShaPass" v-if="!currentUser || !currentUser.atLanding()" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }" v-on:click="setAtLanding"/>
+      <img src="logo.svg" id="logo" alt="Shapass" v-if="!currentUser || !currentUser.atLanding()" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }" v-on:click="setAtLanding"/>
     </router-link>
 
     <div v-if="!showLoginSignup">

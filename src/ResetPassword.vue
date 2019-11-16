@@ -1,6 +1,8 @@
 <template>
-<div id="reset-password" v-bind:class="{ mobile: this.$isMobile() }">
+<div id="reset-password" v-bind:class="{ mobile: this.$isMobile() }" class="site-wrapper">
   <Navbar :currentUser="currentUser" :showLoginSignup="false" :loading="currentUser.isLoading()" />
+
+  <div id="content">
 
   <div class="content-wrapper" v-if="!token">
     <div class="container" id="label">
@@ -39,12 +41,17 @@
         <router-link to="/reset-password" tabindex="4">Request a new password reset e-mail</router-link>
       </div>
     </div>
+
   </div>
+  </div>
+
+  <Footer />
 </div>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
 import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
 import GeneratedPassword from './components/GeneratedPassword.vue'
@@ -56,6 +63,7 @@ export default {
   name: 'reset-password',
   components: {
     Navbar,
+    Footer,
     InfiniteLoadingCircle,
     PasswordVisibilityInput,
     GeneratedPassword
