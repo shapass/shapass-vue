@@ -2,7 +2,7 @@
 <div class="password-visibility-input">
   <label>{{ label }}</label>
 
-  <input :type="inputType" spellcheck="false" autocomplete="new-password" v-model="internalValue" v-on:keyup.enter="onEnter" :placeholder="placeholder" :tabindex="tabindex != -9 ? tabindex : ''">
+  <input :type="inputType" spellcheck="false" autocomplete="new-password" v-model="internalValue" v-on:keyup.enter="onEnter" v-on:keyup.esc="onEsc" :placeholder="placeholder" :tabindex="tabindex != -9 ? tabindex : ''">
   <PasswordVisibilityToggle v-model="isVisible" />
 </div>
 </template>
@@ -27,7 +27,11 @@ export default {
   methods: {
     onEnter: function() {
       this.$emit('keyup:enter', null);
-    }
+    },
+    onEsc: function() {
+      this.internalValue = null;
+      this.$emit('keyup:esc', null);
+    },
   },
   data () {
     return {
