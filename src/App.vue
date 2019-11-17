@@ -1,14 +1,14 @@
 <template>
 <div id="app" v-bind:class="{ mobile: this.$isMobile() }" class="site-wrapper">
   <v-dialog/>
-  <Navbar :currentUser="currentUser" :showLoginSignup="true" :logoutFn="logout" :loading="currentUser.isLoading() || state.saving" />
+  <Navbar :currentUser="currentUser" :showLoginSignup="true" v-on:logout="logout" :loading="currentUser.isLoading() || state.saving" />
 
   <div id="content">
 
   <!-- SERVICE SELECTOR (ON BOTH PAGES) -->
   <div class="content-wrapper" id="service-wrapper">
     <div class="container" id="service">
-      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :asButton="currentUser.atLanding()" :onFocus="serviceFocused" :onBlur="serviceBlurred" :disabled="modalOpened()" :tabindex="1" />
+      <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :asButton="currentUser.atLanding()" v-on:focused="serviceFocused" v-on:blurred="serviceBlurred" :disabled="modalOpened()" :tabindex="1" />
     </div>
     <div class="container" id="service-buttons" v-if="currentUser.atApp()">
       <transition name="slide">

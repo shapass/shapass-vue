@@ -43,7 +43,6 @@ export default {
   props: {
     currentUser: Object,
     showLoginSignup: Boolean,
-    logoutFn: Function,
     loading: Boolean,
   },
   methods: {
@@ -51,9 +50,7 @@ export default {
       this.currentUser.setAtLanding();
     },
     logout () {
-      if (this.logoutFn) {
-        this.logoutFn();
-      }
+      this.$emit('logout', null);
     },
   }
 }
