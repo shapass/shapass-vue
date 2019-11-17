@@ -65,7 +65,7 @@
   <modal name="configurations" @opened="configurations_opened" @closed="configurations_closed" :width="this.$isMobile() ? '100%' : 600" :height="250" :pivotY="0.1" :minHeight="250">
     <div id="configurations" class="modal-body clearfix" v-if="state.generated">
       <div id="length">
-        <label class="typewriter">Length:</label>
+        <label>Length:</label>
         <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength" tabindex="20" v-focus  />
         <button class="btn btn-ico btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
           <font-awesome-icon icon="minus-square" />
@@ -75,11 +75,11 @@
         </button>
       </div>
       <div id="suffix">
-        <label class="typewriter" for="suffix-input">Suffix:</label>
+        <label for="suffix-input">Suffix:</label>
         <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" tabindex="21">
       </div>
       <div id="algorithm">
-        <label class="typewriter" for="algorithm-input">Algorithm:</label>
+        <label for="algorithm-input">Algorithm:</label>
         <select id="algorithm-input" v-model="state.algorithm" tabindex="22">
           <option value="sha256-bin">Default</option>
           <option value="sha256-str">Legacy</option>

@@ -1,6 +1,6 @@
 <template>
 <div class="service-selector">
-  <label class="typewriter" v-if="!asButton">What is this password for?</label>
+  <label v-if="!asButton">What is this password for?</label>
 
   <v-select v-model="service" taggable selectOnTab searchable :clearable="false" :placeholder="placeholder" :options="services" label="name" v-on:input="onInput" v-on:search:focus="onFocus" v-on:search:blur="onBlur" autocomplete="off" v-bind:class="{ selected: this.service !== null, 'as-button': asButton, 'no-drop': !showDrop }" :disabled="disabled" :filterBy="filterBy" :noDrop="!showDrop" :tabindex="tabindex">
 

@@ -8,7 +8,7 @@
       <ServiceSelector v-model="state.service" :currentUser="currentUser" :disabled="true" :asButton="false" />
     </div>
     <div class="container" id="email">
-      <label class="typewriter" for="master-input">Your email</label>
+      <label for="master-input">Your email</label>
       <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submit" v-model="inputEmail" v-focus v-bind:class="{ wrong: notEmpty(inputEmail) && !isValidInputEmail() }">
     </div>
     <div class="container" id="master">

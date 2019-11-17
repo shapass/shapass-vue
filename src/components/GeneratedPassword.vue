@@ -1,6 +1,6 @@
 <template>
 <div class="generated-password" v-if="state.generated">
-  <label class="typewriter">{{ label }}</label>
+  <label>{{ label }}</label>
   <div class="generated-input" v-html="generatedToDisplay"></div>
   <PasswordVisibilityToggle v-model="generatedPasswordVisible" />
 </div>

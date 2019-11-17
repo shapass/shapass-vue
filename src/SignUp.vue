@@ -9,14 +9,14 @@
       <ServiceSelector v-model="state.service" :currentUser="currentUser" :disabled="true" :asButton="false" />
     </div>
     <div class="container" id="email">
-      <label class="typewriter" for="master-input">Your email</label>
+      <label for="master-input">Your email</label>
       <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submit" v-model="inputEmail" v-focus v-bind:class="{ wrong: notEmpty(inputEmail) && !isValidInputEmail() }">
     </div>
     <div class="container" id="master">
       <PasswordVisibilityInput id="master-input" label="Your master password" v-on:keyup:enter="submit" v-model="master"></PasswordVisibilityInput>
     </div>
     <div class="container" id="master-confirmation">
-      <label class="typewriter" for="master-input">Confirm your master password</label>
+      <label for="master-input">Confirm your master password</label>
       <input id="master-confirmation-input" type="password" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submit" v-model="masterConfirmation" :class="{ 'wrong-live': master && !isConfirmationCorrect() }">
     </div>
     <div class="container" id="generated">

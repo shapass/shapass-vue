@@ -11,7 +11,7 @@
       <span class="note"><b>Note:</b> If you just tried it please wait a few minutes. We won't send you more than one email every few minutes to prevent spam.</span>
     </div>
     <!-- <div class="container" id="email"> -->
-    <!--   <label class="typewriter" for="master-input">Your email</label> -->
+    <!--   <label for="master-input">Your email</label> -->
     <!--   <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submit" v-model="inputEmail" v-focus v-bind:class="{ wrong: notEmpty(inputEmail) && !isValidInputEmail() }"> -->
     <!-- </div> -->
     <router-link to="/login" v-if="!currentUser.isLoggingInOrSigningUp() && !currentUser.isLoggedIn()">

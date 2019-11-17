@@ -18,15 +18,15 @@
   </div>
   <div class="demo">
     <div class="input-group group-service">
-      <label class="typewriter">What is this password for?</label>
+      <label>What is this password for?</label>
       <div class="input clearfix"><span>{{ vals.service }}</span><div class="cursor"></div></div>
     </div>
     <div class="input-group group-master">
-      <label class="typewriter">Your master password:</label>
+      <label>Your master password:</label>
       <div class="input clearfix"><span>{{ vals.master }}</span><div class="cursor"></div></div>
     </div>
     <div class="input-group group-generated">
-      <label class="typewriter">Generated password:</label>
+      <label>Generated password:</label>
       <div class="input clearfix"><span>{{ vals.generated }}</span></div>
     </div>
   </div>
