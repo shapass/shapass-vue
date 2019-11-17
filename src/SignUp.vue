@@ -24,7 +24,7 @@
     </div>
     <div class="container">
       <button class="btn btn-signup" id="signup-submit" @click="submit" :disabled="!canSubmit()">Register</button>
-      <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+      <InfiniteLoading v-if="currentUser.isLoading()"></InfiniteLoading>
       <div class="help-links">
         <span>Need help?</span>
         <router-link to="/reset-password">Forgot your password?</router-link>
@@ -44,7 +44,7 @@ import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
 import ServiceSelector from './components/ServiceSelector.vue'
 import GeneratedPassword from './components/GeneratedPassword.vue'
-import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
+import InfiniteLoading from './components/InfiniteLoading.vue'
 import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
 import Store from './store.js'
 import API from './api.js'
@@ -57,7 +57,7 @@ export default {
     Navbar,
     Footer,
     ServiceSelector,
-    InfiniteLoadingCircle,
+    InfiniteLoading,
     PasswordVisibilityInput,
     GeneratedPassword
   },
@@ -132,7 +132,7 @@ export default {
   float: left;
 }
 
-.loader {
+.infinite-loading {
   float: left;
   margin-left: 20px;
 }

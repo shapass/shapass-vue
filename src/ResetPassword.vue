@@ -15,7 +15,7 @@
     </div>
     <div class="container">
       <button class="btn btn-reset-password" id="reset-password-submit" @click="submitReset" :disabled="!canSubmitReset()">Send</button>
-      <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+      <InfiniteLoading v-if="currentUser.isLoading()"></InfiniteLoading>
     </div>
   </div>
 
@@ -35,7 +35,7 @@
     </div>
     <div class="container">
       <button class="btn btn-set-password" id="set-password-submit" @click="submitSet" :disabled="!canSubmitSet()" tabindex="3">Set password</button>
-      <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle>
+      <InfiniteLoading v-if="currentUser.isLoading()"></InfiniteLoading>
       <div class="help-links">
         <span>Need help?</span>
         <router-link to="/reset-password" tabindex="4">Request a new password reset e-mail</router-link>
@@ -52,7 +52,7 @@
 <script>
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
-import InfiniteLoadingCircle from './components/InfiniteLoadingCircle.vue'
+import InfiniteLoading from './components/InfiniteLoading.vue'
 import PasswordVisibilityInput from './components/PasswordVisibilityInput.vue'
 import GeneratedPassword from './components/GeneratedPassword.vue'
 import Store from './store.js'
@@ -64,7 +64,7 @@ export default {
   components: {
     Navbar,
     Footer,
-    InfiniteLoadingCircle,
+    InfiniteLoading,
     PasswordVisibilityInput,
     GeneratedPassword
   },
@@ -159,7 +159,7 @@ button {
   float: left;
 }
 
-.loader {
+.infinite-loading {
   margin-left: 3%;
   float: left;
 }

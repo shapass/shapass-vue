@@ -26,19 +26,19 @@
         <button class="btn" :disabled="loading" v-if="!currentUser.atLanding() && !currentUser.atApp()" v-on:click="setAtLanding">&lt; back</button>
       </router-link>
 
-      <InfiniteLoadingCircle v-if="loading"></InfiniteLoadingCircle>
+      <InfiniteLoading v-if="loading"></InfiniteLoading>
     </div>
   </div>
 </div>
 </template>
 
 <script>
-import InfiniteLoadingCircle from './InfiniteLoadingCircle.vue'
+import InfiniteLoading from './InfiniteLoading.vue'
 
 export default {
   name: 'Navbar',
   components: {
-    InfiniteLoadingCircle
+    InfiniteLoading
   },
   props: {
     currentUser: Object,
@@ -86,7 +86,7 @@ export default {
     margin: 16px 0 10px 15px;
   }
 
-  .loader {
+  .infinite-loading {
     margin: 10px 0 10px 15px;
     display: block;
     float: right;

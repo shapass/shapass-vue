@@ -18,7 +18,7 @@
       <button class="btn" tabindex="1">Login</button>
     </router-link>
     <!-- <button class="btn btn-sumit" id="btn-submit" @click="submit" :disabled="!canSubmit()">Send</button> -->
-    <!-- <InfiniteLoadingCircle v-if="currentUser.isLoading()"></InfiniteLoadingCircle> -->
+    <!-- <InfiniteLoading v-if="currentUser.isLoading()"></InfiniteLoading> -->
   </div>
   </div>
 
@@ -78,7 +78,7 @@ button {
   float: left;
 }
 
-.loader {
+.infinite-loading {
   margin-left: 3%;
   float: left;
 }
