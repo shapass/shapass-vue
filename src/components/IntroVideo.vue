@@ -330,7 +330,7 @@ export default {
 
     img {
       width: 80%;
-      animation: float 3s ease-in-out infinite alternate;
+      animation: float-sm 5s ease-in-out infinite alternate;
       transition: $transition-default;
     }
 

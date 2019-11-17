@@ -69,6 +69,58 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
+
+
+    <g fill="none" fill-rule="evenodd" transform="translate(1 1)" stroke-width="1" stroke="#00ffff">
+        <circle cx="18" cy="18" r="1" fill="#00FFFF">
+            <animate attributeName="r"
+                begin="0s" dur="3s"
+                values="1; 18"
+                calcMode="spline"
+                keyTimes="0; 1"
+                keySplines="0.165, 0.84, 0.44, 1"
+                repeatCount="indefinite" />
+            <animate attributeName="stroke-opacity"
+                begin="0s" dur="3s"
+                values="1; 0"
+                calcMode="spline"
+                keyTimes="0; 1"
+                keySplines="0.3, 0.61, 0.355, 1"
+                repeatCount="indefinite" />
+            <animate attributeName="opacity"
+                begin="0s" dur="3s"
+                values="1; 0"
+                calcMode="spline"
+                keyTimes="0; 1"
+                keySplines="0.3, 0.61, 0.355, 1"
+                repeatCount="indefinite" />
+        </circle>
+        <circle cx="18" cy="18" r="1" fill="#d81059" stroke="#d81059">
+            <animate attributeName="r"
+                begin="-1.5s" dur="3s"
+                values="1; 18"
+                calcMode="spline"
+                keyTimes="0; 1"
+                keySplines="0.165, 0.84, 0.44, 1"
+                repeatCount="indefinite" />
+            <animate attributeName="stroke-opacity"
+                begin="-1.5s" dur="3s"
+                values="1; 0"
+                calcMode="spline"
+                keyTimes="0; 1"
+                keySplines="0.3, 0.61, 0.355, 1"
+                repeatCount="indefinite" />
+            <animate attributeName="opacity"
+                begin="-1.5s" dur="3s"
+                values="1; 0"
+                calcMode="spline"
+                keyTimes="0; 1"
+                keySplines="0.3, 0.61, 0.355, 1"
+                repeatCount="indefinite" />
+        </circle>
+    </g>
+
+
   <g
      inkscape:label="objs"
      inkscape:groupmode="layer"
