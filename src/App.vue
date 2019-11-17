@@ -6,7 +6,7 @@
   <div id="content">
 
   <!-- SERVICE SELECTOR (ON BOTH PAGES) -->
-  <div class="content-wrapper" id="service-wrapper">
+  <div class="content-wrapper" id="service-wrapper" v-if="!videoPlaying">
     <div class="container" id="service">
       <ServiceSelector v-model="state.service" :services="state.servicesForSelect" :currentUser="currentUser" :asButton="currentUser.atLanding()" v-on:focused="serviceFocused" v-on:blurred="serviceBlurred" :disabled="modalOpened()" :tabindex="1" />
     </div>
@@ -25,12 +25,12 @@
   </div>
 
   <!-- LANDING PAGE -->
-  <div id="content-landing" v-if="currentUser.atLanding()" class="content-wrapper">
+  <div id="content-landing" v-if="currentUser.atLanding() && !videoPlaying" class="content-wrapper">
     <div id="start" v-shortkey.once="['enter']" @shortkey="start">Press <kbd>enter</kbd> to start</div>
     <div id="slogan">The password manager that <em>does not</em> store your passwords.</div>
-    <div id="logo-landing" v-tooltip="{ content: 'You sha...pass!', delay: { show: 42000, hide: 100 }, placement: 'right' }">
-    </div>
-    <IntroVideo></IntroVideo>
+  </div>
+  <div id="content-landing-video" v-if="currentUser.atLanding()" class="content-wrapper">
+    <IntroVideo :playing="videoPlaying" v-on:playing="videoPlaying = true" v-on:ended="videoPlaying = false"></IntroVideo>
   </div>
 
   <!-- APP PAGE -->
@@ -94,7 +94,7 @@
   </modal>
 
   <!-- FAQ (AT LANDING PAGE) -->
-  <div v-if="currentUser.atLanding()" class="content-wrapper">
+  <div v-if="currentUser.atLanding() && !videoPlaying" class="content-wrapper">
     <FAQ></FAQ>
   </div>
 
@@ -282,13 +282,14 @@ export default {
     showRemoveButton () {
       return this.currentUser.isLoggedIn() && this.currentUser.atApp() &&
         Store.isCurrentServiceSaved();
-    }
+    },
   },
   data () {
     return {
       state: Store.getState(),
       currentUser: CurrentUser,
-      showConfigs: false
+      showConfigs: false,
+      videoPlaying: false
     }
   },
   mounted () {
@@ -556,7 +557,10 @@ button.btn-toolbar {
   @include mobile {
     margin-top: 80px;
   }
+}
 
+.intro-video.playing {
+  margin-top: 40px;
 }
 
 </style>

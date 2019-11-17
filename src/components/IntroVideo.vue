@@ -1,6 +1,6 @@
 <template>
 <div class="intro-video clearfix">
-  <!-- <div>{{ steps.current }}<div class="cursor"></div></div><br/> -->
+  <!--<div>{{ steps.current }}<div class="cursor"></div></div><br/>-->
   <div class="wizard">
     <img src="logo.svg" alt="Shapass" />
     <div class="text-balloon from-wizard" x-placement="right">
@@ -16,11 +16,19 @@
       <font-awesome-icon icon="play-circle" />
     </div>
   </div>
- <div class="demo">
-    <div class="input input-service clearfix"><span>{{ vals.service }}</span><div class="cursor"></div></div>
-    <span class="plus">+</span>
-    <div class="input input-master clearfix"><span>{{ vals.master }}</span><div class="cursor"></div></div>
-    <div class="input input-generated clearfix"><span>{{ vals.generated }}</span></div>
+  <div class="demo">
+    <div class="input-group group-service">
+      <label class="typewriter">What is this password for?</label>
+      <div class="input clearfix"><span>{{ vals.service }}</span><div class="cursor"></div></div>
+    </div>
+    <div class="input-group group-master">
+      <label class="typewriter">Your master password:</label>
+      <div class="input clearfix"><span>{{ vals.master }}</span><div class="cursor"></div></div>
+    </div>
+    <div class="input-group group-generated">
+      <label class="typewriter">Generated password:</label>
+      <div class="input clearfix"><span>{{ vals.generated }}</span></div>
+    </div>
   </div>
 </div>
 </template>
@@ -56,6 +64,10 @@ var SCENES = [
 export default {
   name: 'IntroVideo',
   props: {
+    playing: {
+      type: Boolean,
+      default: false
+    },
   },
   components: {
   },
@@ -106,6 +118,7 @@ export default {
         this.clear();
         this.say(null);
         this.$el.classList.add("playing");
+        this.$emit('playing', null);
       } else if (this.steps.current == this.stepfor("greeting")) {
         this.say("Hi, I'm the password wizard");
       } else if (this.steps.current == this.stepfor("greeting_2")) {
@@ -126,7 +139,6 @@ export default {
       } else if (this.steps.current == this.stepfor("master_intro")) {
         this.say("Then, you will type a MASTER password");
       } else if (this.steps.current >= this.stepfor("master") && this.steps.current < this.stepfor("master_show")) {
-        this.show(this.el.plus);
         this.show(this.el.master);
         this.typing(this.el.master);
         this.vals.master = this.type("••••••••••••••••", this.stepfor("master"));
@@ -185,6 +197,7 @@ export default {
       Object.keys(this.el).map((key) => {
         this.hide(this.el[key]);
       });
+      this.$emit('ended', null);
     },
     generate: function() {
       this.vals.generated = this.shapass(`${this.vals.service}${this.vals.master}`, 'sha256-bin', 32);
@@ -258,7 +271,7 @@ export default {
       steps: {
         timeout: null,
         current: 0,
-        duration: 120, // 120
+        duration: 120, // default: 120
         infinite: false
       },
       wizard: {
@@ -274,15 +287,13 @@ export default {
         service: null,
         master: null,
         generated: null,
-        plus: null,
       }
     }
   },
   mounted () {
-    this.el.service = this.$el.querySelector(".input-service");
-    this.el.master = this.$el.querySelector(".input-master");
-    this.el.generated = this.$el.querySelector(".input-generated");
-    this.el.plus = this.$el.querySelector(".plus");
+    this.el.service = this.$el.querySelector(".group-service");
+    this.el.master = this.$el.querySelector(".group-master");
+    this.el.generated = this.$el.querySelector(".group-generated");
     this.calculateSteps();
 
     setTimeout(() => {
@@ -291,6 +302,11 @@ export default {
     setInterval(() => {
       this.highlightStart();
     }, 30000);
+
+    // if it was mounted and should start playing directly
+    if (this.playing) {
+      this.start();
+    }
   },
   watch: {
     "vals.service": function() {
@@ -388,37 +404,6 @@ export default {
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
-
-    .input-service {
-      width: calc(40% - 2.3em);
-      order: 1;
-    }
-
-    .input-master {
-      width: calc(60% - 2.3em);
-      order: 3;
-    }
-
-    .plus {
-      opacity: 0;
-      order: 2;
-      flex-grow: 1;
-      width: auto;
-      text-align: center;
-    }
-
-    .input-generated {
-      order: 4;
-      flex-basis: 100%;
-      word-break: break-all;
-      background: $generated-input-bg;
-      border: $generated-input-border;
-      color: $generated-input-color;
-      border: 1px solid $background-highlight;
-      font-family: $font-family-titles;
-      margin-top: 10px;
-      width: 100%;
-    }
   }
 }
 
@@ -443,12 +428,9 @@ export default {
       top: 0;
       width: 100%;
       transition: $transition-default;
-      @include mobile {
-        top: 20px;
-      }
 
       .text-balloon {
-        top: -10px;
+        top: -5px;
         bottom: auto;
         max-width: 80%;
         left: 70px;
@@ -472,7 +454,8 @@ export default {
 
     &.say-at-bottom {
       .wizard {
-        margin-top: 230px;
+        top: auto;
+        bottom: -80px; // avg height of wizard + ballon
         @include mobile { margin-top: 190px; }
       }
     }
@@ -529,21 +512,42 @@ export default {
   }
 }
 
-.input {
+.input-group {
   opacity: 0;
   position: relative;
-  background: none;
-  font-family: $input-font-family;
-  color: $input-font-color;
-  border: 1px solid $background-highlight;
-  padding: 0.3em 0.5em;
-  /* line-height: 1.2em; */
-  width: calc(100% - 20px);
-  transition: $transition-default;
+  width: 100%;
+  margin-bottom: 20px;
+
+  .input {
+    background: none;
+    font-family: $input-font-family;
+    color: $input-font-color;
+    border: 1px solid $background-highlight;
+    padding: 0.3em 0.5em;
+    width: calc(100% - 20px);
+    transition: $transition-default;
+  }
+
+  &.group-generated .input {
+    word-break: break-all;
+    background: $generated-input-bg;
+    border: $generated-input-border;
+    color: $generated-input-color;
+    border: 1px solid $generated-input-bg;
+    padding-top: 8px;
+    padding-bottom: 9px;
+    font-family: $font-family-titles;
+  }
+
+  label {
+    display: inline-block;
+    margin-bottom: 7px;
+  }
 
   span {
     float: left;
     min-height: 1.5em;
+    margin-top: 3px;
   }
 
   &.typing {
@@ -573,12 +577,12 @@ export default {
     opacity: 0.8;
 
     height: 2em;
-    @include mobile { height: 1.5em; }
+    @include mobile { height: 1.8em; }
 
     width: 2px;
     max-width: 2px;
     overflow: hidden;
-    margin-left: 2px;
+    margin-left: 4px;
     margin-top: 2px;
     text-decoration: blink;
     animation: blinker 1s linear infinite;
