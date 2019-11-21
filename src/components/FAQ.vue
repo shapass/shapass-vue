@@ -6,7 +6,7 @@
     <li data-collapse class="collapsed">
       <h3 data-collapse-toggle v-on:click="collapse">What is Shapass?</h3>
       <div data-collapse-content>
-        <p>Shapass is a password generator, an application similar to a <a href="https://en.wikipedia.org/wiki/Password_manager" target="_blank">password manager</a> that helps you generate complex (an thus safer) passwords without having to remember them all.</p>
+        <p>Shapass is a password generator, an application similar to a <a href="https://en.wikipedia.org/wiki/Password_manager" target="_blank">password manager</a> that helps you generate strong (an thus safer) passwords without having to remember them all.</p>
         <p>We help you generate passwords that are <b>long and difficult to guess</b> for all services and websites you use, all based on a <b>single master password</b> (or more than one if you want to) that is only in your head (we don't know it and the other services you use won't know it as well).</p>
         <p>The main differences from other password managers is that Shapass <b>does not store your passwords</b> and that it is based on an <b>open free algorithm</b> to generate passwords. This algorithm is based on a <a href="https://en.m.wikipedia.org/wiki/Secure_Hash_Algorithms" target="_blank">SHA</a> function (hence the name "Shapass"). See the questions below for more technical details.</p>
         <p>It should also be clear that you don't have to trust us on this: you can verify with your browser the information we have access to. You can even build your own Shapass generator if you want to!</p>
@@ -17,9 +17,9 @@
       <h3 data-collapse-toggle v-on:click="collapse">Why should I use Shapass?</h3>
       <div data-collapse-content>
         <ul>
-          <li>You need to remember a single master password but you get a unique complex password for each website/service you use.</li>
+          <li>You need to remember a single master password but you get a unique strong password for each website/service you use.</li>
           <li>If a service leaks their passwords, it won't compromise all other services you use, since you have a password for each website.</li>
-          <li>We generate complex passwords that would be a pain to do so manually.</li>
+          <li>We generate strong passwords that would be a pain to do so manually.</li>
           <li>We don't store your passwords nor the information of the services you use.</li>
           <li>You don't have to trust us on this, you can verify in your browser what we have access to.</li>
           <li>It's based on an open algorithm, so you are not forever depending on us. We're here to help, not lock you up on our service.</li>
