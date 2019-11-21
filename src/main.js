@@ -10,6 +10,7 @@ import VueMobileDetection from "vue-mobile-detection";
 import VTooltip from 'v-tooltip';
 import VModal from 'vue-js-modal';
 import VueLogger from 'vuejs-logger';
+import VueMeta from 'vue-meta';
 
 import Utils from './utils.js';
 
@@ -24,6 +25,8 @@ import Welcome from './Welcome.vue';
 const isProduction = process.env.NODE_ENV === 'production';
 
 Vue.use(VueRouter);
+
+Vue.use(VueMeta);
 
 library.add(faEye);
 library.add(faEyeSlash);

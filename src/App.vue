@@ -127,7 +127,12 @@ export default {
     IntroVideo,
     FAQ,
   },
-  props: {
+  metaInfo: {
+    title: 'Shapass',
+    htmlAttrs: {
+      lang: 'en',
+    },
+    // titleTemplate: '%s | Shapass'
   },
   watch: {
     "state.service" (val) {
