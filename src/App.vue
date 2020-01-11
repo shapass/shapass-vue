@@ -82,6 +82,7 @@
         <label for="algorithm-input">Algorithm:</label>
         <select id="algorithm-input" v-model="state.algorithm" tabindex="22">
           <option value="sha256-bin">Default</option>
+          <option value="sha256-num">Numeric</option>
           <option value="sha256-str">Legacy</option>
           <!-- <option>sha256-bin-alfanum</option> -->
         </select>

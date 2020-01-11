@@ -1,9 +1,26 @@
+// Converts an array of bytes to BigInt
+// from https://coolaj86.com/articles/convert-js-bigints-to-typedarrays/
+function arrayToBigInt(buf) {
+  var hex = [];
+  u8 = Uint8Array.from(buf);
+
+  u8.forEach(function (i) {
+    var h = i.toString(16);
+    if (h.length % 2) { h = '0' + h; }
+    hex.push(h);
+  });
+
+  return BigInt('0x' + hex.join(''));
+}
+
 const Utils = {
   shapass (input, algo, length=32) {
     if (algo === 'sha256-str') {
       return btoa(sha256(input)).substr(0, length);
     } else if (algo === 'sha256-bin') {
       return base64js.fromByteArray(sha256.digest(input)).substr(0, length);
+    } else if (algo === 'sha256-num') {
+      return arrayToBigInt(sha256.digest(input)).toString().substr(0, length);
     } else {
       return '';
     }
