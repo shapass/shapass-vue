@@ -2,7 +2,7 @@
 // from https://coolaj86.com/articles/convert-js-bigints-to-typedarrays/
 function arrayToBigInt(buf) {
   var hex = [];
-  u8 = Uint8Array.from(buf);
+  var u8 = Uint8Array.from(buf);
 
   u8.forEach(function (i) {
     var h = i.toString(16);
