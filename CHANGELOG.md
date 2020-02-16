@@ -1,6 +1,10 @@
 
 # Change Log
 
+## 0.5.0 - 2020-01-10
+
+* Include `sha256-num` algorithm.
+
 ## 0.5.0 - 2019-11-05
 
 * Encrypt all user data when sending to the server. The server no longer receives
