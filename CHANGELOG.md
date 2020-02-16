@@ -1,9 +1,9 @@
 
 # Change Log
 
-## 0.5.0 - 2020-01-10
+## 0.6.0 - 2020-02-16
 
-* Include `sha256-num` algorithm.
+* Include `sha256-num` algorithm to generate passwords with only numbers.
 
 ## 0.5.0 - 2019-11-05
 
