@@ -1,6 +1,9 @@
 # shapass-vue
 
 ## Project setup
+
+Install the node version set in `.nvmrc` and then:
+
 ```
 npm install
 ```
@@ -25,5 +28,13 @@ npm run test
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Running on Docker
+
+Build and run the application in docker with:
+
+```
+docker build -t sp-frontend .
+docker run -it -p 8080:80 --rm sp-frontend:latest
+```
+
+This is to be used in production, in development `npm run serve` is usually better.
