@@ -82,6 +82,7 @@ export default {
 .v-select {
   clear: both;
   margin-top: 10px;
+  border-radius: $vs-border-radius;
 
   border: 1px solid $background-highlight;
   /* padding: 5px 10px; */

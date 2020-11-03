@@ -100,11 +100,17 @@ Vue.mixin({
     },
     randomMask: function() {
       var masks = [
-        '*', '_', '-', '!', '~'
+        '*'
       ];
+      // var masks = [
+      //   '*', '_', '-', '!', '~'
+      // ];
       return masks[Math.floor(Math.random()*masks.length)];
     },
     applyMask: function(str, mask, suffix=null) {
+      var symbols = [
+        '🙈', '🙊', '🙉'
+      ];
       var result = "";
       var maxLen = str.length;
       if (suffix !== null) {
@@ -112,7 +118,7 @@ Vue.mixin({
       }
       for (var i = 0; i < maxLen; i++) {
         if (i % 4 == 0) {
-          result += str[i];
+          result += symbols[Math.floor(Math.random() * symbols.length)];
         } else {
           result += mask;
         }

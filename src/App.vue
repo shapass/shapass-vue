@@ -45,7 +45,7 @@
 
   <div class="clearfix content-wrapper" id="toolbar" v-if="state.generated && currentUser.atApp()">
     <div class="toolbar-left">
-      <button class="btn btn-ico btn-configure btn-toolbar" @click="configure" tabindex="3" v-shortkey.once="['ctrl', '/']" @shortkey="configure" v-tooltip="'Configure the current service'">
+      <button class="btn btn-ico btn-configure btn-toolbar" @click="configure" tabindex="3" v-shortkey.once="['ctrl', '/']" @shortkey="configure" v-tooltip="'Configure the generated password'">
         <font-awesome-icon icon="cog" />
         <span>configure</span>
         <!-- <span v-if="this.$isMobile()">configure</span> -->
@@ -489,7 +489,6 @@ button.btn-toolbar {
   height: auto;
   background: $toolbar-ico-bg;
   border: $toolbar-ico-border;
-  border-radius: 0;
   padding: 10px 10px 12px 10px;
   transition: $transition-default;
 

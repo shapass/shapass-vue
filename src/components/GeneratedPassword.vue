@@ -42,8 +42,10 @@ export default {
     setGeneratedPassword (val) {
       this.state.generated = val;
       if (this.state.generated !== null) {
-        let maskHtml = `<span class="censored">${this.mask}</span>`;
-        this.generatedCensored = this.applyMask(this.state.generated, maskHtml, this.state.suffix);
+        //let maskHtml = `<span class="censored">${this.mask}</span>`;
+        //this.generatedCensored = this.applyMask(this.state.generated, maskHtml, this.state.suffix);
+        let maskHtml = this.applyMask(this.state.generated, this.mask, this.state.suffix);
+        this.generatedCensored = `<span class="censored">${maskHtml}</span>`;
       } else {
         this.generatedCensored = null;
       }
@@ -106,15 +108,16 @@ export default {
   .generated-input {
     word-break: break-all;
     background: $generated-input-bg;
-    border: $generated-input-border;
     color: $generated-input-color;
     border: 1px solid $generated-input-bg;
+    border-radius: $generated-input-border-radius;
     padding-top: 8px;
     padding-bottom: 9px;
     font-family: $font-family-titles;
 
     .censored {
-      color: $generated-input-censored-color;
+      //color: $generated-input-censored-color;
+      font-size: $font-sm;
     }
   }
 

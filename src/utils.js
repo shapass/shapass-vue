@@ -37,10 +37,11 @@ const Utils = {
     var iv = new Uint8Array(16);
     for(var i = 0; i < 16; i++) iv[i] = Math.random() * 100;
 
+    var str;
     if (typeof decrypted === 'string') {
-      var str = decrypted;
+      str = decrypted;
     } else {
-      var str = JSON.stringify(decrypted);
+      str = JSON.stringify(decrypted);
     }
 
     var bytesText = aesjs.utils.utf8.toBytes(str);

@@ -27,6 +27,7 @@ $active: $green;
 $background: $dark-blue;
 $background-highlight: lighten($gray-tv, 20); //rgba(128, 128, 128, 0.3); //$gray;
 $background-dark: $dark; //rgba(0, 0, 0, 0.8);
+$border-radius: 2px;
 
 $font-md: 18px;
 $font-lg: $font-md + 6px;
@@ -93,12 +94,18 @@ $toolbar-ico-hover-border-color: $primary;
 $toolbar-ico-size: 22px;
 $kbd-bg: $background-highlight; //#212529;
 $kbd-color: $white;
+$selection-color: white;
+$selection-bg: $primary;
 $tooltip-bg: $background-highlight; //$black;
 $tooltip-color: $white;
 $tooltip-border: 1px solid $tooltip-bg; //$primary;
 $tooltip-font-size: $font-sm;
 
-$notification-border-radius: 0;
+// TODO
+$tooltip-bg: darken($background-highlight, 10);
+$tooltip-border: none;
+
+$notification-border-radius: $border-radius;
 $notification-bg: $turquoise;
 $notification-border: 1px solid $notification-bg;
 $notification-color: $black;
@@ -110,6 +117,7 @@ $notification-error-border: 1px solid $notification-error-bg;
 $notification-error-color: $white;
 
 $generated-input-bg: darken($background-highlight, 10);
+$generated-input-border-radius: $border-radius;
 $generated-input-color: $primary;
 $generated-input-censored-color: rgba(255, 255, 255, 0.3);
 $generated-input-border: none;
@@ -126,7 +134,8 @@ $vs-state-active-bg: $background;//$dark;
 $vs-state-active-color: $bright;
 $vs-bg: $body-background;
 $vs-border-width: 1px;
-$vs-border-radius: none;
+//$vs-border-radius: none;
+$vs-border-radius: $border-radius;
 $vs-border-color: $accent;
 //$vs-selected-bg: red;
 //$vs-dropdown-z-index: 1000 !default;
@@ -209,6 +218,15 @@ $mobile-width: 480px;
 
 @keyframes blinker {
   50% { opacity: 0.0; }
+}
+
+::-moz-selection { /* Code for Firefox */
+  color: $selection-color;
+  background: $selection-bg;
+}
+::selection {
+  color: $selection-color;
+  background: $selection-bg;
 }
 
 html {
@@ -296,6 +314,7 @@ button {
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s linear;
+  border-radius: $border-radius;
 
   &:hover, &:active, &:focus {
     background: $btn-hover-bg;
@@ -358,6 +377,7 @@ button {
 input, select {
   background: none;
   border: 0;
+  border-radius: $border-radius;
   font-size: $body-font-size;
   @include mobile { font-size: $m-body-font-size; }
   margin: 0;
@@ -484,7 +504,7 @@ img {
   font-size: $tooltip-font-size;
   max-width: 300px;
   text-align: center;
-  border-radius: 0;
+  border-radius: $border-radius;
 
   .tooltip-inner {
     background: $tooltip-bg;
