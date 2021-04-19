@@ -6,10 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "favicon": "convert -density 384 -background transparent src/assets/shap-ico-dark.svg -define icon:auto-resize -colors 256 public/favicon.ico",
-    "deploy": "vue-cli-service build --mode production && rsync -ru --progress dist/* daronco@shapass.com:shapass/",
-    "dev-deploy": "vue-cli-service build --mode staging && rsync -ru --progress dist/* daronco@shapass.com:dev.shapass/",
-    "test-deploy": "vue-cli-service build --mode staging && rsync -ru --progress dist/* root@test.shapass.com:/var/www/shapass/"
+    "favicon": "convert -density 384 -background transparent src/assets/shap-ico-dark.svg -define icon:auto-resize -colors 256 public/favicon.ico"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
