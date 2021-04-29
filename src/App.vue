@@ -53,7 +53,7 @@
       </button>
     </div>
     <div class="toolbar-right">
-      <button class="btn btn-ico btn-copy btn-toolbar" @click="copyToClipboard" tabindex="4" v-shortkey.once="['ctrl', 'c']" @shortkey="copyToClipboard" v-tooltip="'Copy the generated password to your clipboard'">
+      <button class="btn btn-ico btn-copy btn-toolbar" @click="copyToClipboard" tabindex="4" v-tooltip="'Copy the generated password to your clipboard'">
         <font-awesome-icon icon="copy" />
         <span>copy</span>
         <!-- <span v-if="this.$isMobile()">copy</span> -->
