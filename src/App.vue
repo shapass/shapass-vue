@@ -39,7 +39,7 @@
       <PasswordVisibilityInput id="master-input" v-model="state.master" v-on:keyup:enter="enterOnInput" v-focus label="Your master password:" :tabindex="2" />
     </div>
     <div class="container" id="generated">
-      <GeneratedPassword label="Generated password:" :state="state"></GeneratedPassword>
+      <GeneratedPassword label="Generated password:" :state="state" :bus="bus"></GeneratedPassword>
     </div>
   </div>
 
@@ -106,6 +106,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
 import ServiceSelector from './components/ServiceSelector.vue'
@@ -151,6 +152,7 @@ export default {
     copyToClipboard () {
       this.$copyText(this.state.generated).then(() => {
         this.$toasted.show('Password copied', { duration: 2000 });
+        this.bus.$emit('copied-to-clipboard');
         if (!this.$isMobile()) {
           this.focusMasterPassword();
         }
@@ -295,7 +297,8 @@ export default {
       state: Store.getState(),
       currentUser: CurrentUser,
       showConfigs: false,
-      videoPlaying: false
+      videoPlaying: false,
+      bus: new Vue()
     }
   },
   mounted () {
