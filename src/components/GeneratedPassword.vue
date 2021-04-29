@@ -1,7 +1,21 @@
 <template>
 <div class="generated-password" v-if="state.generated">
   <label>{{ label }}</label>
-  <div class="generated-input" v-html="generatedToDisplay"></div>
+  <div class="generated-input" v-if="generatedToDisplay">
+    <div v-if="!generatedPasswordVisible">
+      <transition-group name="list-complete" tag="span">
+        <span
+          v-for="(item, key, index) in generatedToDisplayA"
+          v-bind:key="key"
+          class="list-complete-item censored"
+        >
+          {{ item }}
+        </span>
+      </transition-group>
+      <span>{{ this.state.suffix }}</span>
+    </div>
+    <span v-if="generatedPasswordVisible">{{ generatedToDisplay }}</span>
+  </div>
   <PasswordVisibilityToggle v-model="generatedPasswordVisible" />
 </div>
 </template>
@@ -40,20 +54,34 @@ export default {
       }
     },
     setGeneratedPassword (val) {
+    let result = null;
       this.state.generated = val;
-      if (this.state.generated !== null) {
-        //let maskHtml = `<span class="censored">${this.mask}</span>`;
-        //this.generatedCensored = this.applyMask(this.state.generated, maskHtml, this.state.suffix);
-        let maskHtml = this.applyMask(this.state.generated, this.mask, this.state.suffix);
-        this.generatedCensored = `<span class="censored">${maskHtml}</span>`;
+      if (val !== null) {
+        let toMask = val;
+        if (this.state.suffix !== null) {
+          toMask = toMask.substring(0, toMask.length - this.state.suffix.length);
+        }
+        let masked = this.applyMask(toMask, this.maskSet, this.generatedCensored);
+        this.generatedCensored = masked;
       } else {
         this.generatedCensored = null;
       }
+
       if (this.generatedPasswordVisible) {
         this.generatedToDisplay = this.state.generated;
       } else {
         this.generatedToDisplay = this.generatedCensored;
       }
+
+      if (this.generatedToDisplay !== null) {
+        result = {}
+        for (var i = 0; i < this.generatedToDisplay.length; i++) {
+          let char = this.generatedToDisplay[i];
+          result[`${i}-${char}`] = char;
+        }
+        this.generatedToDisplayA = result;
+      }
+
       this.$emit('input', this.state.generated);
     },
     isValueSet: function(v) {
@@ -64,8 +92,9 @@ export default {
     return {
       generatedCensored: null,
       generatedToDisplay: null,
+      generatedToDisplayA: [],
       generatedPasswordVisible: false,
-      mask: this.randomMask(),
+      maskSet: this.randomMaskSet(),
     }
   },
   mounted () {
@@ -116,8 +145,9 @@ export default {
     font-family: $font-family-titles;
 
     .censored {
-      //color: $generated-input-censored-color;
-      font-size: $font-sm;
+      color: $generated-input-censored-color;
+      font-family: monospace;
+      font-size: $font-md-sm;
     }
   }
 
@@ -127,4 +157,19 @@ export default {
     top: 2.0em; // based on how font-size is calculated
   }
 }
+
+.list-complete-item {
+  transition: all 0.5s;
+  display: inline-block;
+  margin-right: 2px;
+}
+.list-complete-enter, .list-complete-leave-to
+/* .list-complete-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(15px);
+}
+.list-complete-leave-active {
+  position: absolute;
+}
+
 </style>

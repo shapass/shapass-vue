@@ -98,33 +98,26 @@ Vue.mixin({
     shapass: function(input, algo, length) {
       return Utils.shapass(input, algo, length);
     },
-    randomMask: function() {
+    randomMaskSet: function() {
       var masks = [
-        '*'
+        [ '*', '⊚', '0', '∞', '⟟', '∘', '(', ')' ],
+        [ '*', '<', '>', '_', '⊏', '⊐','×', '⊣', '⊢', '⊥', '⊤', '⟤', '⟥' ]
       ];
-      // var masks = [
-      //   '*', '_', '-', '!', '~'
-      // ];
       return masks[Math.floor(Math.random()*masks.length)];
     },
-    applyMask: function(str, mask, suffix=null) {
-      var symbols = [
-        '🙈', '🙊', '🙉'
-      ];
+    applyMask: function(str, maskSet, previous=null) {
       var result = "";
       var maxLen = str.length;
-      if (suffix !== null) {
-        maxLen -= suffix.length;
-      }
       for (var i = 0; i < maxLen; i++) {
-        if (i % 4 == 0) {
-          result += symbols[Math.floor(Math.random() * symbols.length)];
+        if (previous === null) {
+          result += maskSet[Math.floor(Math.random() * maskSet.length)];
         } else {
-          result += mask;
+          if (Math.random() >= 0.8) {
+            result += maskSet[Math.floor(Math.random() * maskSet.length)];
+          } else {
+            result += previous[i];
+          }
         }
-      }
-      if (suffix !== null) {
-        result += suffix;
       }
       return result;
     },
