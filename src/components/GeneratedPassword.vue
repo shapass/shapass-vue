@@ -28,7 +28,10 @@ export default {
   props: {
     label: String,
     state: Object,
-    bus: Object,
+    bus: {
+      type: Object,
+      default: null
+    },
     onlyIfMasterSet: {
       type: Boolean,
       default: false
@@ -107,9 +110,11 @@ export default {
   },
   mounted () {
     this.generatePassword();
-    this.bus.$on('copied-to-clipboard', (e) => {
-      this.highlight();
-    });
+    if (this.bus !== null) {
+      this.bus.$on('copied-to-clipboard', (e) => {
+        this.highlight();
+      });
+    }
   },
   watch: {
     "state.service" (val, prev) {
