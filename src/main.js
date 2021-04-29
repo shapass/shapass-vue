@@ -57,10 +57,10 @@ Vue.use(VModal, { dialog: true });
 
 const options = {
   isEnabled: true,
-  logLevel : isProduction ? 'error' : 'debug',
+  logLevel : isProduction ? 'warn' : 'debug',
   stringifyArguments : false,
-  showLogLevel : true,
-  showMethodName : true,
+  showLogLevel : isProduction ? false : true,
+  showMethodName : isProduction ? false : true,
   separator: '|',
   showConsoleColors: true
 };
