@@ -1,6 +1,12 @@
 
 # Change Log
 
+## 0.7.0 - 2021-05-02
+
+* Read the API's domain from .env files.
+* Use node 12.16.
+* Add configs and instructions to run the app on docker.
+
 ## 0.6.0 - 2020-02-16
 
 * Include `sha256-num` algorithm to generate passwords with only numbers.
