@@ -77,6 +77,7 @@ const CurrentUser = {
         }
       } else {
         this.state.loading = false;
+        this._setLoggedOut(); // not signed in, so make sure all data is cleared
         callback(false);
       }
     });

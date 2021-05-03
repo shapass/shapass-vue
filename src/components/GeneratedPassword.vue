@@ -1,7 +1,7 @@
 <template>
 <div class="generated-password" v-if="state.generated">
   <label>{{ label }}</label>
-  <div class="generated-input" v-if="generatedToDisplay">
+  <div class="generated-input" v-if="generatedToDisplay" :class="{ highlighted: this.highlighted }">
     <div v-if="!generatedPasswordVisible">
       <transition-group name="list-complete" tag="span">
         <span
@@ -28,6 +28,10 @@ export default {
   props: {
     label: String,
     state: Object,
+    bus: {
+      type: Object,
+      default: null
+    },
     onlyIfMasterSet: {
       type: Boolean,
       default: false
@@ -86,6 +90,12 @@ export default {
     },
     isValueSet: function(v) {
       return this.notEmpty(v);
+    },
+    highlight: function() {
+      this.highlighted = true;
+      setTimeout(() => {
+        this.highlighted = false;
+      }, 300);
     }
   },
   data () {
@@ -95,10 +105,16 @@ export default {
       generatedToDisplayA: [],
       generatedPasswordVisible: false,
       maskSet: this.randomMaskSet(),
+      highlighted: false,
     }
   },
   mounted () {
     this.generatePassword();
+    if (this.bus !== null) {
+      this.bus.$on('copied-to-clipboard', (e) => {
+        this.highlight();
+      });
+    }
   },
   watch: {
     "state.service" (val, prev) {
@@ -148,6 +164,14 @@ export default {
       color: $generated-input-censored-color;
       font-family: monospace;
       font-size: $font-md-sm;
+    }
+
+    transition: border-color 0.5s;
+    &.highlighted {
+      border-color: $primary;
+      .censored {
+        color: $primary;
+      }
     }
   }
 

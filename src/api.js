@@ -3,6 +3,8 @@ import { Configs } from './config.js';
 import Utils from './utils.js';
 import axios from 'axios';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const API = {
   Errors: Object.freeze({
     CodeOK: 0,
@@ -27,7 +29,11 @@ const API = {
 
   request (method, httpMethod, data, callback) {
     var url = `${Configs.API_URL}/${method}`;
-    Vue.$log.info("Sending request", url, httpMethod, data);
+
+    let dataForLog = Vue.util.extend({}, data);
+    this._filterParamsForLog(dataForLog);
+    Vue.$log.warn("Sending request", url, httpMethod, dataForLog);
+
     axios({
       method: httpMethod,
       url: url,
@@ -36,10 +42,12 @@ const API = {
         'Content-Type': 'application/json'
       }
     }).then(response => {
-      Vue.$log.info("Success response:", url, response.data);
+      dataForLog = Vue.util.extend({}, response.data);
+      this._filterParamsForLog(dataForLog);
+      Vue.$log.warn("Success response:", url, dataForLog);
       callback(response.data.Status === 'OK', response.data);
     }).catch(error => {
-      Vue.$log.info("Error response:", url, error);
+      Vue.$log.warn("Error response:", url, error);
       callback(false, null, error);
     });
   },
@@ -191,6 +199,21 @@ const API = {
       }
     });
   },
+
+  //
+  // Internal methods
+  //
+
+  _filterParamsForLog (params) {
+    if (isProduction) {
+      ['password', 'LoginCount', 'Token', 'token'].forEach((p) => {
+        if (params[p] !== undefined && params[p] !== null) {
+          params[p] = '[FILTERED]';
+        }
+      });
+    }
+  },
+
 };
 
 export default API;
