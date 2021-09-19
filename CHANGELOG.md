@@ -1,6 +1,11 @@
 
 # Change Log
 
+## 0.7.2 - 2021-09-19
+
+* Merged several dependabot pull requests for security upgrades.
+
+
 ## 0.7.1 - 2021-05-02
 
 * Highlight the generated password when copying.
