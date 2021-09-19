@@ -154,8 +154,7 @@ export default {
     word-break: break-all;
     background: $generated-input-bg;
     color: $generated-input-color;
-    border: 1px solid $generated-input-bg;
-    border-radius: $generated-input-border-radius;
+    border: $input-border;
     padding-top: 8px;
     padding-bottom: 9px;
     font-family: $font-family-titles;

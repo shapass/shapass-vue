@@ -1,11 +1,13 @@
 $dark-blue: #010913;
 // $turquoise: #36cdd4; //#4abfc8;
 $turquoise: #00ffff; //#4abfc8;
-$dark-gray: #2d3238; //#212529;
+$dark-gray: #222; //#161b22; //#2d3238; //#212529;
 $gray: #4f5862;
+$black: #000;
+
 $black-tv: #010a13;
 $gray-tv: #131722;
-$black: #000;
+
 $white: #fff;
 $medium-gray: #666;
 $green: #0C7C59;
@@ -24,9 +26,9 @@ $twitter-blue: #1ea0f2;
 $primary: $turquoise;
 $secondary: $ruby;
 $active: $green;
-$background: $dark-blue;
-$background-highlight: lighten($gray-tv, 20); //rgba(128, 128, 128, 0.3); //$gray;
-$background-dark: $dark; //rgba(0, 0, 0, 0.8);
+$background: $black; //#0d1117; //$black; //$dark-blue;
+$background-highlight: $dark-gray; //lighten($gray-tv, 20); //rgba(128, 128, 128, 0.3); //$gray;
+$background-dark: $black; //$dark; //rgba(0, 0, 0, 0.8);
 $border-radius: 2px;
 
 $font-md: 18px;
@@ -61,11 +63,13 @@ $input-font-family: $font-family-titles; //$body-font-family;
 $input-font-color: $primary;
 $input-focus-bg: $dark;
 $input-not-empty-bg: rgba($background-highlight, 0.3);
+$input-border-color: $background-highlight;
+$input-border: 1px solid $background-highlight;
 $icon-size: 16px;
 $placeholder-opacity: 0.5;
 $placeholder-color: rgba(255, 255, 255, $placeholder-opacity);
 $placeholder-font-size: $font-sm;
-$navbar-bg: $black;//$background-highlight; // rgba(255, 255, 255, 0.15);
+$navbar-bg: $background; //$black;//$background-highlight; // rgba(255, 255, 255, 0.15);
 $navbar-border-bottom: 1px solid $background-highlight;
 $btn-border: 1px solid $primary;
 $btn-bg: $black;
@@ -98,12 +102,8 @@ $selection-color: white;
 $selection-bg: $primary;
 $tooltip-bg: $background-highlight; //$black;
 $tooltip-color: $white;
-$tooltip-border: 1px solid $tooltip-bg; //$primary;
+$tooltip-border: none; //1px solid $primary;
 $tooltip-font-size: $font-sm;
-
-// TODO
-$tooltip-bg: darken($background-highlight, 10);
-$tooltip-border: none;
 
 $notification-border-radius: $border-radius;
 $notification-bg: $turquoise;
@@ -117,10 +117,8 @@ $notification-error-border: 1px solid $notification-error-bg;
 $notification-error-color: $white;
 
 $generated-input-bg: darken($background-highlight, 10);
-$generated-input-border-radius: $border-radius;
 $generated-input-color: $primary;
 $generated-input-censored-color: rgba(255, 255, 255, 0.3);
-$generated-input-border: none;
 
 $modal-bg: $black;
 $modal-border-color: $background-highlight;
@@ -166,7 +164,7 @@ $vs-selected-border: none;
 // Mobile
 //
 // TODO: move all mobile things to a separate file
-$m-body-background: #0c1827; //lighten($body-background, 3);
+$m-body-background: $body-background; //#0c1827; //lighten($body-background, 3);
 $m-font-md: calc(0.5em + 2vmin);
 $m-font-lg: calc(0.7em + 2vmin);
 $m-body-font-size: $m-font-md;
@@ -386,7 +384,7 @@ input, select {
   background: none;
   font-family: $input-font-family;
   color: $input-font-color;
-  border: 1px solid $background-highlight;
+  border: $input-border;
   padding: 8px 10px 9px 10px;
   width: calc(100% - 20px);
   transition: all 0.3s linear;
