@@ -2,9 +2,14 @@
 <div id="footer">
   <div class="push"></div>
   <div class="content-wrapper">
-    <span>Follow us</span>
-    <a href="https://twitter.com/shapassed" target="_blank" class="twitter-badge">
-      <img src="twitter-logo.svg" alt="Twitter"/>
+    <a href="https://www.notion.so/Shapass-FAQ-51b40cc521c946eea4a1c68caea0e1ba" target="_blank">
+      <span>FAQ</span>
+    </a>
+    <a href="https://github.com/shapass" target="_blank">
+      <span>Github</span>
+    </a>
+    <a href="https://twitter.com/shapassed" target="_blank">
+      <span>Twitter</span>
     </a>
   </div>
 </div>
@@ -27,34 +32,10 @@ export default {
   text-align: right;
   padding: 20px 0 10px 0;
   vertical-align: middle;
-  
-  .twitter-badge {
-    height: 18px;
-    vertical-align: middle;
-    /* background: $twitter-blue; */
+
+  a {
+    padding: 0 10px;
     display: inline-block;
-    /* border-radius: 2px; */
-    padding: 3px 6px;
-    margin-left: 2px;
-    font-family: $font-family-titles;
-    color: $white;
-    text-decoration: none;
-    opacity: 0.7;
-
-    &:hover, &:active, &:focus {
-      opacity: 1;
-    }
-
-    img {
-      width: 18px;
-      height: 18px;
-      float: left;
-      /* padding-top: 1px; */
-    }
-    
-    /* span { */
-    /*   float: left; */
-    /* } */
   }
 }
 </style>
