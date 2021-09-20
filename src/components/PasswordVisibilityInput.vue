@@ -38,7 +38,6 @@ export default {
     return {
       internalValue: null,
       inputType: "password",
-      inputName: "",
       isVisible: false,
     }
   },
