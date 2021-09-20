@@ -91,7 +91,13 @@ const CurrentUser = {
     return this.state.step;
   },
   saveCookie () {
-    this._setCookie(Configs.LOGIN_COOKIE_NAME, this.state.token, Configs.REMEMBER_ME_DAYS);
+    this._setCookie(
+      Configs.LOGIN_COOKIE_NAME,
+      this.state.token,
+      Configs.REMEMBER_ME_DAYS,
+      Configs.LOGIN_COOKIE_SECURE,
+      Configs.LOGIN_COOKIE_SAMESITE
+    );
   },
   loadCookie () {
     return this._getCookie(Configs.LOGIN_COOKIE_NAME);
@@ -181,14 +187,22 @@ const CurrentUser = {
     this.removeCookie();
   },
 
-  _setCookie (name, value, days) {
+  // attr_expire_days: int
+  // attr_secure: boolean
+  // attr_same_site: string
+  _setCookie (name, value, attr_expire_days, attr_secure, attr_same_site) {
     var expires = "";
-    if (days) {
+    if (attr_expire_days) {
       var date = new Date();
-      date.setTime(date.getTime() + (days*24*60*60*1000));
-      expires = "; expires=" + date.toUTCString();
+      date.setTime(date.getTime() + (attr_expire_days*24*60*60*1000));
+      expires = "Expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    var secure = attr_secure ? "Secure" : "";
+    var same_site = (attr_same_site !== "") ? attr_same_site : "Lax";
+    same_site = `SameSite=${attr_same_site}`;
+    var path = "Path=/";
+
+    document.cookie = `${name}=${(value || "")}; ${expires}; ${same_site}; ${secure}; ${path}`;
   },
   _getCookie (name) {
     var nameEQ = name + "=";
