@@ -13,7 +13,7 @@
       <input id="email-input" type="email" spellcheck="false" placeholder="" autocomplete="off" v-on:keyup.enter="submit" v-model="inputEmail" v-focus v-bind:class="{ wrong: notEmpty(inputEmail) && !isValidInputEmail() }">
     </div>
     <div class="container" id="master">
-      <PasswordVisibilityInput id="master-input" label="Your master password" v-on:keyup:enter="submit" v-model="master"></PasswordVisibilityInput>
+      <PasswordVisibilityInput id="master-input" label="Your master password" v-on:keyup:enter="submit" v-model="master" inputName="login-password"></PasswordVisibilityInput>
     </div>
     <div class="container" id="master-confirmation">
       <label for="master-input">Confirm your master password</label>

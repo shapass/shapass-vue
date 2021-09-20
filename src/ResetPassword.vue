@@ -24,7 +24,7 @@
       <h3>Choose a new password</h3>
     </div>
     <div class="container" id="master">
-      <PasswordVisibilityInput id="master-input" label="Your new password" v-on:keyup:enter="submitSet" v-model="master" v-focus :tabindex="1"></PasswordVisibilityInput>
+      <PasswordVisibilityInput id="master-input" label="Your new password" v-on:keyup:enter="submitSet" v-model="master" v-focus :tabindex="1" inputName="login-password"></PasswordVisibilityInput>
     </div>
     <div class="container" id="master-confirmation">
       <label for="master-input">Confirm your new password</label>
