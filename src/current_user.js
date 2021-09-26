@@ -215,7 +215,7 @@ const CurrentUser = {
     return null;
   },
   _eraseCookie (name) {
-    document.cookie = name+'=; Max-Age=-99999999;';
+    document.cookie = name+'=; Max-Age=-99999999; SameSite=Strict';
   }
 
 
