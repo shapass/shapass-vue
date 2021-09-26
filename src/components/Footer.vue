@@ -8,7 +8,7 @@
     <a href="https://github.com/shapass" target="_blank">
       <span>Github</span>
     </a>
-    <a href="https://twitter.com/shapassed" target="_blank">
+    <a href="https://twitter.com/shapasspw" target="_blank">
       <span>Twitter</span>
     </a>
   </div>
