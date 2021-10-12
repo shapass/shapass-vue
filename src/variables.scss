@@ -622,11 +622,11 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
 // vue-modal
 //
 
-.v--modal-overlay {
-  background: rgba(0, 0, 0, 0.5);
+.vm--overlay {
+  background: rgba(36, 36, 36, 0.7);
 }
 
-.v--modal-box.v--modal {
+.vm--modal {
   background: $modal-bg;
   box-shadow: none;
   border: $modal-border;
@@ -634,18 +634,6 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 8px 5px $gray-tv;
-
-  .v--modal-close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    color: $modal-color;
-    font-size: $font-xs;
-
-    .btn {
-      font-size: $font-xs;
-    }
-  }
 
   .modal-body {
     flex-grow: 1;
@@ -677,6 +665,10 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
         border: $btn-hover-border;
       }
     }
+  }
+
+  .vue-dialog-content-title {
+    font-size: $font-sm;
   }
 }
 

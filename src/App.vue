@@ -62,30 +62,33 @@
     </div>
   </div>
 
-  <modal name="configurations" @opened="configurations_opened" @closed="configurations_closed" :width="this.$isMobile() ? '100%' : 600" :height="250" :pivotY="0.1" :minHeight="250">
-    <div id="configurations" class="modal-body clearfix" v-if="state.generated">
-      <div id="length">
-        <label>Length:</label>
-        <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength" tabindex="20" v-focus  />
-        <button class="btn btn-ico btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
-          <font-awesome-icon icon="minus-square" />
-        </button>
-        <button class="btn btn-ico btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
-          <font-awesome-icon icon="plus-square" />
-        </button>
-      </div>
-      <div id="suffix">
-        <label for="suffix-input">Suffix:</label>
-        <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" tabindex="21">
-      </div>
-      <div id="algorithm">
-        <label for="algorithm-input">Algorithm:</label>
-        <select id="algorithm-input" v-model="state.algorithm" tabindex="22">
-          <option value="sha256-bin">Default</option>
-          <option value="sha256-num">Numeric</option>
-          <option value="sha256-str">Legacy</option>
-          <!-- <option>sha256-bin-alfanum</option> -->
-        </select>
+  <modal name="configurations" @opened="configurations_opened" @closed="configurations_closed" :width="this.$isMobile() ? '100%' : 600" :shiftY="0.35" :height="auto">
+    <div class="vue-dialog-content">
+      <div class="vue-dialog-content-title">Configure your password</div>
+      <div id="configurations" class="modal-body clearfix" v-if="state.generated">
+        <div id="length">
+          <label>Length:</label>
+          <input type="number" v-on:blur="setLengthEvent" :value="state.outputLength" tabindex="20" v-focus  />
+          <button class="btn btn-ico btn-length-minus" @click="lengthAdd(-1)" tabindex="-1">
+            <font-awesome-icon icon="minus-square" />
+          </button>
+          <button class="btn btn-ico btn-length-plus" @click="lengthAdd(1)" tabindex="-1">
+            <font-awesome-icon icon="plus-square" />
+          </button>
+        </div>
+        <div id="suffix">
+          <label for="suffix-input">Suffix:</label>
+          <input id="suffix-input" type="text" spellcheck="false" placeholder="(none)" autocomplete="off" v-model="state.suffix" tabindex="21">
+        </div>
+        <div id="algorithm">
+          <label for="algorithm-input">Algorithm:</label>
+          <select id="algorithm-input" v-model="state.algorithm" tabindex="22">
+            <option value="sha256-bin">Default</option>
+            <option value="sha256-num">Numeric</option>
+            <option value="sha256-str">Legacy</option>
+            <!-- <option>sha256-bin-alfanum</option> -->
+          </select>
+        </div>
       </div>
     </div>
     <div class="v--modal-buttons">
@@ -209,10 +212,20 @@ export default {
           },
           {
             title: 'No',
-            default: true
+            default: true,
+            handler: () => {
+              this.$modal.hide('dialog')
+            }
           }
         ]
       });
+      // {
+      //   adaptive: true,
+      //   draggable: true,
+      //   focusTrap: true,
+      //   transition: 'fade',
+      //   classes: 'modal-confirmation'
+      // }
     },
     remove () {
       Store.removeService((r, removed) => {
@@ -370,9 +383,8 @@ export default {
 
 #configurations {
   background: none;
-  margin: 20px 0;
   padding-left: 0px;
-  padding-top: 10px;
+  margin-top: 16px;
 
   > div {
     align-items: baseline;
